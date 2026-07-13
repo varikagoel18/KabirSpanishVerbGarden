@@ -1,0 +1,3569 @@
+{
+  "activity": "Level 3 · Verb Tenses",
+  "topic": "Futuro cercano — ir + a + infinitive",
+  "lessonCount": 10,
+  "lessons": [
+    {
+      "title": "1 · Verbo IR",
+      "em": "🚶",
+      "intro": "Learn IR (to go) — the key to near future! Practice each pronoun.",
+      "items": [
+        {
+          "difficulty": "easy",
+          "pre": "Yo ",
+          "correct": "voy",
+          "opts": [
+            "voy",
+            "vas",
+            "va",
+            "van"
+          ],
+          "hint": "ir · yo",
+          "post": " a casa."
+        },
+        {
+          "difficulty": "easy",
+          "pre": "Tú ",
+          "correct": "vas",
+          "opts": [
+            "voy",
+            "vas",
+            "va",
+            "vais"
+          ],
+          "hint": "ir · tú",
+          "post": " al parque."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Todos los días, yo ",
+          "correct": "voy",
+          "opts": [
+            "voy",
+            "vas",
+            "va",
+            "van"
+          ],
+          "hint": "ir · yo",
+          "post": " a la escuela con mi hermano."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Después del trabajo, mi mamá ",
+          "correct": "va",
+          "opts": [
+            "va",
+            "voy",
+            "vamos",
+            "van"
+          ],
+          "hint": "ir · ella",
+          "post": " al supermercado a comprar."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Nosotros ",
+          "correct": "vamos",
+          "opts": [
+            "vamos",
+            "vais",
+            "van",
+            "voy"
+          ],
+          "hint": "ir · nosotros",
+          "post": " al cine este viernes por la tarde."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Los niños ",
+          "correct": "van",
+          "opts": [
+            "van",
+            "va",
+            "vamos",
+            "vais"
+          ],
+          "hint": "ir · ellos",
+          "post": " a la piscina cuando hace mucho calor."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Aunque llueve mucho, yo siempre ",
+          "correct": "voy",
+          "opts": [
+            "voy",
+            "vas",
+            "va",
+            "van"
+          ],
+          "hint": "ir · yo",
+          "post": " a la escuela caminando con mis amigos."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Cuando termine mi tarea de ciencias, tú ",
+          "correct": "vas",
+          "opts": [
+            "vas",
+            "voy",
+            "va",
+            "van"
+          ],
+          "hint": "ir · tú",
+          "post": " a la casa de tu abuela a jugar."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Después de cenar con mi familia, nosotros ",
+          "correct": "vamos",
+          "opts": [
+            "vamos",
+            "van",
+            "vais",
+            "voy"
+          ],
+          "hint": "ir · nosotros",
+          "post": " al cine a ver una película nueva."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Los estudiantes de mi clase ",
+          "correct": "van",
+          "opts": [
+            "van",
+            "va",
+            "vamos",
+            "voy"
+          ],
+          "hint": "ir · ellos",
+          "post": " a la biblioteca cada tarde para hacer sus proyectos."
+        }
+      ],
+      "paragraphs": [
+        {
+          "title": "Mi rutina semanal 📅",
+          "intro": "Fill each blank with the right form of IR.",
+          "items": [
+            {
+              "pre": "Todos los días yo ",
+              "correct": "voy",
+              "opts": [
+                "voy",
+                "vas",
+                "va",
+                "van"
+              ],
+              "hint": "ir · yo",
+              "post": " a la escuela por la mañana."
+            },
+            {
+              "pre": "Después tú ",
+              "correct": "vas",
+              "opts": [
+                "voy",
+                "vas",
+                "va",
+                "van"
+              ],
+              "hint": "ir · tú",
+              "post": " al parque con tus amigos."
+            },
+            {
+              "pre": "Mi hermana ",
+              "correct": "va",
+              "opts": [
+                "va",
+                "voy",
+                "vamos",
+                "van"
+              ],
+              "hint": "ir · ella",
+              "post": " a la clase de ballet los martes."
+            },
+            {
+              "pre": "Los domingos nosotros ",
+              "correct": "vamos",
+              "opts": [
+                "vamos",
+                "vais",
+                "van",
+                "voy"
+              ],
+              "hint": "ir · nosotros",
+              "post": " a visitar a los abuelos."
+            }
+          ]
+        },
+        {
+          "title": "Sábado en el parque 🌳",
+          "intro": "Fill each blank with the right form of IR.",
+          "items": [
+            {
+              "pre": "El sábado, yo ",
+              "correct": "voy",
+              "opts": [
+                "voy",
+                "vas",
+                "va",
+                "van"
+              ],
+              "hint": "ir · yo",
+              "post": " al parque con mi familia."
+            },
+            {
+              "pre": "Mis padres ",
+              "correct": "van",
+              "opts": [
+                "van",
+                "va",
+                "vamos",
+                "voy"
+              ],
+              "hint": "ir · ellos",
+              "post": " a comprar helados en la tienda."
+            },
+            {
+              "pre": "Mi hermano y yo ",
+              "correct": "vamos",
+              "opts": [
+                "vamos",
+                "vais",
+                "van",
+                "voy"
+              ],
+              "hint": "ir · nosotros",
+              "post": " a jugar en los columpios."
+            },
+            {
+              "pre": "Después, todos ",
+              "correct": "van",
+              "opts": [
+                "van",
+                "va",
+                "voy",
+                "vamos"
+              ],
+              "hint": "ir · ellos",
+              "post": " a merendar bajo un árbol grande."
+            }
+          ]
+        },
+        {
+          "title": "Día de compras 🛒",
+          "intro": "Fill each blank with the right form of IR.",
+          "items": [
+            {
+              "pre": "Mi mamá y yo ",
+              "correct": "vamos",
+              "opts": [
+                "vamos",
+                "vais",
+                "van",
+                "voy"
+              ],
+              "hint": "ir · nosotros",
+              "post": " al supermercado los sábados."
+            },
+            {
+              "pre": "Ella ",
+              "correct": "va",
+              "opts": [
+                "va",
+                "voy",
+                "vamos",
+                "van"
+              ],
+              "hint": "ir · ella",
+              "post": " primero a la sección de frutas."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy",
+              "opts": [
+                "voy",
+                "vas",
+                "va",
+                "van"
+              ],
+              "hint": "ir · yo",
+              "post": " a mirar los cereales de chocolate."
+            },
+            {
+              "pre": "Después nosotros ",
+              "correct": "vamos",
+              "opts": [
+                "vamos",
+                "vais",
+                "van",
+                "voy"
+              ],
+              "hint": "ir · nosotros",
+              "post": " juntos a pagar en la caja."
+            }
+          ]
+        },
+        {
+          "title": "Vacaciones a la playa 🏖️",
+          "intro": "Fill each blank with the right form of IR.",
+          "items": [
+            {
+              "pre": "En verano, mi familia ",
+              "correct": "va",
+              "opts": [
+                "va",
+                "voy",
+                "vas",
+                "van"
+              ],
+              "hint": "ir · ella (family)",
+              "post": " a la playa por dos semanas."
+            },
+            {
+              "pre": "Mis primos también ",
+              "correct": "van",
+              "opts": [
+                "van",
+                "va",
+                "vamos",
+                "voy"
+              ],
+              "hint": "ir · ellos",
+              "post": " a la misma playa."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy",
+              "opts": [
+                "voy",
+                "vas",
+                "va",
+                "van"
+              ],
+              "hint": "ir · yo",
+              "post": " a nadar todos los días con mis hermanos."
+            },
+            {
+              "pre": "Nosotros ",
+              "correct": "vamos",
+              "opts": [
+                "vamos",
+                "vais",
+                "van",
+                "voy"
+              ],
+              "hint": "ir · nosotros",
+              "post": " a construir castillos de arena juntos."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "2 · Futuro cercano · basics",
+      "em": "🔮",
+      "intro": "Near future = IR + a + infinitive. Practice mixing pronoun and infinitive.",
+      "items": [
+        {
+          "difficulty": "easy",
+          "pre": "Yo ",
+          "correct": "voy a",
+          "opts": [
+            "voy a",
+            "vas a",
+            "va a",
+            "van a"
+          ],
+          "hint": "ir + a · yo",
+          "post": " estudiar."
+        },
+        {
+          "difficulty": "easy",
+          "pre": "Tú ",
+          "correct": "vas a",
+          "opts": [
+            "vas a",
+            "voy a",
+            "va a",
+            "vais a"
+          ],
+          "hint": "ir + a · tú",
+          "post": " jugar."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Este viernes yo ",
+          "correct": "voy a",
+          "opts": [
+            "voy a",
+            "vas a",
+            "va a",
+            "van a"
+          ],
+          "hint": "ir + a · yo",
+          "post": " escribir un poema para mi maestra."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Después del colegio, mi hermana ",
+          "correct": "va a",
+          "opts": [
+            "va a",
+            "voy a",
+            "vamos a",
+            "vais a"
+          ],
+          "hint": "ir + a · ella",
+          "post": " merendar con sus amigas."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Nosotros ",
+          "correct": "vamos a",
+          "opts": [
+            "vamos a",
+            "vais a",
+            "va a",
+            "voy a"
+          ],
+          "hint": "ir + a · nosotros",
+          "post": " nadar en la piscina del parque este sábado."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Mis padres ",
+          "correct": "van a",
+          "opts": [
+            "van a",
+            "va a",
+            "vamos a",
+            "voy a"
+          ],
+          "hint": "ir + a · ellos",
+          "post": " trabajar hasta las siete de la tarde."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Cuando lleguemos a casa por la tarde, yo ",
+          "correct": "voy a",
+          "opts": [
+            "voy a",
+            "vas a",
+            "va a",
+            "van a"
+          ],
+          "hint": "ir + a · yo",
+          "post": " preparar un pastel de chocolate."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Si no llueve mañana, tú ",
+          "correct": "vas a",
+          "opts": [
+            "vas a",
+            "voy a",
+            "va a",
+            "vais a"
+          ],
+          "hint": "ir + a · tú",
+          "post": " montar tu bicicleta nueva en el parque."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Después de terminar nuestra tarea, nosotros ",
+          "correct": "vamos a",
+          "opts": [
+            "vamos a",
+            "vais a",
+            "van a",
+            "voy a"
+          ],
+          "hint": "ir + a · nosotros",
+          "post": " ver una película en el salón."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Cuando termine el partido de fútbol, los niños ",
+          "correct": "van a",
+          "opts": [
+            "van a",
+            "va a",
+            "vamos a",
+            "voy a"
+          ],
+          "hint": "ir + a · ellos",
+          "post": " regresar corriendo a casa."
+        }
+      ],
+      "paragraphs": [
+        {
+          "title": "Mañana en la escuela 📚",
+          "intro": "Complete with the near-future form.",
+          "items": [
+            {
+              "pre": "Mañana yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "van a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " estudiar matemáticas con mi maestra."
+            },
+            {
+              "pre": "Tú ",
+              "correct": "vas a",
+              "opts": [
+                "vas a",
+                "voy a",
+                "va a",
+                "vais a"
+              ],
+              "hint": "ir + a · tú",
+              "post": " leer un cuento en voz alta."
+            },
+            {
+              "pre": "Nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "vais a",
+                "van a",
+                "voy a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " hacer un dibujo bonito."
+            },
+            {
+              "pre": "Los otros niños ",
+              "correct": "van a",
+              "opts": [
+                "van a",
+                "va a",
+                "vamos a",
+                "voy a"
+              ],
+              "hint": "ir + a · ellos",
+              "post": " cantar una canción."
+            }
+          ]
+        },
+        {
+          "title": "Después del colegio 🎒",
+          "intro": "Complete with the near-future form.",
+          "items": [
+            {
+              "pre": "Cuando termine el colegio, yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " merendar en casa."
+            },
+            {
+              "pre": "Después mi hermana ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella",
+              "post": " hacer su tarea de ciencias."
+            },
+            {
+              "pre": "Mis padres ",
+              "correct": "van a",
+              "opts": [
+                "van a",
+                "va a",
+                "vamos a",
+                "voy a"
+              ],
+              "hint": "ir + a · ellos",
+              "post": " llegar temprano hoy."
+            },
+            {
+              "pre": "Todos nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "vais a",
+                "van a",
+                "voy a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " ver la tele juntos."
+            }
+          ]
+        },
+        {
+          "title": "Este fin de semana 🎉",
+          "intro": "Complete with the near-future form.",
+          "items": [
+            {
+              "pre": "Este sábado mi familia ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vamos a",
+                "van a"
+              ],
+              "hint": "ir + a · ella (family)",
+              "post": " descansar mucho."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "van a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " jugar videojuegos por la mañana."
+            },
+            {
+              "pre": "Mi papá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · él",
+              "post": " cocinar un pastel de chocolate."
+            },
+            {
+              "pre": "El domingo nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "vais a",
+                "van a",
+                "voy a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " ir al parque."
+            }
+          ]
+        },
+        {
+          "title": "Cumpleaños de mi amigo 🎂",
+          "intro": "Complete with the near-future form.",
+          "items": [
+            {
+              "pre": "Este viernes yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "van a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " llevar un regalo bonito."
+            },
+            {
+              "pre": "Mi mamá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella",
+              "post": " comprar un pastel de fresa."
+            },
+            {
+              "pre": "Los amigos ",
+              "correct": "van a",
+              "opts": [
+                "van a",
+                "va a",
+                "vamos a",
+                "voy a"
+              ],
+              "hint": "ir + a · ellos",
+              "post": " cantar 'feliz cumpleaños'."
+            },
+            {
+              "pre": "Nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "vais a",
+                "van a",
+                "voy a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " bailar hasta tarde."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "3 · Planes de vacaciones",
+      "em": "🏖️",
+      "intro": "Vacation plans in near future — talk about your trip!",
+      "items": [
+        {
+          "difficulty": "easy",
+          "pre": "Voy a ",
+          "correct": "viajar",
+          "opts": [
+            "viajar",
+            "viajo",
+            "viaje",
+            "viajado"
+          ],
+          "hint": "infinitive after voy a",
+          "post": " a Goa."
+        },
+        {
+          "difficulty": "easy",
+          "pre": "Mi papá va a ",
+          "correct": "conducir",
+          "opts": [
+            "conducir",
+            "conduzco",
+            "conduce",
+            "conducimos"
+          ],
+          "hint": "infinitive after va a",
+          "post": " el carro."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Este verano yo voy a ",
+          "correct": "viajar",
+          "opts": [
+            "viajar",
+            "viajo",
+            "viaje",
+            "viajaba"
+          ],
+          "hint": "infinitive after voy a",
+          "post": " con mi familia a las montañas."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "En Coorg, mi papá va a ",
+          "correct": "conducir",
+          "opts": [
+            "conducir",
+            "conduzco",
+            "conduce",
+            "condujo"
+          ],
+          "hint": "infinitive after va a",
+          "post": " el carro por muchas horas."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Nosotros vamos a ",
+          "correct": "quedarnos",
+          "opts": [
+            "quedarnos",
+            "quedarme",
+            "quedarse",
+            "quedaros"
+          ],
+          "hint": "reflexive · nosotros",
+          "post": " en un hotel muy bonito."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Todos los días yo voy a ",
+          "correct": "nadar",
+          "opts": [
+            "nadar",
+            "nado",
+            "nada",
+            "nadamos"
+          ],
+          "hint": "infinitive after voy a",
+          "post": " en la piscina del hotel."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Después de un viaje largo en carro, mi familia va a ",
+          "correct": "quedarse",
+          "opts": [
+            "quedarse",
+            "quedarme",
+            "quedarnos",
+            "quedaros"
+          ],
+          "hint": "reflexive · ella (family)",
+          "post": " en un hotel de la playa."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Cuando lleguemos al hotel, yo voy a ",
+          "correct": "nadar",
+          "opts": [
+            "nadar",
+            "nado",
+            "nada",
+            "nadamos"
+          ],
+          "hint": "infinitive after voy a",
+          "post": " inmediatamente en la piscina grande."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Mis abuelos, mis padres y yo vamos a ",
+          "correct": "viajar",
+          "opts": [
+            "viajar",
+            "viajo",
+            "viaje",
+            "viajaba"
+          ],
+          "hint": "infinitive after vamos a",
+          "post": " juntos a Coorg en las vacaciones."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Mi mamá va a ",
+          "correct": "sacar",
+          "opts": [
+            "sacar",
+            "saco",
+            "saca",
+            "sacamos"
+          ],
+          "hint": "infinitive after va a",
+          "post": " muchas fotos hermosas para nuestro álbum familiar."
+        }
+      ],
+      "paragraphs": [
+        {
+          "title": "Viaje a Coorg 🏔️",
+          "intro": "From your Spanish class notes — fill each blank.",
+          "items": [
+            {
+              "pre": "Voy a ",
+              "correct": "viajar",
+              "opts": [
+                "viajar",
+                "viajo",
+                "viaje",
+                "viajaba"
+              ],
+              "hint": "infinitive after voy a",
+              "post": " a Coorg con mis abuelos y padres."
+            },
+            {
+              "pre": "Nosotros vamos a ",
+              "correct": "ir",
+              "opts": [
+                "ir",
+                "voy",
+                "vamos",
+                "van"
+              ],
+              "hint": "infinitive after vamos a",
+              "post": " en carro."
+            },
+            {
+              "pre": "Mi padre ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vamos a",
+                "van a"
+              ],
+              "hint": "ir + a · él",
+              "post": " conducir todo el camino."
+            },
+            {
+              "pre": "Nosotros vamos a ",
+              "correct": "quedarnos",
+              "opts": [
+                "quedarnos",
+                "quedarme",
+                "quedarse",
+                "quedaros"
+              ],
+              "hint": "reflexive · nosotros",
+              "post": " en un hotel."
+            },
+            {
+              "pre": "Yo voy a ",
+              "correct": "nadar",
+              "opts": [
+                "nadar",
+                "nado",
+                "nada",
+                "nadamos"
+              ],
+              "hint": "infinitive after voy a",
+              "post": " en la piscina cada día."
+            }
+          ]
+        },
+        {
+          "title": "Playa en Goa 🌊",
+          "intro": "Complete each sentence.",
+          "items": [
+            {
+              "pre": "Este verano vamos a ",
+              "correct": "viajar",
+              "opts": [
+                "viajar",
+                "viajo",
+                "viaje",
+                "viajaba"
+              ],
+              "hint": "infinitive after vamos a",
+              "post": " a Goa por siete días."
+            },
+            {
+              "pre": "Mi mamá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vamos a",
+                "van a"
+              ],
+              "hint": "ir + a · ella",
+              "post": " reservar un hotel cerca del mar."
+            },
+            {
+              "pre": "Yo voy a ",
+              "correct": "nadar",
+              "opts": [
+                "nadar",
+                "nado",
+                "nada",
+                "nadamos"
+              ],
+              "hint": "infinitive after voy a",
+              "post": " en el mar todos los días."
+            },
+            {
+              "pre": "Mis hermanos ",
+              "correct": "van a",
+              "opts": [
+                "van a",
+                "va a",
+                "vamos a",
+                "voy a"
+              ],
+              "hint": "ir + a · ellos",
+              "post": " construir castillos en la arena."
+            }
+          ]
+        },
+        {
+          "title": "Montañas de Himachal 🏔️",
+          "intro": "Complete each sentence.",
+          "items": [
+            {
+              "pre": "Mi familia ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vamos a",
+                "van a"
+              ],
+              "hint": "ir + a · ella (family)",
+              "post": " explorar las montañas."
+            },
+            {
+              "pre": "Nosotros vamos a ",
+              "correct": "viajar",
+              "opts": [
+                "viajar",
+                "viajo",
+                "viaje",
+                "viajaba"
+              ],
+              "hint": "infinitive after vamos a",
+              "post": " en tren primero."
+            },
+            {
+              "pre": "Yo voy a ",
+              "correct": "aprender",
+              "opts": [
+                "aprender",
+                "aprendo",
+                "aprende",
+                "aprendemos"
+              ],
+              "hint": "infinitive after voy a",
+              "post": " a esquiar en la nieve."
+            },
+            {
+              "pre": "Todos vamos a ",
+              "correct": "disfrutar",
+              "opts": [
+                "disfrutar",
+                "disfruto",
+                "disfruta",
+                "disfrutamos"
+              ],
+              "hint": "infinitive after vamos a",
+              "post": " del aire fresco."
+            }
+          ]
+        },
+        {
+          "title": "Bali con la familia 🌴",
+          "intro": "Complete each sentence.",
+          "items": [
+            {
+              "pre": "El próximo mes mi familia ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella (family)",
+              "post": " volar a Bali."
+            },
+            {
+              "pre": "Vamos a ",
+              "correct": "quedarnos",
+              "opts": [
+                "quedarnos",
+                "quedarme",
+                "quedarse",
+                "quedaros"
+              ],
+              "hint": "reflexive · nosotros",
+              "post": " en un resort con piscina."
+            },
+            {
+              "pre": "Yo voy a ",
+              "correct": "surfear",
+              "opts": [
+                "surfear",
+                "surfeo",
+                "surfea",
+                "surfeamos"
+              ],
+              "hint": "infinitive after voy a",
+              "post": " por primera vez."
+            },
+            {
+              "pre": "Mi hermana ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella",
+              "post": " comprar recuerdos bonitos."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "4 · Hoy y mañana",
+      "em": "📅",
+      "intro": "Talk about today's and tomorrow's plans!",
+      "items": [
+        {
+          "difficulty": "easy",
+          "pre": "Hoy yo ",
+          "correct": "voy a",
+          "opts": [
+            "voy a",
+            "vas a",
+            "va a",
+            "vamos a"
+          ],
+          "hint": "ir + a · yo",
+          "post": " hacer tarea."
+        },
+        {
+          "difficulty": "easy",
+          "pre": "Mañana tú ",
+          "correct": "vas a",
+          "opts": [
+            "vas a",
+            "voy a",
+            "va a",
+            "vais a"
+          ],
+          "hint": "ir + a · tú",
+          "post": " jugar."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Esta tarde nosotros ",
+          "correct": "vamos a",
+          "opts": [
+            "vamos a",
+            "van a",
+            "voy a",
+            "vais a"
+          ],
+          "hint": "ir + a · nosotros",
+          "post": " merendar en el parque grande."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Mañana por la mañana mi hermano ",
+          "correct": "va a",
+          "opts": [
+            "va a",
+            "voy a",
+            "vas a",
+            "van a"
+          ],
+          "hint": "ir + a · él",
+          "post": " estudiar para el examen."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Esta noche yo ",
+          "correct": "voy a",
+          "opts": [
+            "voy a",
+            "vas a",
+            "va a",
+            "vamos a"
+          ],
+          "hint": "ir + a · yo",
+          "post": " leer un libro sobre dinosaurios."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Mañana ella ",
+          "correct": "va a",
+          "opts": [
+            "va a",
+            "voy a",
+            "vamos a",
+            "van a"
+          ],
+          "hint": "ir + a · ella",
+          "post": " cocinar un pastel de chocolate."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Antes de dormir, yo ",
+          "correct": "voy a",
+          "opts": [
+            "voy a",
+            "vas a",
+            "va a",
+            "vamos a"
+          ],
+          "hint": "ir + a · yo",
+          "post": " escribir en mi diario sobre las cosas divertidas del día."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Después de la escuela, tú ",
+          "correct": "vas a",
+          "opts": [
+            "vas a",
+            "voy a",
+            "va a",
+            "van a"
+          ],
+          "hint": "ir + a · tú",
+          "post": " despertar a tu hermana para llevarla al parque."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Los niños de mi clase ",
+          "correct": "van a",
+          "opts": [
+            "van a",
+            "va a",
+            "vamos a",
+            "voy a"
+          ],
+          "hint": "ir + a · ellos",
+          "post": " pintar un mural gigante en la pared de la escuela."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Cuando terminen las vacaciones, nosotros ",
+          "correct": "vamos a",
+          "opts": [
+            "vamos a",
+            "vais a",
+            "van a",
+            "voy a"
+          ],
+          "hint": "ir + a · nosotros",
+          "post": " regresar a la escuela con muchas historias."
+        }
+      ],
+      "paragraphs": [
+        {
+          "title": "Hoy en casa 🏠",
+          "intro": "Fill in the near-future form.",
+          "items": [
+            {
+              "pre": "Hoy yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " limpiar mi cuarto por la mañana."
+            },
+            {
+              "pre": "Mi mamá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella",
+              "post": " preparar el almuerzo."
+            },
+            {
+              "pre": "Mi hermano ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vamos a",
+                "van a"
+              ],
+              "hint": "ir + a · él",
+              "post": " jugar con sus juguetes."
+            },
+            {
+              "pre": "Todos nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "van a",
+                "vais a",
+                "voy a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " descansar por la tarde."
+            }
+          ]
+        },
+        {
+          "title": "Mañana en el colegio 📚",
+          "intro": "Fill in the near-future form.",
+          "items": [
+            {
+              "pre": "Mañana mi maestra ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella",
+              "post": " enseñar una lección nueva."
+            },
+            {
+              "pre": "Nosotros vamos a ",
+              "correct": "estudiar",
+              "opts": [
+                "estudiar",
+                "estudio",
+                "estudia",
+                "estudiamos"
+              ],
+              "hint": "infinitive after vamos a",
+              "post": " ciencias por la mañana."
+            },
+            {
+              "pre": "En el recreo yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "van a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " jugar con mis amigos."
+            },
+            {
+              "pre": "Al final del día ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " regresar en autobús."
+            }
+          ]
+        },
+        {
+          "title": "Esta noche 🌙",
+          "intro": "Fill in the near-future form.",
+          "items": [
+            {
+              "pre": "Esta noche mi papá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · él",
+              "post": " cocinar la cena."
+            },
+            {
+              "pre": "Después de comer yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " bañarme rápidamente."
+            },
+            {
+              "pre": "Mi mamá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella",
+              "post": " leerme un cuento antes de dormir."
+            },
+            {
+              "pre": "Todos nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "van a",
+                "vais a",
+                "voy a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " dormir temprano."
+            }
+          ]
+        },
+        {
+          "title": "Este fin de semana ⭐",
+          "intro": "Fill in the near-future form.",
+          "items": [
+            {
+              "pre": "Este fin de semana nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "van a",
+                "vais a",
+                "voy a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " tener muchas actividades."
+            },
+            {
+              "pre": "El sábado yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " ir al mercado con mamá."
+            },
+            {
+              "pre": "Mi hermano ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · él",
+              "post": " jugar fútbol por la tarde."
+            },
+            {
+              "pre": "Mis abuelos ",
+              "correct": "van a",
+              "opts": [
+                "van a",
+                "va a",
+                "vamos a",
+                "voy a"
+              ],
+              "hint": "ir + a · ellos",
+              "post": " venir a comer el domingo."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "5 · En familia",
+      "em": "👨‍👩‍👧‍👦",
+      "intro": "Family plans — what are you all going to do together?",
+      "items": [
+        {
+          "difficulty": "easy",
+          "pre": "Mi familia y yo ",
+          "correct": "vamos a",
+          "opts": [
+            "vamos a",
+            "van a",
+            "voy a",
+            "vais a"
+          ],
+          "hint": "ir + a · nosotros",
+          "post": " viajar."
+        },
+        {
+          "difficulty": "easy",
+          "pre": "Mis padres ",
+          "correct": "van a",
+          "opts": [
+            "van a",
+            "va a",
+            "vamos a",
+            "voy a"
+          ],
+          "hint": "ir + a · ellos",
+          "post": " llevar comida."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Este fin de semana nosotros ",
+          "correct": "vamos a",
+          "opts": [
+            "vamos a",
+            "van a",
+            "voy a",
+            "vais a"
+          ],
+          "hint": "ir + a · nosotros",
+          "post": " descansar mucho en casa."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Mi hermano ",
+          "correct": "va a",
+          "opts": [
+            "va a",
+            "voy a",
+            "vas a",
+            "van a"
+          ],
+          "hint": "ir + a · él",
+          "post": " llevar su guitarra a la fiesta familiar."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Mi mamá y yo ",
+          "correct": "vamos a",
+          "opts": [
+            "vamos a",
+            "va a",
+            "van a",
+            "vais a"
+          ],
+          "hint": "ir + a · nosotros",
+          "post": " preparar el desayuno especial."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Los primos ",
+          "correct": "van a",
+          "opts": [
+            "van a",
+            "va a",
+            "vamos a",
+            "voy a"
+          ],
+          "hint": "ir + a · ellos",
+          "post": " venir a visitarnos el próximo mes."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Después del almuerzo del domingo, mi abuelo ",
+          "correct": "va a",
+          "opts": [
+            "va a",
+            "voy a",
+            "vas a",
+            "van a"
+          ],
+          "hint": "ir + a · él",
+          "post": " contar historias increíbles a los nietos."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Cuando terminen las clases escolares, todos nosotros ",
+          "correct": "vamos a",
+          "opts": [
+            "vamos a",
+            "van a",
+            "vais a",
+            "voy a"
+          ],
+          "hint": "ir + a · nosotros",
+          "post": " cenar en el nuevo restaurante italiano."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Los tíos que viven en otra ciudad ",
+          "correct": "van a",
+          "opts": [
+            "van a",
+            "va a",
+            "vamos a",
+            "voy a"
+          ],
+          "hint": "ir + a · ellos",
+          "post": " venir para el cumpleaños de mi abuela."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Después de la cena familiar, todos nosotros ",
+          "correct": "vamos a",
+          "opts": [
+            "vamos a",
+            "van a",
+            "vais a",
+            "voy a"
+          ],
+          "hint": "ir + a · nosotros",
+          "post": " ver la película que mi papá alquiló."
+        }
+      ],
+      "paragraphs": [
+        {
+          "title": "Cumpleaños de mamá 🎂",
+          "intro": "Fill in the near-future form.",
+          "items": [
+            {
+              "pre": "El próximo domingo nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "van a",
+                "voy a",
+                "vais a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " celebrar el cumpleaños de mi mamá."
+            },
+            {
+              "pre": "Mi papá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · él",
+              "post": " comprar un regalo especial."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " hacer una tarjeta bonita."
+            },
+            {
+              "pre": "Todos los primos ",
+              "correct": "van a",
+              "opts": [
+                "van a",
+                "va a",
+                "vamos a",
+                "voy a"
+              ],
+              "hint": "ir + a · ellos",
+              "post": " venir a la fiesta."
+            }
+          ]
+        },
+        {
+          "title": "Cena familiar 🍽️",
+          "intro": "Fill in the near-future form.",
+          "items": [
+            {
+              "pre": "El viernes mi familia ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella (family)",
+              "post": " cenar en un restaurante."
+            },
+            {
+              "pre": "Nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "van a",
+                "vais a",
+                "voy a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " probar comida italiana."
+            },
+            {
+              "pre": "Mi papá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · él",
+              "post": " pedir pizza para todos."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " comer espagueti con salsa."
+            }
+          ]
+        },
+        {
+          "title": "Domingo con abuelos 👵",
+          "intro": "Fill in the near-future form.",
+          "items": [
+            {
+              "pre": "Este domingo mis abuelos ",
+              "correct": "van a",
+              "opts": [
+                "van a",
+                "va a",
+                "vamos a",
+                "voy a"
+              ],
+              "hint": "ir + a · ellos",
+              "post": " venir a nuestra casa."
+            },
+            {
+              "pre": "Mi abuela ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella",
+              "post": " preparar galletas."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " ayudarla en la cocina."
+            },
+            {
+              "pre": "Mi abuelo ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · él",
+              "post": " contar historias interesantes."
+            }
+          ]
+        },
+        {
+          "title": "Reunión familiar 👨‍👩‍👧‍👦",
+          "intro": "Fill in the near-future form.",
+          "items": [
+            {
+              "pre": "En diciembre toda mi familia ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella (family)",
+              "post": " reunirse."
+            },
+            {
+              "pre": "Mis primos ",
+              "correct": "van a",
+              "opts": [
+                "van a",
+                "va a",
+                "vamos a",
+                "voy a"
+              ],
+              "hint": "ir + a · ellos",
+              "post": " traer juegos nuevos."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " mostrar mis dibujos."
+            },
+            {
+              "pre": "Los niños ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "van a",
+                "voy a",
+                "vais a"
+              ],
+              "hint": "ir + a · nosotros (kids)",
+              "post": " jugar en el patio."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "6 · Frases negativas",
+      "em": "🚫",
+      "intro": "Say what you're NOT going to do — put NO before ir!",
+      "items": [
+        {
+          "difficulty": "easy",
+          "pre": "Yo no ",
+          "correct": "voy a",
+          "opts": [
+            "voy a",
+            "vas a",
+            "va a",
+            "van a"
+          ],
+          "hint": "negative · yo",
+          "post": " estudiar."
+        },
+        {
+          "difficulty": "easy",
+          "pre": "Tú ",
+          "correct": "no vas a",
+          "opts": [
+            "no vas a",
+            "no voy a",
+            "no va a",
+            "no van a"
+          ],
+          "hint": "negative · tú",
+          "post": " jugar hoy."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Nosotros ",
+          "correct": "no vamos a",
+          "opts": [
+            "no vamos a",
+            "no van a",
+            "no voy a",
+            "no vais a"
+          ],
+          "hint": "negative · nosotros",
+          "post": " estudiar el domingo porque es día de descanso."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Mi hermano ",
+          "correct": "no va a",
+          "opts": [
+            "no va a",
+            "no voy a",
+            "no vas a",
+            "no van a"
+          ],
+          "hint": "negative · él",
+          "post": " venir a la fiesta porque está enfermo hoy."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Yo no voy a ",
+          "correct": "ver",
+          "opts": [
+            "ver",
+            "veo",
+            "ves",
+            "vemos"
+          ],
+          "hint": "infinitive after no voy a",
+          "post": " la tele porque tengo mucha tarea."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Tú no vas a ",
+          "correct": "dormir",
+          "opts": [
+            "dormir",
+            "duermo",
+            "duerme",
+            "dormimos"
+          ],
+          "hint": "infinitive after no vas a",
+          "post": " tarde esta noche, tienes escuela mañana."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Aunque me lo pida mi hermano, yo ",
+          "correct": "no voy a",
+          "opts": [
+            "no voy a",
+            "no vas a",
+            "no va a",
+            "no van a"
+          ],
+          "hint": "negative · yo",
+          "post": " prestarle mis juegos favoritos."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Como está lloviendo mucho, nosotros ",
+          "correct": "no vamos a",
+          "opts": [
+            "no vamos a",
+            "no van a",
+            "no voy a",
+            "no vais a"
+          ],
+          "hint": "negative · nosotros",
+          "post": " salir al parque esta tarde."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Después de comer tanto, mis abuelos ",
+          "correct": "no van a",
+          "opts": [
+            "no van a",
+            "no va a",
+            "no voy a",
+            "no vamos a"
+          ],
+          "hint": "negative · ellos",
+          "post": " querer probar el postre delicioso."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Aunque tenga muchas ganas, ella ",
+          "correct": "no va a",
+          "opts": [
+            "no va a",
+            "no voy a",
+            "no vas a",
+            "no van a"
+          ],
+          "hint": "negative · ella",
+          "post": " poder ir al cumpleaños porque está enferma."
+        }
+      ],
+      "paragraphs": [
+        {
+          "title": "Día de descanso 🛋️",
+          "intro": "Fill in the negative near-future form.",
+          "items": [
+            {
+              "pre": "Hoy mi familia ",
+              "correct": "no va a",
+              "opts": [
+                "no va a",
+                "no voy a",
+                "no vas a",
+                "no van a"
+              ],
+              "hint": "negative · ella (family)",
+              "post": " hacer nada especial."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "no voy a",
+              "opts": [
+                "no voy a",
+                "no vas a",
+                "no va a",
+                "no van a"
+              ],
+              "hint": "negative · yo",
+              "post": " salir de la casa."
+            },
+            {
+              "pre": "Mi mamá ",
+              "correct": "no va a",
+              "opts": [
+                "no va a",
+                "no voy a",
+                "no vas a",
+                "no van a"
+              ],
+              "hint": "negative · ella",
+              "post": " cocinar mucho."
+            },
+            {
+              "pre": "Nosotros ",
+              "correct": "no vamos a",
+              "opts": [
+                "no vamos a",
+                "no van a",
+                "no voy a",
+                "no vais a"
+              ],
+              "hint": "negative · nosotros",
+              "post": " ver la tele todo el día."
+            }
+          ]
+        },
+        {
+          "title": "No al parque 🚫",
+          "intro": "Fill in the negative near-future form.",
+          "items": [
+            {
+              "pre": "Hoy nosotros ",
+              "correct": "no vamos a",
+              "opts": [
+                "no vamos a",
+                "no van a",
+                "no voy a",
+                "no vais a"
+              ],
+              "hint": "negative · nosotros",
+              "post": " ir al parque porque llueve mucho."
+            },
+            {
+              "pre": "Mi hermano ",
+              "correct": "no va a",
+              "opts": [
+                "no va a",
+                "no voy a",
+                "no vas a",
+                "no van a"
+              ],
+              "hint": "negative · él",
+              "post": " montar su bicicleta."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "no voy a",
+              "opts": [
+                "no voy a",
+                "no vas a",
+                "no va a",
+                "no van a"
+              ],
+              "hint": "negative · yo",
+              "post": " jugar con la pelota."
+            },
+            {
+              "pre": "Mis amigos ",
+              "correct": "no van a",
+              "opts": [
+                "no van a",
+                "no va a",
+                "no vamos a",
+                "no voy a"
+              ],
+              "hint": "negative · ellos",
+              "post": " venir a jugar."
+            }
+          ]
+        },
+        {
+          "title": "Sin ganas 😐",
+          "intro": "Fill in the negative near-future form.",
+          "items": [
+            {
+              "pre": "Hoy yo ",
+              "correct": "no voy a",
+              "opts": [
+                "no voy a",
+                "no vas a",
+                "no va a",
+                "no van a"
+              ],
+              "hint": "negative · yo",
+              "post": " hacer mi tarea de matemáticas."
+            },
+            {
+              "pre": "Tú ",
+              "correct": "no vas a",
+              "opts": [
+                "no vas a",
+                "no voy a",
+                "no va a",
+                "no van a"
+              ],
+              "hint": "negative · tú",
+              "post": " practicar el piano."
+            },
+            {
+              "pre": "Mi hermana ",
+              "correct": "no va a",
+              "opts": [
+                "no va a",
+                "no voy a",
+                "no vas a",
+                "no van a"
+              ],
+              "hint": "negative · ella",
+              "post": " leer su libro."
+            },
+            {
+              "pre": "Nosotros ",
+              "correct": "no vamos a",
+              "opts": [
+                "no vamos a",
+                "no van a",
+                "no voy a",
+                "no vais a"
+              ],
+              "hint": "negative · nosotros",
+              "post": " estudiar para el examen."
+            }
+          ]
+        },
+        {
+          "title": "Enfermo en casa 🤒",
+          "intro": "Fill in the negative near-future form.",
+          "items": [
+            {
+              "pre": "Mi hermano está enfermo hoy y ",
+              "correct": "no va a",
+              "opts": [
+                "no va a",
+                "no voy a",
+                "no vas a",
+                "no van a"
+              ],
+              "hint": "negative · él",
+              "post": " ir a la escuela."
+            },
+            {
+              "pre": "Él ",
+              "correct": "no va a",
+              "opts": [
+                "no va a",
+                "no voy a",
+                "no vas a",
+                "no van a"
+              ],
+              "hint": "negative · él",
+              "post": " jugar con sus amigos."
+            },
+            {
+              "pre": "Nosotros ",
+              "correct": "no vamos a",
+              "opts": [
+                "no vamos a",
+                "no van a",
+                "no voy a",
+                "no vais a"
+              ],
+              "hint": "negative · nosotros",
+              "post": " salir de la casa."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "no voy a",
+              "opts": [
+                "no voy a",
+                "no vas a",
+                "no va a",
+                "no van a"
+              ],
+              "hint": "negative · yo",
+              "post": " hacer ruido para que descanse."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "7 · Preguntas",
+      "em": "❓",
+      "intro": "Ask questions in the near future — use qué, adónde, cuándo!",
+      "items": [
+        {
+          "difficulty": "easy",
+          "pre": "¿",
+          "correct": "Qué",
+          "opts": [
+            "Qué",
+            "Quién",
+            "Cuándo",
+            "Cómo"
+          ],
+          "hint": "question word for 'what'",
+          "post": " vas a hacer?"
+        },
+        {
+          "difficulty": "easy",
+          "pre": "¿Tú ",
+          "correct": "vas a",
+          "opts": [
+            "vas a",
+            "voy a",
+            "va a",
+            "van a"
+          ],
+          "hint": "ir + a · tú (Q)",
+          "post": " jugar?"
+        },
+        {
+          "difficulty": "medium",
+          "pre": "¿Qué comida ",
+          "correct": "va a",
+          "opts": [
+            "va a",
+            "voy a",
+            "vamos a",
+            "van a"
+          ],
+          "hint": "ir + a · ella (Q)",
+          "post": " preparar tu mamá para tu cumpleaños?"
+        },
+        {
+          "difficulty": "medium",
+          "pre": "¿Adónde vas a ",
+          "correct": "ir",
+          "opts": [
+            "ir",
+            "voy",
+            "vas",
+            "va"
+          ],
+          "hint": "infinitive after vas a",
+          "post": " este fin de semana con tu familia?"
+        },
+        {
+          "difficulty": "medium",
+          "pre": "¿Cuándo ",
+          "correct": "vamos a",
+          "opts": [
+            "vamos a",
+            "van a",
+            "voy a",
+            "vais a"
+          ],
+          "hint": "ir + a · nosotros (Q)",
+          "post": " terminar la película que estamos viendo?"
+        },
+        {
+          "difficulty": "medium",
+          "pre": "¿Con quién ",
+          "correct": "vas a",
+          "opts": [
+            "vas a",
+            "voy a",
+            "va a",
+            "van a"
+          ],
+          "hint": "ir + a · tú (Q)",
+          "post": " estudiar para el examen de matemáticas?"
+        },
+        {
+          "difficulty": "hard",
+          "pre": "¿A qué hora exactamente ",
+          "correct": "va a",
+          "opts": [
+            "va a",
+            "voy a",
+            "vas a",
+            "van a"
+          ],
+          "hint": "ir + a · ella (Q)",
+          "post": " empezar la fiesta de cumpleaños en la casa de Diego?"
+        },
+        {
+          "difficulty": "hard",
+          "pre": "¿Cuánto tiempo ",
+          "correct": "van a",
+          "opts": [
+            "van a",
+            "va a",
+            "vamos a",
+            "voy a"
+          ],
+          "hint": "ir + a · ellos (Q)",
+          "post": " quedarse tus abuelos en nuestra casa durante las vacaciones?"
+        },
+        {
+          "difficulty": "hard",
+          "pre": "¿Después de terminar tu tarea, ",
+          "correct": "vas a",
+          "opts": [
+            "vas a",
+            "voy a",
+            "va a",
+            "van a"
+          ],
+          "hint": "ir + a · tú (Q)",
+          "post": " ayudarme a preparar la cena para mamá?"
+        },
+        {
+          "difficulty": "hard",
+          "pre": "¿Vosotros ",
+          "correct": "vais a",
+          "opts": [
+            "vais a",
+            "van a",
+            "vamos a",
+            "voy a"
+          ],
+          "hint": "ir + a · vosotros (Q)",
+          "post": " ir al concierto de música clásica que hay en el parque el domingo?"
+        }
+      ],
+      "paragraphs": [
+        {
+          "title": "Preguntas de vacaciones ❓",
+          "intro": "Fill in the question forms.",
+          "items": [
+            {
+              "pre": "¿",
+              "correct": "Adónde",
+              "opts": [
+                "Adónde",
+                "Cómo",
+                "Qué",
+                "Cuándo"
+              ],
+              "hint": "question word for 'where to'",
+              "post": " vas a ir de vacaciones este verano?"
+            },
+            {
+              "pre": "¿",
+              "correct": "Con quién",
+              "opts": [
+                "Con quién",
+                "Cómo",
+                "Qué",
+                "Cuándo"
+              ],
+              "hint": "question word for 'with whom'",
+              "post": " vas a viajar?"
+            },
+            {
+              "pre": "¿",
+              "correct": "Cuánto",
+              "opts": [
+                "Cuánto",
+                "Cómo",
+                "Qué",
+                "Cuándo"
+              ],
+              "hint": "question word for 'how much'",
+              "post": " tiempo van a quedarse allí?"
+            },
+            {
+              "pre": "¿",
+              "correct": "Qué",
+              "opts": [
+                "Qué",
+                "Cómo",
+                "Adónde",
+                "Cuándo"
+              ],
+              "hint": "question word for 'what'",
+              "post": " vas a hacer en la playa?"
+            }
+          ]
+        },
+        {
+          "title": "Preguntas a mamá 👩",
+          "intro": "Fill in the question forms.",
+          "items": [
+            {
+              "pre": "Mamá, ¿",
+              "correct": "qué",
+              "opts": [
+                "qué",
+                "cómo",
+                "cuándo",
+                "adónde"
+              ],
+              "hint": "'what' in question",
+              "post": " vas a cocinar para la cena?"
+            },
+            {
+              "pre": "¿",
+              "correct": "A qué hora",
+              "opts": [
+                "A qué hora",
+                "Qué",
+                "Cómo",
+                "Cuánto"
+              ],
+              "hint": "'at what time'",
+              "post": " vamos a comer?"
+            },
+            {
+              "pre": "¿",
+              "correct": "Cuándo",
+              "opts": [
+                "Cuándo",
+                "Qué",
+                "Cómo",
+                "Adónde"
+              ],
+              "hint": "'when'",
+              "post": " vamos a hacer la tarea juntos?"
+            },
+            {
+              "pre": "¿",
+              "correct": "Puedo",
+              "opts": [
+                "Puedo",
+                "Vas",
+                "Vamos",
+                "Vais"
+              ],
+              "hint": "'can I' — poder · yo",
+              "post": " invitar a mi amigo mañana?"
+            }
+          ]
+        },
+        {
+          "title": "Conversación con amigo 👥",
+          "intro": "Fill in the question forms.",
+          "items": [
+            {
+              "pre": "Amigo, ¿",
+              "correct": "vas a",
+              "opts": [
+                "vas a",
+                "voy a",
+                "va a",
+                "van a"
+              ],
+              "hint": "ir + a · tú (Q)",
+              "post": " venir a mi casa el sábado?"
+            },
+            {
+              "pre": "¿",
+              "correct": "Vas a",
+              "opts": [
+                "Vas a",
+                "Voy a",
+                "Va a",
+                "Van a"
+              ],
+              "hint": "ir + a · tú (Q)",
+              "post": " traer tu juego nuevo?"
+            },
+            {
+              "pre": "¿",
+              "correct": "Cuánto tiempo",
+              "opts": [
+                "Cuánto tiempo",
+                "Cómo",
+                "Qué",
+                "Cuándo"
+              ],
+              "hint": "'how long'",
+              "post": " vas a quedarte?"
+            },
+            {
+              "pre": "¿",
+              "correct": "Van a",
+              "opts": [
+                "Van a",
+                "Va a",
+                "Vais a",
+                "Voy a"
+              ],
+              "hint": "ir + a · ellos (Q)",
+              "post": " venir tus hermanos también?"
+            }
+          ]
+        },
+        {
+          "title": "Encuesta escolar 📋",
+          "intro": "Fill in the question forms.",
+          "items": [
+            {
+              "pre": "Estudiantes, ¿",
+              "correct": "quién",
+              "opts": [
+                "quién",
+                "cómo",
+                "cuándo",
+                "adónde"
+              ],
+              "hint": "'who'",
+              "post": " va a participar en la feria de ciencias?"
+            },
+            {
+              "pre": "¿",
+              "correct": "Qué",
+              "opts": [
+                "Qué",
+                "Cómo",
+                "Adónde",
+                "Cuándo"
+              ],
+              "hint": "'what'",
+              "post": " van a presentar?"
+            },
+            {
+              "pre": "¿",
+              "correct": "Cuándo",
+              "opts": [
+                "Cuándo",
+                "Qué",
+                "Cómo",
+                "Adónde"
+              ],
+              "hint": "'when'",
+              "post": " van a empezar los proyectos?"
+            },
+            {
+              "pre": "¿",
+              "correct": "Cómo",
+              "opts": [
+                "Cómo",
+                "Qué",
+                "Adónde",
+                "Cuándo"
+              ],
+              "hint": "'how'",
+              "post": " van a formar los equipos?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "8 · Nuevos verbos",
+      "em": "🚗",
+      "intro": "New verbs: conducir (to drive), quedarse (to stay), ver (to watch).",
+      "items": [
+        {
+          "difficulty": "easy",
+          "pre": "Papá va a ",
+          "correct": "conducir",
+          "opts": [
+            "conducir",
+            "conduzco",
+            "conduce",
+            "conducimos"
+          ],
+          "hint": "infinitive after va a",
+          "post": " el carro."
+        },
+        {
+          "difficulty": "easy",
+          "pre": "Yo voy a ",
+          "correct": "ver",
+          "opts": [
+            "ver",
+            "veo",
+            "ves",
+            "vemos"
+          ],
+          "hint": "infinitive after voy a",
+          "post": " TV."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Este viaje mi papá va a ",
+          "correct": "conducir",
+          "opts": [
+            "conducir",
+            "conduzco",
+            "conduce",
+            "condujo"
+          ],
+          "hint": "infinitive after va a",
+          "post": " por más de cinco horas seguidas."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Nosotros vamos a ",
+          "correct": "quedarnos",
+          "opts": [
+            "quedarnos",
+            "quedarme",
+            "quedarse",
+            "quedaros"
+          ],
+          "hint": "reflexive · nosotros",
+          "post": " tres noches en un hotel cerca del mar."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Yo voy a ",
+          "correct": "ver",
+          "opts": [
+            "ver",
+            "veo",
+            "ves",
+            "vemos"
+          ],
+          "hint": "infinitive after voy a",
+          "post": " una película nueva con mi hermano este sábado."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Mi tío va a ",
+          "correct": "conducir",
+          "opts": [
+            "conducir",
+            "conduzco",
+            "conduce",
+            "condujo"
+          ],
+          "hint": "infinitive after va a",
+          "post": " el camión grande a la casa nueva."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Durante todo el viaje a Coorg, mi papá va a ",
+          "correct": "conducir",
+          "opts": [
+            "conducir",
+            "conduzco",
+            "conduce",
+            "condujo"
+          ],
+          "hint": "infinitive after va a",
+          "post": " el carro con mucho cuidado."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Como llueve mucho hoy, nosotros vamos a ",
+          "correct": "quedarnos",
+          "opts": [
+            "quedarnos",
+            "quedarme",
+            "quedarse",
+            "quedaros"
+          ],
+          "hint": "reflexive · nosotros",
+          "post": " en casa viendo películas todo el día."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Cuando lleguemos al hotel, mi familia y yo vamos a ",
+          "correct": "ver",
+          "opts": [
+            "ver",
+            "veo",
+            "ves",
+            "vemos"
+          ],
+          "hint": "infinitive after vamos a",
+          "post": " los partidos importantes en la sala."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Después de las vacaciones cortas, mi hermana va a ",
+          "correct": "quedarse",
+          "opts": [
+            "quedarse",
+            "quedarme",
+            "quedarnos",
+            "quedaros"
+          ],
+          "hint": "reflexive · ella",
+          "post": " una semana más en casa de la abuela."
+        }
+      ],
+      "paragraphs": [
+        {
+          "title": "Papá conduce 🚗",
+          "intro": "Complete with the near-future forms.",
+          "items": [
+            {
+              "pre": "Este fin de semana mi papá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · él",
+              "post": " conducir a la playa."
+            },
+            {
+              "pre": "Nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "van a",
+                "voy a",
+                "vais a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " quedarnos en un hotel bonito."
+            },
+            {
+              "pre": "Mi mamá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella",
+              "post": " ver el mapa durante el viaje."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " ver películas en el carro."
+            }
+          ]
+        },
+        {
+          "title": "Noche de películas 🎬",
+          "intro": "Complete with the near-future forms.",
+          "items": [
+            {
+              "pre": "Esta noche mi familia ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella (family)",
+              "post": " ver películas en casa."
+            },
+            {
+              "pre": "Mi papá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · él",
+              "post": " hacer palomitas."
+            },
+            {
+              "pre": "Nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "van a",
+                "voy a",
+                "vais a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " quedarnos despiertos hasta tarde."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " elegir la primera película."
+            }
+          ]
+        },
+        {
+          "title": "Fin de semana en casa 🏠",
+          "intro": "Complete with the near-future forms.",
+          "items": [
+            {
+              "pre": "El sábado nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "van a",
+                "voy a",
+                "vais a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " quedarnos en casa todo el día."
+            },
+            {
+              "pre": "Mi papá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · él",
+              "post": " ver los partidos de fútbol."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " ver los dibujos animados."
+            },
+            {
+              "pre": "Mi mamá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella",
+              "post": " leer un libro tranquila."
+            }
+          ]
+        },
+        {
+          "title": "Viaje familiar 🚙",
+          "intro": "Complete with the near-future forms.",
+          "items": [
+            {
+              "pre": "El próximo mes mi familia ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella (family)",
+              "post": " viajar a otro estado."
+            },
+            {
+              "pre": "Mi tío ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · él",
+              "post": " conducir el carro grande."
+            },
+            {
+              "pre": "Nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "van a",
+                "voy a",
+                "vais a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " quedarnos en la casa de mis abuelos."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " ver a mis primos por primera vez."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "9 · La casa",
+      "em": "🏠",
+      "intro": "Home vocabulary — rooms and spaces!",
+      "items": [
+        {
+          "difficulty": "easy",
+          "pre": "Yo vivo en una ",
+          "correct": "casa",
+          "opts": [
+            "casa",
+            "cocina",
+            "cama",
+            "calle"
+          ],
+          "hint": "la ___ = the home",
+          "post": "."
+        },
+        {
+          "difficulty": "easy",
+          "pre": "Mi casa tiene dos ",
+          "correct": "plantas",
+          "opts": [
+            "plantas",
+            "platos",
+            "piscinas",
+            "paredes"
+          ],
+          "hint": "las ___ = the floors",
+          "post": "."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "En mi casa grande hay seis ",
+          "correct": "habitaciones",
+          "opts": [
+            "habitaciones",
+            "cocinas",
+            "salones",
+            "jardines"
+          ],
+          "hint": "las ___ = the rooms",
+          "post": " diferentes para toda la familia."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "El ",
+          "correct": "salón",
+          "opts": [
+            "salón",
+            "dormitorio",
+            "jardín",
+            "baño"
+          ],
+          "hint": "el ___ = living room",
+          "post": " de mi casa es donde vemos la televisión juntos."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Voy a preparar galletas en la ",
+          "correct": "cocina",
+          "opts": [
+            "cocina",
+            "salón",
+            "jardín",
+            "habitación"
+          ],
+          "hint": "where you cook",
+          "post": " con mi mamá."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Mi habitación favorita es mi ",
+          "correct": "dormitorio",
+          "opts": [
+            "dormitorio",
+            "salón",
+            "jardín",
+            "baño"
+          ],
+          "hint": "bedroom",
+          "post": " porque tiene todos mis juguetes."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "En la segunda planta de mi casa hay cuatro ",
+          "correct": "dormitorios",
+          "opts": [
+            "dormitorios",
+            "habitaciones",
+            "salones",
+            "cocinas"
+          ],
+          "hint": "bedrooms",
+          "post": " y un baño grande."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "El ",
+          "correct": "jardín",
+          "opts": [
+            "jardín",
+            "salón",
+            "dormitorio",
+            "baño"
+          ],
+          "hint": "el ___ = garden",
+          "post": " trasero de mi casa tiene muchas flores y un árbol grande."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Cuando vengan mis primos, vamos a jugar en el ",
+          "correct": "jardín",
+          "opts": [
+            "jardín",
+            "salón",
+            "dormitorio",
+            "cocina"
+          ],
+          "hint": "outdoor space",
+          "post": " hasta que se ponga el sol."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Los sábados por la tarde toda mi familia se reúne en el ",
+          "correct": "salón",
+          "opts": [
+            "salón",
+            "dormitorio",
+            "jardín",
+            "cocina"
+          ],
+          "hint": "living room",
+          "post": " para ver películas."
+        }
+      ],
+      "paragraphs": [
+        {
+          "title": "Mi casa 🏠",
+          "intro": "From your class notes — fill in each blank.",
+          "items": [
+            {
+              "pre": "Yo ",
+              "correct": "vivo",
+              "opts": [
+                "vivo",
+                "vives",
+                "vive",
+                "vivimos"
+              ],
+              "hint": "vivir · yo",
+              "post": " en una casa grande y bonita con mis padres."
+            },
+            {
+              "pre": "Mi casa ",
+              "correct": "tiene",
+              "opts": [
+                "tiene",
+                "tienes",
+                "tenemos",
+                "tengo"
+              ],
+              "hint": "tener · ella",
+              "post": " dos plantas altas."
+            },
+            {
+              "pre": "En mi casa ",
+              "correct": "hay",
+              "opts": [
+                "hay",
+                "es",
+                "son",
+                "está"
+              ],
+              "hint": "'there is/are'",
+              "post": " seis habitaciones grandes."
+            },
+            {
+              "pre": "Mi habitación favorita ",
+              "correct": "es",
+              "opts": [
+                "es",
+                "está",
+                "son",
+                "hay"
+              ],
+              "hint": "ser · description",
+              "post": " mi dormitorio."
+            }
+          ]
+        },
+        {
+          "title": "Casa de la abuela 👵",
+          "intro": "Complete each sentence.",
+          "items": [
+            {
+              "pre": "La casa de mi abuela ",
+              "correct": "está",
+              "opts": [
+                "está",
+                "es",
+                "están",
+                "son"
+              ],
+              "hint": "estar · location",
+              "post": " en el campo."
+            },
+            {
+              "pre": "",
+              "correct": "Tiene",
+              "opts": [
+                "Tiene",
+                "Tienes",
+                "Es",
+                "Está"
+              ],
+              "hint": "tener · ella",
+              "post": " una sola planta pero es muy grande."
+            },
+            {
+              "pre": "",
+              "correct": "Hay",
+              "opts": [
+                "Hay",
+                "Es",
+                "Son",
+                "Está"
+              ],
+              "hint": "'there is/are'",
+              "post": " muchos árboles en el jardín."
+            },
+            {
+              "pre": "El salón ",
+              "correct": "es",
+              "opts": [
+                "es",
+                "está",
+                "son",
+                "hay"
+              ],
+              "hint": "ser · description",
+              "post": " el lugar más acogedor."
+            }
+          ]
+        },
+        {
+          "title": "Casa nueva 🏡",
+          "intro": "Complete each sentence.",
+          "items": [
+            {
+              "pre": "Mi familia ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella (family)",
+              "post": " mudarse a una casa nueva."
+            },
+            {
+              "pre": "La casa nueva ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella",
+              "post": " tener tres plantas."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " tener mi propio dormitorio grande."
+            },
+            {
+              "pre": "Mi mamá ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella",
+              "post": " plantar flores en el jardín."
+            }
+          ]
+        },
+        {
+          "title": "Cuarto de juegos 🎮",
+          "intro": "Complete each sentence.",
+          "items": [
+            {
+              "pre": "En el segundo piso ",
+              "correct": "hay",
+              "opts": [
+                "hay",
+                "es",
+                "son",
+                "está"
+              ],
+              "hint": "'there is'",
+              "post": " un cuarto de juegos."
+            },
+            {
+              "pre": "",
+              "correct": "Tiene",
+              "opts": [
+                "Tiene",
+                "Tienes",
+                "Es",
+                "Está"
+              ],
+              "hint": "tener · ella (room)",
+              "post": " muchos juguetes en los estantes."
+            },
+            {
+              "pre": "Yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " invitar a mis amigos allí."
+            },
+            {
+              "pre": "Nosotros ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "van a",
+                "voy a",
+                "vais a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " jugar toda la tarde."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "10 · Mi casa y vacaciones",
+      "em": "🌟",
+      "intro": "Full paragraph practice — put everything together!",
+      "items": [
+        {
+          "difficulty": "easy",
+          "pre": "Yo vivo ",
+          "correct": "en",
+          "opts": [
+            "en",
+            "a",
+            "de",
+            "por"
+          ],
+          "hint": "'in' a place",
+          "post": " una casa."
+        },
+        {
+          "difficulty": "easy",
+          "pre": "Hay ",
+          "correct": "muchos",
+          "opts": [
+            "muchos",
+            "muchas",
+            "mucho",
+            "mucha"
+          ],
+          "hint": "agreement with árboles",
+          "post": " árboles."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Mi casa ",
+          "correct": "tiene",
+          "opts": [
+            "tiene",
+            "tienes",
+            "tenemos",
+            "tengo"
+          ],
+          "hint": "tener · ella",
+          "post": " tres jardines grandes con muchas flores bonitas."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "En mi casa ",
+          "correct": "hay",
+          "opts": [
+            "hay",
+            "es",
+            "están",
+            "son"
+          ],
+          "hint": "'there is/are'",
+          "post": " una cocina grande donde mi mamá prepara la comida."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Mi habitación favorita ",
+          "correct": "es",
+          "opts": [
+            "es",
+            "está",
+            "son",
+            "hay"
+          ],
+          "hint": "ser · description",
+          "post": " mi dormitorio porque tiene mis juegos."
+        },
+        {
+          "difficulty": "medium",
+          "pre": "Este verano yo ",
+          "correct": "voy a",
+          "opts": [
+            "voy a",
+            "vas a",
+            "va a",
+            "vamos a"
+          ],
+          "hint": "ir + a · yo",
+          "post": " viajar con mi familia a las montañas de Coorg."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Aunque hace mucho calor en verano, mi familia y yo vamos a ",
+          "correct": "quedarnos",
+          "opts": [
+            "quedarnos",
+            "quedarme",
+            "quedarse",
+            "quedaros"
+          ],
+          "hint": "reflexive · nosotros",
+          "post": " en un hotel con piscina."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Cuando termine el semestre escolar, yo voy a ",
+          "correct": "nadar",
+          "opts": [
+            "nadar",
+            "nado",
+            "nada",
+            "nadamos"
+          ],
+          "hint": "infinitive after voy a",
+          "post": " en la piscina del hotel todos los días."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "Durante nuestras vacaciones familiares, nosotros vamos a ",
+          "correct": "comer",
+          "opts": [
+            "comer",
+            "como",
+            "come",
+            "comemos"
+          ],
+          "hint": "infinitive after vamos a",
+          "post": " comida deliciosa de diferentes lugares."
+        },
+        {
+          "difficulty": "hard",
+          "pre": "¿Tú ",
+          "correct": "vas a",
+          "opts": [
+            "vas a",
+            "voy a",
+            "va a",
+            "van a"
+          ],
+          "hint": "ir + a · tú (Q)",
+          "post": " ir con tu familia de vacaciones este verano a algún lugar interesante?"
+        }
+      ],
+      "paragraphs": [
+        {
+          "title": "Mi vida entera ⭐",
+          "intro": "Bring it all together — fill in each blank.",
+          "items": [
+            {
+              "pre": "Yo ",
+              "correct": "vivo",
+              "opts": [
+                "vivo",
+                "vives",
+                "vive",
+                "vivimos"
+              ],
+              "hint": "vivir · yo",
+              "post": " en Bangalore con mi familia."
+            },
+            {
+              "pre": "Este verano ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " viajar a Coorg con mis abuelos."
+            },
+            {
+              "pre": "Después ",
+              "correct": "vamos a",
+              "opts": [
+                "vamos a",
+                "van a",
+                "voy a",
+                "vais a"
+              ],
+              "hint": "ir + a · nosotros",
+              "post": " descansar en casa por unos días."
+            },
+            {
+              "pre": "También yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " escribir un cuento nuevo."
+            }
+          ]
+        },
+        {
+          "title": "Mi familia 👨‍👩‍👧‍👦",
+          "intro": "Describe your family — fill in each blank.",
+          "items": [
+            {
+              "pre": "Mi familia ",
+              "correct": "es",
+              "opts": [
+                "es",
+                "está",
+                "son",
+                "están"
+              ],
+              "hint": "ser · description",
+              "post": " muy grande y feliz."
+            },
+            {
+              "pre": "Nosotros ",
+              "correct": "vivimos",
+              "opts": [
+                "vivimos",
+                "vivo",
+                "vive",
+                "viven"
+              ],
+              "hint": "vivir · nosotros",
+              "post": " en una casa bonita cerca del parque."
+            },
+            {
+              "pre": "Mi papá ",
+              "correct": "trabaja",
+              "opts": [
+                "trabaja",
+                "trabajo",
+                "trabajas",
+                "trabajamos"
+              ],
+              "hint": "trabajar · él",
+              "post": " en un hospital."
+            },
+            {
+              "pre": "Mi mamá ",
+              "correct": "enseña",
+              "opts": [
+                "enseña",
+                "enseño",
+                "enseñas",
+                "enseñamos"
+              ],
+              "hint": "enseñar · ella",
+              "post": " español a los niños."
+            }
+          ]
+        },
+        {
+          "title": "Mi verano completo ☀️",
+          "intro": "Summer plans — fill in each blank.",
+          "items": [
+            {
+              "pre": "Este verano ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · él (summer)",
+              "post": " ser muy divertido para mí."
+            },
+            {
+              "pre": "Primero mi familia ",
+              "correct": "va a",
+              "opts": [
+                "va a",
+                "voy a",
+                "vas a",
+                "van a"
+              ],
+              "hint": "ir + a · ella (family)",
+              "post": " viajar a la playa."
+            },
+            {
+              "pre": "Después ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " visitar a mi tía en Goa."
+            },
+            {
+              "pre": "También ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " tomar clases de natación."
+            }
+          ]
+        },
+        {
+          "title": "Mi día perfecto 🌟",
+          "intro": "A perfect day — fill in each blank.",
+          "items": [
+            {
+              "pre": "Un día perfecto empieza cuando yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " despertarme temprano."
+            },
+            {
+              "pre": "Después ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " desayunar con mi familia."
+            },
+            {
+              "pre": "Por la tarde yo ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " jugar en el parque."
+            },
+            {
+              "pre": "Antes de dormir ",
+              "correct": "voy a",
+              "opts": [
+                "voy a",
+                "vas a",
+                "va a",
+                "vamos a"
+              ],
+              "hint": "ir + a · yo",
+              "post": " leer un cuento bonito."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

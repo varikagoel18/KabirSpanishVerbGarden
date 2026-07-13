@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Spanish Class HW</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF8EE; --leaf:#3FA46A; --leaf-dark:#2E7E50; --sun:#FFC23F;
+    --berry:#FF6B8A; --berry-dark:#E94f72; --sky:#6CC4E8; --ink:#43332A;
+    --ink-soft:#7A6A5E; --card:#fff; --shadow:0 10px 24px rgba(94,70,48,.16);
+    --shadow-sm:0 4px 12px rgba(94,70,48,.14);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:Nunito,sans-serif;color:var(--ink);background:linear-gradient(180deg,#FFF8EE,#FBF0DC);min-height:100vh}
+  .wrap{max-width:860px;margin:0 auto;padding:18px 16px 52px}
+  h1,h2,h3{font-family:'Baloo 2',cursive;margin:0;line-height:1.05}
+  button,a,input{font-family:Nunito,sans-serif}
+  header{background:linear-gradient(135deg,var(--leaf),var(--leaf-dark));color:#fff;border-radius:28px;padding:18px 20px;box-shadow:var(--shadow)}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{font-size:34px}
+  h1{font-size:27px}
+  header p{margin:3px 0 0;font-weight:800;opacity:.92;font-size:13px}
+  .back{background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.3);border-radius:14px;padding:10px 13px;text-decoration:none;font-weight:900}
+  .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+  .metric{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.28);border-radius:16px;padding:10px 12px;font-weight:900}
+  .metric b{font-family:'Baloo 2';font-size:25px;margin-right:4px}
+  .section-title{display:flex;align-items:baseline;gap:10px;margin:22px 4px 12px}
+  .section-title h2{font-size:21px;color:var(--leaf-dark)}
+  .section-title span{font-size:13px;color:var(--ink-soft);font-weight:800}
+  .tests{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .test-card{background:var(--card);border:0;border-radius:20px;padding:15px;text-align:left;box-shadow:var(--shadow);color:var(--ink);cursor:pointer;position:relative}
+  .test-card:active{transform:scale(.99)}
+  .test-card h3{font-size:19px}
+  .test-card p{margin:5px 0 10px;color:var(--ink-soft);font-weight:800;font-size:13px}
+  .test-card.done{background:linear-gradient(135deg,#E6F6EA 0%,#CDEFD6 100%);border:2px solid var(--leaf)}
+  .test-card.done h3{color:var(--leaf-dark)}
+  .test-card .done-badge{position:absolute;top:10px;right:12px;background:var(--leaf);color:#fff;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:900}
+  .test-card .stars{margin-top:6px;font-size:14px;letter-spacing:2px}
+  .pill{display:inline-flex;align-items:center;gap:5px;background:#FFF3D6;color:#9A6400;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:900;margin-right:5px}
+  .panel{background:#fff;border-radius:22px;padding:16px;box-shadow:var(--shadow);margin-top:14px}
+  .qtop{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;color:var(--ink-soft);font-weight:900}
+  .bar{height:12px;background:#EFE3D2;border-radius:10px;overflow:hidden;margin-bottom:14px}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--leaf),var(--sun));border-radius:10px;transition:width .25s}
+  .question{background:#FFF8EE;border-radius:18px;padding:16px;text-align:center;margin-bottom:14px}
+  .ask{font-family:'Baloo 2';font-weight:800;font-size:22px;line-height:1.4}
+  .blank-line{display:inline-block;min-width:120px;border-bottom:3px solid var(--berry);color:var(--berry-dark);padding:0 8px;margin:0 4px}
+  .blank-line.done{border-bottom-color:var(--leaf);color:var(--leaf-dark);background:#E6F6EA;border-radius:6px}
+  .hint-row{margin-top:10px;display:flex;justify-content:center}
+  .hint-btn{background:#FFF3D6;color:#a3650b;border:2px solid #FFD58A;border-radius:14px;padding:6px 12px;font-weight:900;font-size:13px;cursor:pointer}
+  .hint-text{display:block;margin-top:8px;color:var(--berry-dark);font-weight:900;font-size:13px}
+  .hint-text[hidden]{display:none}
+  .story-player{background:#fff;border:2px solid #EFE3D2;border-radius:16px;padding:10px;margin-bottom:12px;text-align:left;box-shadow:var(--shadow-sm)}
+  .story-player .sp-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .story-player .sp-label{font-weight:900;color:var(--ink-soft);font-size:13px}
+  .story-player .sp-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .story-player .btn{font-size:13px;padding:8px 11px;border-radius:12px;box-shadow:0 3px 0 var(--leaf-dark)}
+  .story-player input[type=range]{width:100%;accent-color:var(--berry)}
+  .opts{display:grid;gap:10px}
+  .typed-answer{width:100%;border:2.5px solid #E7D8C4;border-radius:14px;padding:14px 16px;font:900 19px Nunito,sans-serif;color:var(--ink);box-shadow:var(--shadow-sm)}
+  .typed-answer:focus{outline:none;border-color:var(--sun)}
+  .typed-answer.ok{background:#CDEFD6;border-color:var(--leaf);color:var(--leaf-dark)}
+  .typed-answer.no{background:#FFD9DF;border-color:var(--berry)}
+  .feedback{color:var(--ink-soft);font-weight:900;font-size:13px;margin-top:8px;min-height:18px}
+  .feedback.good{color:var(--leaf-dark)}
+  .feedback.bad{color:var(--berry-dark)}
+  .actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .btn{background:var(--leaf);color:#fff;border:0;border-radius:16px;padding:13px 18px;font-weight:900;font-size:16px;box-shadow:0 5px 0 var(--leaf-dark);cursor:pointer}
+  .btn.sun{background:#FF9F1C;color:#5b3a00;box-shadow:0 5px 0 #d97f00}
+  .btn.ghost{background:#fff;color:var(--ink);box-shadow:0 4px 0 #e3d4c0, inset 0 0 0 2px #efe2d2}
+  .result{text-align:center}
+  .result .big{font-size:72px}
+  .starline{font-size:38px;letter-spacing:3px}
+  .review{display:grid;gap:9px;text-align:left;margin-top:12px}
+  .review-row{background:#FFF8EE;border-radius:13px;padding:10px;font-weight:800}
+  .review-row small{display:block;color:var(--ink-soft);font-weight:800}
+  .review-row.bad{background:#FFE8EC}
+  .confetti{position:fixed;top:-10px;font-size:20px;z-index:20;pointer-events:none;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.9}}
+  @media(max-width:620px){.tests,.summary{grid-template-columns:1fr}.top{align-items:flex-start}.back{width:100%;text-align:center}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="top">
+      <div class="brand">
+        <div class="logo">📒</div>
+        <div>
+          <h1>Spanish Class HW</h1>
+          <p>Revision, typing, and listening practice</p>
+        </div>
+      </div>
+      <a class="back" href="learn-verb-activity.html">← Verb Garden</a>
+    </div>
+    <div class="summary">
+      <div class="metric"><b id="mTotal">0</b>quizzes</div>
+      <div class="metric"><b id="mDone">0</b>completed</div>
+      <div class="metric"><b id="mStars">0</b>⭐ stars</div>
+    </div>
+  </header>
+
+  <div id="home">
+    <div class="section-title">
+      <h2>Choose a homework</h2>
+      <span>One quiz per class day</span>
+    </div>
+    <div class="tests" id="tests"></div>
+  </div>
+
+  <div id="runner" style="display:none"></div>
+</div>
+
+<script>
+const STORE_KEY="learn_verb_activity_v2";
+function loadState(){
+  try{ const raw=localStorage.getItem(STORE_KEY); return raw?JSON.parse(raw):{levels:{},streak:0,lastDate:null}; }
+  catch(e){ return {levels:{},streak:0,lastDate:null}; }
+}
+function saveState(s){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }catch(e){} }
+function completionKeysFromState(s){
+  const keys=[];
+  for(const lid in (s.levels||{})){
+    const completed=(s.levels[lid]&&s.levels[lid].completed)||{};
+    for(const d in completed){ if(completed[d]) keys.push(`level:${lid}:day:${d}`); }
+  }
+  const practice=(s.practiceRegular&&s.practiceRegular.completed)||{};
+  for(const testNum in practice){ if(practice[testNum]) keys.push(`practiceRegular:${testNum}`); }
+  const hw=(s.spanishHW&&s.spanishHW.completed)||{};
+  for(const quizId in hw){ if(hw[quizId]) keys.push(`spanishHW:${quizId}`); }
+  return keys;
+}
+function ensureSurpriseState(s){
+  s.surpriseQuiz=s.surpriseQuiz||{};
+  const q=s.surpriseQuiz;
+  q.completedKeys=q.completedKeys||{};
+  if(typeof q.completedCount!=="number"){
+    const keys=completionKeysFromState(s);
+    keys.forEach(k=>{ q.completedKeys[k]=true; });
+    q.completedCount=keys.length;
+  }
+  q.pending=!!q.pending;
+}
+function recordGlobalCompletion(s, sourceKey){
+  ensureSurpriseState(s);
+  const q=s.surpriseQuiz;
+  if(q.completedKeys[sourceKey]) return false;
+  q.completedKeys[sourceKey]=true;
+  q.completedCount=(q.completedCount||0)+1;
+  if(q.completedCount>0 && q.completedCount%4===0){
+    q.pending=true;
+    q.triggeredAt=new Date().toISOString();
+  }
+  return q.pending;
+}
+function saveHWResult(quizId, stars, score, total){
+  const s=loadState();
+  ensureSurpriseState(s);
+  s.spanishHW=s.spanishHW||{completed:{},stars:{},scores:{},totalPerQuiz:{}};
+  const wasCompleted=!!s.spanishHW.completed[quizId];
+  s.spanishHW.completed[quizId]=true;
+  s.spanishHW.stars[quizId]=Math.max(s.spanishHW.stars[quizId]||0, stars);
+  s.spanishHW.scores[quizId]=Math.max(s.spanishHW.scores[quizId]||0, score);
+  s.spanishHW.totalPerQuiz[quizId]=total;
+  if(!wasCompleted) recordGlobalCompletion(s, `spanishHW:${quizId}`);
+  saveState(s);
+}
+
+/* ============================================================
+   HOMEWORK CONTENT — add a new entry per class HW date.
+   Each item: { ask (HTML), correct (string), accepted? (extra answers), hint }
+   Optional item types: type:"audio-story" for listen-only story, type:"mcq" for multiple choice.
+   ============================================================ */
+const HW = [
+  { id:"2025-06-18", title:"18 June · Gustar", em:"💚",
+    intro:"Type the correct form of GUSTAR (me/te/le/nos/os/les + gusta/gustan).",
+    pills:["Gustar","10 questions","Type the answer"],
+    items:[
+      {ask:`A él no <b>___</b> las películas.`,           correct:"le gustan",  accepted:["le gustan","no le gustan"], hint:"él + plural noun → le gustan"},
+      {ask:`A ella <b>___</b> el helado.`,                correct:"le gusta",   hint:"ella + singular noun → le gusta"},
+      {ask:`A nosotros <b>___</b> las hamburguesas.`,     correct:"nos gustan", hint:"nosotros + plural → nos gustan"},
+      {ask:`A los estudiantes <b>___</b> estudiar español.`, correct:"les gusta", hint:"ellos + infinitive → les gusta"},
+      {ask:`A ustedes no <b>___</b> las novelas.`,        correct:"les gustan", accepted:["les gustan","no les gustan"], hint:"ustedes + plural → les gustan"},
+      {ask:`A Juan y a Marta <b>___</b> mucho la comida china.`, correct:"les gusta", hint:"ellos + singular noun → les gusta"},
+      {ask:`A mí no <b>___</b> las revistas.`,            correct:"me gustan",  accepted:["me gustan","no me gustan"], hint:"yo + plural → me gustan"},
+      {ask:`A usted <b>___</b> la clase de español.`,     correct:"le gusta",   hint:"usted + singular → le gusta"},
+      {ask:`A mi mamá <b>___</b> nadar.`,                  correct:"le gusta",   hint:"ella + infinitive → le gusta"},
+      {ask:`A vosotros <b>___</b> escribir, leer y dibujar.`, correct:"os gusta", accepted:["os gusta","os gustan"], hint:"vosotros + infinitives → os gusta"},
+    ]
+  },
+  { id:"2025-06-22", title:"22 June · Querer (Yes Day)", em:"💛",
+    intro:"Type the correct form of QUERER (yo quiero, tú quieres, él quiere, nosotros queremos, vosotros queréis, ellos quieren).",
+    pills:["Querer","10 questions","Type the answer"],
+    items:[
+      {ask:`¿Qué <b>___</b> hacer en tu tiempo libre?`,      correct:"quieres",  hint:"querer · tú"},
+      {ask:`Yo <b>___</b> nadar en la piscina.`,             correct:"quiero",   hint:"querer · yo"},
+      {ask:`Yo no <b>___</b> estudiar matemáticas hoy.`,     correct:"quiero",   hint:"querer · yo (negative)"},
+      {ask:`Tú <b>___</b> jugar fútbol con tus amigos.`,     correct:"quieres",  hint:"querer · tú"},
+      {ask:`Mi mamá <b>___</b> descansar en el sofá.`,        correct:"quiere",   hint:"querer · ella"},
+      {ask:`Mi papá <b>___</b> leer un libro tranquilo.`,    correct:"quiere",   hint:"querer · él"},
+      {ask:`Nosotros <b>___</b> comer pizza el día de Sí.`,   correct:"queremos", hint:"querer · nosotros"},
+      {ask:`Vosotros <b>___</b> ver una película de animación.`, correct:"queréis", accepted:["queréis","quereis"], hint:"querer · vosotros"},
+      {ask:`Mis amigos <b>___</b> ir al parque ahora mismo.`, correct:"quieren",  hint:"querer · ellos"},
+      {ask:`Los niños no <b>___</b> comer verduras hoy.`,    correct:"quieren",  hint:"querer · ellos (negative)"},
+    ]
+  },
+  { id:"2026-06-22-revision", title:"22 June · Revision Test", em:"🎧",
+    intro:"Stem-changing verbs from class: jugar and querer.",
+    pills:["Jugar","Querer","Type the answer","No story"],
+    items:[
+      {ask:`Jugar es especial: la <b>u</b> cambia a <b>___</b>.`, correct:"ue", hint:"jugar → juego"},
+      {ask:`Yo <b>___</b> al fútbol todos los días.`, correct:"juego", hint:"jugar · yo"},
+      {ask:`Tú <b>___</b> al tenis.`, correct:"juegas", hint:"jugar · tú"},
+      {ask:`Khushi y Polly <b>___</b> videojuegos.`, correct:"juegan", hint:"jugar · ellos/ellas"},
+      {ask:`Nosotros <b>___</b> en el parque.`, correct:"jugamos", hint:"nosotros has the invisible shield: no ue"},
+      {ask:`Vosotros <b>___</b> después de clase.`, correct:"jugáis", accepted:["jugáis","jugais"], hint:"vosotros has the invisible shield: no ue"},
+      {ask:`¿Qué significa <b>querer</b> en inglés?`, correct:"to want", accepted:["want","to want"], hint:"querer = to want"},
+      {ask:`Yo <b>___</b> una camiseta de Ronaldo.`, correct:"quiero", hint:"querer · yo"},
+      {ask:`Mi madre Varika <b>___</b> mancuernas.`, correct:"quiere", hint:"querer · ella"},
+      {ask:`Mi padre <b>___</b> una camiseta de Messi.`, correct:"quiere", hint:"querer · él"},
+      {ask:`Nosotros <b>___</b> visitar otros países.`, correct:"queremos", hint:"nosotros has the invisible shield: no ie"},
+      {type:"mcq", ask:`¿Qué forma mantiene la raíz original por el escudo invisible?`, opts:["queremos","quiero","quieren","quieres"], correct:"queremos", hint:"nosotros y vosotros no cambian la raíz"},
+    ]
+  },
+  { id:"2026-06-22-listening-1", title:"Listening Test 1 · La Navidad", em:"🎧",
+    intro:"Escucha la historia y contesta en español.",
+    pills:["Listening","Story 1","MCQ"],
+    story:`Es Navidad. En mi familia hay tres personas. Mi madre se llama Varika. Ella quiere mancuernas porque le gusta hacer ejercicio. Mi padre quiere una camiseta de Messi porque le gusta el fútbol. Yo quiero una camiseta de Ronaldo y quiero jugar al fútbol todos los días. Después, nosotros jugamos en el parque.`,
+    items:[
+      {type:"audio-story", ask:`Escucha la historia. El texto está escondido.`, story:`Es Navidad. En mi familia hay tres personas. Mi madre se llama Varika. Ella quiere mancuernas porque le gusta hacer ejercicio. Mi padre quiere una camiseta de Messi porque le gusta el fútbol. Yo quiero una camiseta de Ronaldo y quiero jugar al fútbol todos los días. Después, nosotros jugamos en el parque.`},
+      {type:"mcq", ask:`¿Qué quiere Varika?`, opts:["mancuernas","una botella","un móvil nuevo","una mascota"], correct:"mancuernas", hint:"Escucha: Varika quiere..."},
+      {type:"mcq", ask:`¿Por qué quiere mancuernas?`, opts:["porque le gusta hacer ejercicio","porque le gusta jugar videojuegos","porque quiere viajar","porque le encantan los animales"], correct:"porque le gusta hacer ejercicio", hint:"Le gusta hacer ejercicio."},
+      {type:"mcq", ask:`¿Qué quiere el padre?`, opts:["una camiseta de Messi","una camiseta de Ronaldo","un móvil nuevo","una botella"], correct:"una camiseta de Messi", hint:"Escucha: Mi padre quiere..."},
+      {type:"mcq", ask:`¿Qué quiere el niño?`, opts:["una camiseta de Ronaldo","mancuernas","una mascota","ver películas"], correct:"una camiseta de Ronaldo", hint:"Escucha: Yo quiero..."},
+      {type:"mcq", ask:`¿Dónde juegan después?`, opts:["en el parque","en la escuela","en la cocina","en Suiza"], correct:"en el parque", hint:"Escucha: jugamos en..."},
+    ]
+  },
+  { id:"2026-06-22-listening-2", title:"Listening Test 2 · En la escuela", em:"🎧",
+    intro:"Escucha una historia general y contesta en español.",
+    pills:["Listening","Story 2","MCQ"],
+    story:`Hoy es lunes. Kabir va a la escuela con su mochila azul. En la clase de español, él escucha a la maestra y escribe tres frases. Después, Kabir juega al fútbol con Arjun en el recreo. A Kabir le gusta la escuela porque aprende palabras nuevas.`,
+    items:[
+      {type:"audio-story", ask:`Escucha la historia. El texto está escondido.`},
+      {type:"mcq", ask:`¿Qué día es en la historia?`, opts:["lunes","viernes","domingo","martes"], correct:"lunes", hint:"Escucha la primera frase."},
+      {type:"mcq", ask:`¿De qué color es la mochila?`, opts:["azul","roja","verde","negra"], correct:"azul", hint:"Escucha: mochila..."},
+      {type:"mcq", ask:`¿Cuántas frases escribe Kabir?`, opts:["tres","dos","cinco","una"], correct:"tres", hint:"Escucha el número."},
+      {type:"mcq", ask:`¿Con quién juega Kabir?`, opts:["con Arjun","con Varika","con Polly","con la maestra"], correct:"con Arjun", hint:"Escucha: juega con..."},
+      {type:"mcq", ask:`¿Por qué le gusta la escuela?`, opts:["porque aprende palabras nuevas","porque come pizza","porque duerme","porque viaja"], correct:"porque aprende palabras nuevas", hint:"Escucha: porque aprende..."},
+    ]
+  },
+  { id:"2026-06-22-listening-3", title:"Listening Test 3 · El parque", em:"🎧",
+    intro:"Escucha una historia general y contesta en español.",
+    pills:["Listening","Story 3","MCQ"],
+    story:`Por la tarde, Maya y Kabir van al parque. Maya quiere montar en bicicleta, pero Kabir quiere jugar al fútbol. Primero, ellos corren cerca de los árboles. Luego, beben agua y comen una manzana. Al final, todos están contentos.`,
+    items:[
+      {type:"audio-story", ask:`Escucha la historia. El texto está escondido.`},
+      {type:"mcq", ask:`¿Adónde van Maya y Kabir?`, opts:["al parque","a la escuela","al mercado","a casa"], correct:"al parque", hint:"Escucha: van al..."},
+      {type:"mcq", ask:`¿Qué quiere hacer Maya?`, opts:["montar en bicicleta","jugar al fútbol","leer un libro","dormir"], correct:"montar en bicicleta", hint:"Escucha: Maya quiere..."},
+      {type:"mcq", ask:`¿Qué quiere hacer Kabir?`, opts:["jugar al fútbol","cantar","comprar pan","ver una película"], correct:"jugar al fútbol", hint:"Escucha: Kabir quiere..."},
+      {type:"mcq", ask:`¿Dónde corren primero?`, opts:["cerca de los árboles","en la cocina","en la playa","en el coche"], correct:"cerca de los árboles", hint:"Escucha: cerca de..."},
+      {type:"mcq", ask:`¿Qué comen?`, opts:["una manzana","una pizza","un helado","una hamburguesa"], correct:"una manzana", hint:"Escucha: comen..."},
+    ]
+  },
+  { id:"2026-06-22-listening-4", title:"Listening Test 4 · En el mercado", em:"🎧",
+    intro:"Escucha una historia general y contesta en español.",
+    pills:["Listening","Story 4","MCQ"],
+    story:`El sábado, la familia va al mercado. Mamá quiere comprar tomates y pan. Papá quiere comprar leche. Kabir ve una tienda de juguetes y quiere un balón pequeño. La familia paga y vuelve a casa a las doce.`,
+    items:[
+      {type:"audio-story", ask:`Escucha la historia. El texto está escondido.`},
+      {type:"mcq", ask:`¿Cuándo va la familia al mercado?`, opts:["el sábado","el lunes","el martes","el jueves"], correct:"el sábado", hint:"Escucha el día."},
+      {type:"mcq", ask:`¿Qué quiere comprar mamá?`, opts:["tomates y pan","leche y arroz","un balón","una camiseta"], correct:"tomates y pan", hint:"Escucha: Mamá quiere comprar..."},
+      {type:"mcq", ask:`¿Qué quiere comprar papá?`, opts:["leche","pan","juguetes","tomates"], correct:"leche", hint:"Escucha: Papá quiere..."},
+      {type:"mcq", ask:`¿Qué ve Kabir?`, opts:["una tienda de juguetes","una escuela","una biblioteca","un parque"], correct:"una tienda de juguetes", hint:"Escucha: Kabir ve..."},
+      {type:"mcq", ask:`¿A qué hora vuelven a casa?`, opts:["a las doce","a las ocho","a las tres","a las diez"], correct:"a las doce", hint:"Escucha: vuelve a casa a..."},
+    ]
+  },
+  { id:"2026-06-22-listening-5", title:"Listening Test 5 · Un viaje", em:"🎧",
+    intro:"Escucha una historia general y contesta en español.",
+    pills:["Listening","Story 5","MCQ"],
+    story:`En las vacaciones, Kabir quiere viajar a Suiza con su familia. Su madre quiere ver las montañas. Su padre quiere tomar muchas fotos. Kabir quiere comer chocolate y jugar con la nieve. Todos preparan las maletas por la noche.`,
+    items:[
+      {type:"audio-story", ask:`Escucha la historia. El texto está escondido.`},
+      {type:"mcq", ask:`¿Adónde quiere viajar Kabir?`, opts:["a Suiza","a India","a México","a España"], correct:"a Suiza", hint:"Escucha: viajar a..."},
+      {type:"mcq", ask:`¿Con quién quiere viajar?`, opts:["con su familia","con sus amigos","con su maestra","con Polly"], correct:"con su familia", hint:"Escucha: con..."},
+      {type:"mcq", ask:`¿Qué quiere ver su madre?`, opts:["las montañas","el mercado","una película","un partido"], correct:"las montañas", hint:"Escucha: su madre quiere ver..."},
+      {type:"mcq", ask:`¿Qué quiere comer Kabir?`, opts:["chocolate","pizza","pan","tomates"], correct:"chocolate", hint:"Escucha: quiere comer..."},
+      {type:"mcq", ask:`¿Cuándo preparan las maletas?`, opts:["por la noche","por la mañana","al mediodía","por la tarde"], correct:"por la noche", hint:"Escucha: por..."},
+    ]
+  },
+];
+
+const $=s=>document.querySelector(s);
+function norm(s){
+  return (s||"").toString().toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .replace(/[^a-z0-9\s]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+}
+function isCorrect(item, value){
+  const got=norm(value);
+  const accepted=(item.accepted||[item.correct]).map(norm);
+  return accepted.some(a=>a===got);
+}
+function scoredItems(){
+  return current.items.filter(item=>item.type!=="audio-story");
+}
+function confetti(n=18){
+  const ems=["🌸","🌼","⭐","🌻","🎉","💚","🦋"];
+  for(let i=0;i<n;i++){
+    const c=document.createElement("div"); c.className="confetti"; c.textContent=ems[i%ems.length];
+    c.style.left=Math.random()*100+"vw";
+    c.style.animationDuration=(1.6+Math.random()*1.6)+"s";
+    c.style.fontSize=(16+Math.random()*18)+"px";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3500);
+  }
+}
+function speakSpanish(text, rate=.9){
+  try{
+    if(!window.speechSynthesis) return;
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang="es-ES"; u.rate=rate;
+    const vs=speechSynthesis.getVoices(); const es=vs.find(v=>/es/i.test(v.lang)); if(es) u.voice=es;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }catch(e){}
+}
+let storyRun={chunks:[], idx:0, rate:.9, playing:false};
+function storyChunks(story){
+  return String(story||"").match(/[^.!?]+[.!?]+/g)?.map(s=>s.trim()).filter(Boolean) || [String(story||"").trim()].filter(Boolean);
+}
+function storyPlayerHTML(){
+  return `<div class="story-player" id="storyPlayer">
+    <div class="sp-top">
+      <span class="sp-label">🎧 Story audio <span id="storyPos">1/1</span></span>
+      <div class="sp-actions">
+        <button class="btn sun" id="storyPlay" type="button">🔊 Play</button>
+        <button class="btn ghost" id="storySlow" type="button">🐢 Slow</button>
+        <button class="btn ghost" id="storyStop" type="button">⏸ Stop</button>
+      </div>
+    </div>
+    <input id="storySeek" type="range" min="0" max="0" step="1" value="0" aria-label="Story sentence position">
+  </div>`;
+}
+function setupStoryPlayer(story, auto=false){
+  const seek=$("#storySeek"), pos=$("#storyPos");
+  if(!seek || !pos) return;
+  storyRun.chunks=storyChunks(story);
+  storyRun.idx=Math.min(+seek.value||0, Math.max(0, storyRun.chunks.length-1));
+  seek.max=Math.max(0, storyRun.chunks.length-1);
+  function sync(){
+    seek.value=storyRun.idx;
+    pos.textContent=`${storyRun.idx+1}/${storyRun.chunks.length}`;
+  }
+  function speakChunk(){
+    try{
+      if(!window.speechSynthesis || !storyRun.playing) return;
+      if(storyRun.idx>=storyRun.chunks.length){ storyRun.playing=false; storyRun.idx=storyRun.chunks.length-1; sync(); return; }
+      const u=new SpeechSynthesisUtterance(storyRun.chunks[storyRun.idx]);
+      u.lang="es-ES"; u.rate=storyRun.rate;
+      const vs=speechSynthesis.getVoices(); const es=vs.find(v=>/es/i.test(v.lang)); if(es) u.voice=es;
+      u.onend=()=>{ if(!storyRun.playing) return; storyRun.idx++; sync(); if(storyRun.idx<storyRun.chunks.length) speakChunk(); else storyRun.playing=false; };
+      sync();
+      speechSynthesis.speak(u);
+    }catch(e){}
+  }
+  function play(rate){
+    try{ speechSynthesis.cancel(); }catch(e){}
+    storyRun.idx=+seek.value||0;
+    storyRun.rate=rate;
+    storyRun.playing=true;
+    speakChunk();
+  }
+  seek.oninput=()=>{ storyRun.idx=+seek.value||0; sync(); };
+  seek.onchange=()=>{ if(storyRun.playing) play(storyRun.rate); };
+  $("#storyPlay").onclick=()=>play(.9);
+  $("#storySlow").onclick=()=>play(.48);
+  $("#storyStop").onclick=()=>{ storyRun.playing=false; try{ speechSynthesis.cancel(); }catch(e){} };
+  sync();
+  if(auto) setTimeout(()=>play(.9), 350);
+}
+
+let current=null, qi=0, score=0, answers=[], redoQueue=[], redoIndex=0, inRedo=false;
+function stopStoryAudio(){
+  storyRun.playing=false;
+  try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+}
+function backToHWHome(){
+  stopStoryAudio();
+  $("#runner").style.display="none";
+  $("#home").style.display="";
+  current=null;
+  renderHome();
+}
+function showQuestion(){ stopStoryAudio(); renderQuestion(); }
+function showRedo(){ stopStoryAudio(); renderRedo(); }
+function showResult(){ stopStoryAudio(); renderResult(); }
+
+function renderHome(){
+  // Keep a top-level total available to the main app's home page (for the level card progress bar).
+  const full=loadState();
+  full.spanishHWMeta=Object.assign({}, full.spanishHWMeta||{}, {totalQuizzes:HW.length});
+  saveState(full);
+  const s=full.spanishHW||{completed:{},stars:{},scores:{},totalPerQuiz:{}};
+  $("#mTotal").textContent=HW.length;
+  $("#mDone").textContent=Object.values(s.completed||{}).filter(Boolean).length;
+  $("#mStars").textContent=Object.values(s.stars||{}).reduce((a,b)=>a+b,0);
+  const wrap=$("#tests"); wrap.innerHTML="";
+  HW.forEach(quiz=>{
+    const done=!!s.completed[quiz.id];
+    const stars=s.stars[quiz.id]||0;
+    const sc=s.scores[quiz.id];
+    const total=s.totalPerQuiz[quiz.id]||quiz.items.length;
+    const b=document.createElement("button"); b.className="test-card"+(done?" done":"");
+    b.innerHTML=
+      (done?`<span class="done-badge">✅ Done</span>`:"")+
+      `<h3>${quiz.em} ${quiz.title}${done?" 🌳":""}</h3>`+
+      `<p>${done?`Best: ${sc||0}/${total} · `:""}${quiz.intro}</p>`+
+      (done?`<div class="stars">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div>`:"")+
+      quiz.pills.map(p=>`<span class="pill">${p}</span>`).join("");
+    b.onclick=()=>startQuiz(quiz.id);
+    wrap.appendChild(b);
+  });
+}
+
+function startQuiz(quizId){
+  current=HW.find(q=>q.id===quizId);
+  if(!current) return;
+  qi=0; score=0; answers=[]; redoQueue=[]; redoIndex=0; inRedo=false;
+  $("#home").style.display="none"; $("#runner").style.display="";
+  showQuestion();
+}
+
+function renderQuestion(){
+  const q=current.items[qi];
+  const pct=Math.round((qi/current.items.length)*100);
+  const storyControls = current.story && q.type==="mcq" ? storyPlayerHTML() : "";
+  $("#runner").innerHTML=`
+    <div class="section-title"><h2>${current.em} ${current.title}</h2><span>Question ${qi+1} of ${current.items.length}</span></div>
+    <div class="panel">
+      <div class="qtop"><span>Score ${score}/${qi}</span><span>${pct}%</span></div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+      <div class="question">
+        ${storyControls}
+        <div class="ask">${q.ask}</div>
+        <div class="hint-row"><button class="hint-btn" id="hintBtn" type="button">💡 Need a hint?</button></div>
+        <span class="hint-text" id="hintText" hidden>${q.hint}</span>
+      </div>
+      <div class="opts" id="opts"></div>
+      <div class="actions"><button class="btn ghost" id="backHome">All HW</button></div>
+    </div>`;
+  $("#backHome").onclick=backToHWHome;
+  if(current.story && q.type==="mcq") setupStoryPlayer(current.story);
+  if(q.type==="audio-story"){ renderAudioStory(q); return; }
+  if(q.type==="mcq"){ renderMCQ(q, false); return; }
+  let hintUsed=false;
+  $("#hintBtn").onclick=()=>{
+    hintUsed=true;
+    const t=$("#hintText"); if(t) t.hidden=false;
+    $("#hintBtn").style.display="none";
+    setTimeout(()=>{ const t2=$("#hintText"); if(t2) t2.hidden=true; const b=$("#hintBtn"); if(b) b.style.display=""; }, 1800);
+  };
+  renderTypedAnswer(q, (value, input)=>{
+    const correct=isCorrect(q,value);
+    input.classList.add(correct?"ok":"no");
+    const fb=$("#typedFeedback");
+    if(correct){
+      score++; confetti(8);
+      fb.textContent="¡Correcto! 🌟"; fb.className="feedback good";
+      speakSpanish(value);
+      answers.push({q, value, correct:true, hintUsed});
+    } else {
+      fb.textContent=`Correct answer: ${q.correct}`; fb.className="feedback bad";
+      redoQueue.push(q);
+      answers.push({q, value, correct:false, hintUsed});
+    }
+    $("#submitTyped").disabled=true; input.disabled=true;
+    setTimeout(()=>{
+      qi++;
+      if(qi<current.items.length) showQuestion();
+      else if(redoQueue.length) startRedo();
+      else showResult();
+    }, 1100);
+  });
+}
+
+function renderAudioStory(q){
+  const story=q.story||current.story;
+  $("#opts").innerHTML=`
+    <div class="panel" style="box-shadow:none;background:#FFF8EE;margin:0;text-align:center">
+      <div style="font-size:52px;margin-bottom:8px">🎧</div>
+      <p style="margin:0 0 12px;color:var(--ink-soft);font-weight:900">Escucha con atención. El texto está escondido.</p>
+      ${storyPlayerHTML()}
+      <button class="btn" id="continueStory" style="margin-left:8px">Move to questions</button>
+    </div>`;
+  $("#continueStory").onclick=()=>{
+    speechSynthesis && speechSynthesis.cancel();
+    storyRun.playing=false;
+    qi++;
+    qi<current.items.length ? showQuestion() : showResult();
+  };
+  setupStoryPlayer(story, true);
+}
+
+function renderMCQ(q, redoMode){
+  let hintUsed=false;
+  $("#hintBtn").onclick=()=>{
+    hintUsed=true;
+    const t=$("#hintText"); if(t) t.hidden=false;
+    $("#hintBtn").style.display="none";
+    setTimeout(()=>{ const t2=$("#hintText"); if(t2) t2.hidden=true; const b=$("#hintBtn"); if(b) b.style.display=""; }, 1800);
+  };
+  const opts=[...q.opts].sort(()=>Math.random()-.5);
+  $("#opts").innerHTML=opts.map(o=>`<button class="btn ghost mcqOpt" data-v="${o.replace(/"/g,"&quot;")}">${o}</button>`).join("");
+  $("#opts").querySelectorAll(".mcqOpt").forEach(btn=>{
+    btn.onclick=()=>{
+      const value=btn.dataset.v;
+      const ok=norm(value)===norm(q.correct);
+      btn.classList.remove("ghost");
+      if(ok){ score++; confetti(8); btn.textContent="✅ "+value; speakSpanish(value); }
+      else {
+        btn.classList.add("sun");
+        btn.textContent="❌ "+value;
+        if(!redoMode) redoQueue.push(q);
+      }
+      answers.push({q, value, correct:ok, hintUsed});
+      $("#opts").querySelectorAll("button").forEach(b=>b.disabled=true);
+      setTimeout(()=>{
+        if(redoMode){
+          redoIndex++;
+          redoIndex<redoQueue.length ? showRedo() : showResult();
+        } else {
+          qi++;
+          if(qi<current.items.length) showQuestion();
+          else if(redoQueue.length) startRedo();
+          else showResult();
+        }
+      }, 950);
+    };
+  });
+}
+
+function renderTypedAnswer(q, handler){
+  $("#opts").innerHTML=
+    `<input class="typed-answer" id="typedAnswer" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type the answer here…">`+
+    `<button class="btn" id="submitTyped">Submit</button>`+
+    `<div class="feedback" id="typedFeedback"></div>`;
+  $("#typedAnswer").focus();
+  $("#submitTyped").onclick=()=>handler($("#typedAnswer").value, $("#typedAnswer"));
+  $("#typedAnswer").onkeydown=e=>{ if(e.key==="Enter") handler($("#typedAnswer").value, $("#typedAnswer")); };
+}
+
+function startRedo(){
+  inRedo=true; redoIndex=0; confetti(14);
+  showRedo();
+}
+function renderRedo(){
+  const q=redoQueue[redoIndex];
+  const storyControls = current.story && q.type==="mcq" ? storyPlayerHTML() : "";
+  $("#runner").innerHTML=`
+    <div class="section-title"><h2>${current.em} ${current.title}</h2><span>🔁 Practice round — try these again</span></div>
+    <div class="panel">
+      <div class="qtop"><span>Practice ${redoIndex+1} of ${redoQueue.length}</span></div>
+      <div class="question">
+        ${storyControls}
+        <div class="ask">${q.ask}</div>
+        <div class="hint-row"><button class="hint-btn" id="hintBtn" type="button">💡 Need a hint?</button></div>
+        <span class="hint-text" id="hintText" hidden>${q.hint}</span>
+      </div>
+      <div class="opts" id="opts"></div>
+      <div class="actions"><button class="btn ghost" id="backHome">All HW</button></div>
+    </div>`;
+  $("#backHome").onclick=backToHWHome;
+  if(current.story && q.type==="mcq") setupStoryPlayer(current.story);
+  if(q.type==="mcq"){ renderMCQ(q, true); return; }
+  $("#hintBtn").onclick=()=>{
+    const t=$("#hintText"); if(t) t.hidden=false; $("#hintBtn").style.display="none";
+    setTimeout(()=>{ const t2=$("#hintText"); if(t2) t2.hidden=true; const b=$("#hintBtn"); if(b) b.style.display=""; }, 1800);
+  };
+  renderTypedAnswer(q, (value, input)=>{
+    const ok=isCorrect(q, value);
+    input.classList.add(ok?"ok":"no");
+    const fb=$("#typedFeedback");
+    if(ok){ fb.textContent="¡Sí! Got it this time. 🌟"; fb.className="feedback good"; speakSpanish(value); }
+    else { fb.textContent=`Correct answer: ${q.correct}`; fb.className="feedback bad"; }
+    $("#submitTyped").disabled=true; input.disabled=true;
+    setTimeout(()=>{ redoIndex++; redoIndex<redoQueue.length ? showRedo() : showResult(); }, 1100);
+  });
+}
+
+function renderResult(){
+  const total=scoredItems().length;
+  // Stars: count answers that were correct on FIRST try AND without hint
+  const firstAnswers=answers.slice(0,total);
+  const cleanWins=firstAnswers.filter(a=>a.correct && !a.hintUsed).length;
+  const ratio=cleanWins/total;
+  const stars=ratio>=0.8?3:ratio>=0.5?2:1;
+  saveHWResult(current.id, stars, score, total);
+  confetti(40);
+  $("#runner").innerHTML=`
+    <div class="panel result">
+      <div class="big">${stars===3?"🌳":"🌱"}</div>
+      <h2>${current.title}</h2>
+      <div class="starline">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div>
+      <p style="margin:8px 0 18px;color:var(--ink-soft);font-weight:900">
+        Clean wins (first try, no hint): <b>${cleanWins} / ${total}</b><br>
+        Eventually correct: <b>${score} / ${total}</b>
+      </p>
+      <div class="actions" style="justify-content:center">
+        <button class="btn" id="retryBtn">🔁 Try again</button>
+        <button class="btn ghost" id="allTests">All HW</button>
+      </div>
+      <div class="review" id="review"></div>
+    </div>`;
+  $("#retryBtn").onclick=()=>{ stopStoryAudio(); startQuiz(current.id); };
+  $("#allTests").onclick=backToHWHome;
+  const review=$("#review");
+  firstAnswers.forEach(a=>{
+    const row=document.createElement("div");
+    row.className="review-row"+(a.correct?"":" bad");
+    row.innerHTML=`${a.correct?"✅":"❌"} ${a.q.ask.replace(/<b>___<\/b>/, `<u>${a.q.correct}</u>`)}<small>You typed: ${a.value||"(empty)"}${a.hintUsed?" · 💡 hint used":""}</small>`;
+    review.appendChild(row);
+  });
+}
+
+renderHome();
+</script>
+</body>
+</html>
