@@ -90,13 +90,72 @@
   .mini-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#F9F0E3;border-radius:12px;padding:9px 11px;font-weight:800;}
   .mini-row span{min-width:0;overflow-wrap:anywhere;}
   .mini-row small{display:block;color:var(--ink-soft);font-weight:800;}
-  .trophy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
-  .trophy{background:#fff;border-radius:16px;padding:12px;box-shadow:var(--shadow-sm);min-height:100px;}
-  .trophy.locked{filter:grayscale(1);opacity:.55;}
-  .trophy .em{font-size:30px;}
-  .trophy .name{font-family:'Baloo 2';font-weight:800;color:var(--ink);font-size:16px;line-height:1.05;}
-  .trophy .desc{font-size:12px;font-weight:800;color:var(--ink-soft);margin-top:3px;}
+  /* ---------- Trophy Room (revamped) ---------- */
+  .trophy-room{display:grid;gap:14px;}
+  .trophy-hero{
+    background:linear-gradient(135deg,#3F79E5 0%,#7A5CFF 45%,#E94F72 100%);
+    color:#fff;border-radius:24px;padding:18px 20px;box-shadow:0 12px 28px rgba(85,60,180,.28);
+    overflow:hidden;position:relative;
+  }
+  .trophy-hero::before{content:"";position:absolute;inset:-40% -30% auto auto;width:220px;height:220px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.45) 0%,transparent 68%);pointer-events:none;}
+  .trophy-hero::after{content:"🏆";position:absolute;right:14px;top:12px;font-size:52px;opacity:.35;transform:rotate(-8deg);}
+  .trophy-hero h3{font-size:26px;font-family:'Baloo 2',cursive;margin:0 0 2px;}
+  .trophy-hero p{margin:0 0 12px;font-weight:800;opacity:.94;font-size:13px;letter-spacing:.2px;}
+  .trophy-hero .th-count{font-family:'Baloo 2',cursive;font-size:44px;line-height:1;letter-spacing:.5px;}
+  .trophy-hero .th-count small{font-size:18px;opacity:.8;font-weight:800;font-family:'Nunito',sans-serif;}
+  .trophy-meter{height:12px;background:rgba(255,255,255,.28);border-radius:999px;overflow:hidden;margin-top:10px;position:relative;z-index:1;}
+  .trophy-meter i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#FFC23F,#FF9F1C,#FFC23F);width:0;transition:width .75s cubic-bezier(.2,.9,.3,1.2);
+    box-shadow:0 0 12px rgba(255,196,60,.85);}
+  .trophy-cats{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;position:relative;z-index:1;}
+  .trophy-cat-chip{background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.32);border-radius:999px;padding:5px 10px;font-size:12px;font-weight:800;color:#fff;display:inline-flex;align-items:center;gap:5px;}
+  .trophy-cat-chip .chip-count{background:#fff;color:var(--ink);border-radius:999px;padding:1px 8px;font-size:11px;font-weight:900;}
+  /* Category section */
+  .trophy-section{border-radius:22px;padding:14px 14px 16px;box-shadow:var(--shadow-sm);
+    background:var(--cat-tint,#fff);border:2px solid var(--cat-accent,#eee);position:relative;overflow:hidden;}
+  .trophy-section::before{content:"";position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.6) 0%,transparent 68%);pointer-events:none;}
+  .trophy-section .sec-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;position:relative;z-index:1;}
+  .trophy-section .sec-icon{font-size:28px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.12));}
+  .trophy-section .sec-title{font-family:'Baloo 2',cursive;font-size:20px;color:var(--cat-accent,var(--ink));flex:1;}
+  .trophy-section .sec-count{background:#fff;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:900;color:var(--cat-accent,var(--ink-soft));box-shadow:var(--shadow-sm);}
+  .trophy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;position:relative;z-index:1;}
+  /* Trophy card — richer, tier-ringed, animated */
+  .trophy{background:#fff;border-radius:18px;padding:14px 12px;min-height:150px;position:relative;overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;
+    box-shadow:0 6px 16px rgba(94,70,48,.14);
+    animation:trophyCardIn .5s cubic-bezier(.2,.9,.3,1.2) both;animation-delay:var(--delay,0ms);}
+  .trophy .tier-badge{position:absolute;top:8px;left:8px;background:var(--tier-bg,#e0e0e0);color:var(--tier-fg,#333);border-radius:999px;font-size:9.5px;font-weight:900;padding:2px 7px;letter-spacing:.6px;text-transform:uppercase;box-shadow:0 2px 4px rgba(0,0,0,.14);}
+  .trophy[data-tier="bronze"]{  --tier-bg:linear-gradient(135deg,#CD7F32,#8C5424);--tier-fg:#fff;--ring:#CD7F32;}
+  .trophy[data-tier="silver"]{  --tier-bg:linear-gradient(135deg,#D8D8D8,#9A9A9A);--tier-fg:#fff;--ring:#B8B8B8;}
+  .trophy[data-tier="gold"]{    --tier-bg:linear-gradient(135deg,#FFD64C,#D48A00);--tier-fg:#fff;--ring:#FFC23F;}
+  .trophy[data-tier="platinum"]{--tier-bg:linear-gradient(135deg,#B3E0FF,#7A5CFF 55%,#FF6B8A);--tier-fg:#fff;--ring:#7A5CFF;}
+  .trophy .emblem{
+    width:78px;height:78px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 30% 25%, #fff 0%, #FFEED6 55%, #FFD68A 100%);
+    box-shadow:inset 0 -3px 6px rgba(0,0,0,.1), 0 0 0 4px #fff, 0 0 0 6px var(--ring,#DDD), 0 6px 14px rgba(0,0,0,.12);
+    position:relative;overflow:visible;
+  }
+  .trophy .emblem .em{font-size:38px;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.15));position:relative;z-index:1;}
+  .trophy .name{font-family:'Baloo 2';font-weight:800;color:var(--ink);font-size:15px;line-height:1.1;margin-top:2px;}
+  .trophy .desc{font-size:11.5px;font-weight:800;color:var(--ink-soft);line-height:1.25;}
+  .trophy .stamp{font-size:10.5px;font-weight:900;color:var(--cat-accent,var(--leaf-dark));background:rgba(255,255,255,.75);border-radius:999px;padding:2px 8px;letter-spacing:.4px;margin-top:2px;}
+  .trophy.earned{border:2px solid var(--ring,#FFC23F);cursor:pointer;}
+  .trophy.earned::before{content:"";position:absolute;inset:-40% -65%;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%);
+    transform:translateX(-70%) rotate(9deg);animation:trophyShine 3.8s ease-in-out infinite;animation-delay:var(--delay,0ms);pointer-events:none;}
+  .trophy.earned .emblem{animation:trophyBadgePulse 2.6s ease-in-out infinite;}
+  .trophy.earned:active{transform:scale(.97);}
+  .trophy.locked{background:linear-gradient(180deg,#F7F2E9 0%,#EEE7D6 100%);}
+  .trophy.locked .emblem{background:radial-gradient(circle at 30% 25%,#F5EFE2 0%,#E1D9C7 100%);box-shadow:inset 0 -3px 6px rgba(0,0,0,.08), 0 0 0 4px #F7F2E9, 0 0 0 6px #D6CDB8, 0 4px 8px rgba(0,0,0,.06);}
+  .trophy.locked .emblem .em{filter:none;opacity:.45;}
+  .trophy.locked .name{color:var(--ink-soft);}
+  .trophy.locked .desc{opacity:.85;}
+  .trophy.locked .tier-badge{opacity:.6;}
+  @keyframes trophyCardIn{from{transform:translateY(14px) scale(.94);opacity:0}to{transform:none;opacity:1}}
+  @keyframes trophyShine{0%,45%{transform:translateX(-75%) rotate(9deg)}65%,100%{transform:translateX(75%) rotate(9deg)}}
+  @keyframes trophyBadgePulse{0%,100%{transform:scale(1) rotate(-3deg)}50%{transform:scale(1.08) rotate(3deg)}}
   @media(max-width:480px){.metric-row,.trophy-grid{grid-template-columns:1fr;}}
+  @media(min-width:640px){.trophy-grid{grid-template-columns:repeat(3,1fr);}}
   /* Hint reveal button (used in quiz questions) */
   .hint-btn{background:#FFF3D6;color:#a3650b;border:2px solid #FFD58A;border-radius:14px;padding:6px 12px;
     font-weight:800;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
@@ -108,9 +167,12 @@
   .diff-badge.med{background:#FFF3D6;color:#8a5b00;}
   .diff-badge.hard{background:#FFE0E6;color:#a52347;}
   /* Trophy popup */
-  .trophy-popup{text-align:center;padding:8px 6px 4px;}
-  .trophy-popup .tp-em{font-size:96px;animation:trophyPop .8s cubic-bezier(.2,1.6,.4,1);}
+  .trophy-popup{text-align:center;padding:8px 6px 4px;position:relative;overflow:hidden;}
+  .trophy-popup .tp-rays{position:absolute;inset:4px;border-radius:22px;background:conic-gradient(from 0deg,rgba(255,194,63,.28),transparent 14%,rgba(108,196,232,.22) 28%,transparent 42%,rgba(255,107,138,.20) 58%,transparent 72%,rgba(255,194,63,.28));animation:tpRays 5s linear infinite;opacity:.85;}
+  .trophy-popup .tp-badge{position:relative;display:inline-block;background:#fff;border:2px solid #FFD58A;border-radius:999px;padding:5px 13px;font-weight:900;color:#a3650b;box-shadow:var(--shadow-sm);}
+  .trophy-popup .tp-em{position:relative;font-size:104px;animation:trophyPop .8s cubic-bezier(.2,1.6,.4,1), trophyBadgeBounce 2.2s ease-in-out .9s infinite;}
   @keyframes trophyPop{0%{transform:scale(0) rotate(-30deg);opacity:0}55%{transform:scale(1.3);opacity:1}75%{transform:scale(.9);}100%{transform:none}}
+  @keyframes tpRays{to{transform:rotate(360deg)}}
   .trophy-popup .tp-name{font-family:'Baloo 2',cursive;color:var(--leaf-dark);font-size:26px;margin:6px 0 4px;}
   .trophy-popup .tp-desc{font-weight:800;color:var(--ink);margin:0 12px 6px;}
   .trophy-popup .tp-reason{font-size:13px;color:var(--ink-soft);font-weight:700;margin:0 12px 14px;}
@@ -195,6 +257,20 @@
   .rc-row.done .rc-status{color:var(--leaf-dark);}
   .coupon-actions{display:flex;flex-direction:column;gap:8px;align-items:stretch;margin-top:4px;}
   .coupon-fine{text-align:center;font-size:11px;color:#8a5b00;font-weight:700;margin-top:10px;letter-spacing:.3px;}
+  .coupon-actions button[disabled]{opacity:.55;cursor:not-allowed;filter:grayscale(.35);}
+  /* Sapling-cost wallet inside the coupon */
+  .rc-wallet{background:#fff;border:2px solid #FFD58A;border-radius:14px;padding:12px 14px;margin:12px 0;}
+  .rc-wallet.short{border-color:#F7B4BE;background:#FFF3F4;}
+  .rc-wallet.ok{border-color:#8FD9A2;background:#F0FCEF;}
+  .rc-wallet-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 2px;}
+  .rc-wallet-row + .rc-wallet-row{border-top:1px dashed rgba(0,0,0,.08);}
+  .rc-wallet-label{font-weight:800;color:var(--ink);font-size:14px;}
+  .rc-wallet-val{font-weight:900;font-size:15px;color:var(--ink);letter-spacing:.4px;}
+  .rc-wallet-val b{font-family:'Baloo 2',cursive;font-size:20px;margin-left:2px;color:var(--leaf-dark);}
+  .rc-wallet-val.low b{color:var(--berry-dark);}
+  .rc-wallet-msg{margin-top:8px;font-weight:800;font-size:13px;line-height:1.35;text-align:center;padding:6px 6px 4px;border-radius:10px;}
+  .rc-wallet-msg.good{color:var(--leaf-dark);background:#E6F6EA;}
+  .rc-wallet-msg.short-msg{color:var(--berry-dark);background:#FFE0E6;}
   /* Withered saplings header state */
   .stat.stat-withered{opacity:.7;}
   .stat.stat-withered .n{color:#8a5b00;text-decoration:line-through;}
@@ -354,6 +430,17 @@
   .opt.ok{background:#CDEFD6;border-color:var(--leaf);color:var(--leaf-dark);}
   .opt.no{background:#FFD9DF;border-color:var(--berry);}
   .qcount{text-align:center;font-weight:800;color:var(--ink-soft);font-size:13px;margin-bottom:10px;}
+  .l0input{width:100%;padding:12px 14px;border-radius:14px;border:2px solid var(--leaf);
+    font:inherit;font-size:1.05em;font-weight:700;color:var(--ink);background:#fff;
+    box-sizing:border-box;margin-top:14px;outline:none;transition:border-color .15s;}
+  .l0input:focus{border-color:var(--sun);box-shadow:0 0 0 3px rgba(255,199,80,.25);}
+  .l0input:disabled{background:#F1F7EE;opacity:.9;}
+  .l0feed{min-height:22px;margin-top:10px;font-weight:800;text-align:center;font-size:15px;}
+  .l0actions{display:flex;gap:10px;justify-content:center;align-items:center;margin-top:12px;flex-wrap:wrap;}
+  .l0wrong{color:var(--berry);text-decoration:line-through;font-weight:800;}
+  .l0para{background:#FFF7E2;border-radius:14px;padding:14px 16px;border:2px dashed var(--sun);}
+  .l0paraFilled{color:var(--leaf-dark);font-weight:800;background:#E6F6EA;padding:0 6px;border-radius:6px;}
+  .l0paraPend{opacity:.5;letter-spacing:1px;}
   .blank{display:inline-block;min-width:58px;padding:0 10px;margin:0 3px;border-bottom:3px solid var(--berry);
     color:var(--berry-dark);font-family:'Baloo 2';font-weight:800;}
   .blank.done{border-bottom-color:var(--leaf);color:var(--leaf-dark);background:#E6F6EA;border-radius:6px;}
@@ -1410,14 +1497,20 @@ const LEVEL4_SENTENCES = [
   {pre:"El ",                   correct:"ático",     post:" está encima de la casa.",opts:["ático","sótano","garaje","comedor"], hint:"top of the house"},
 ];
 
-/* 40-lesson plan: Days 1–5 learn-only (intro new words), then Q/L/Q/L… through Day 20.
-   Days 21–40 add 10 review lessons + 10 quizzes that randomly draw from already-covered words.
+/* 45-lesson plan: Days 1-4 stay unchanged, Days 5-7 are practice quizzes,
+   then the original Day 5+ lesson/quiz cadence resumes shifted by 3 days.
+   Extra review days add 10 review lessons + 10 quizzes that randomly draw from already-covered words.
    `newV` lists vocab ids introduced that day (for houseWordsLearned trophy). */
 const LEVEL4_LESSONS = [
   {d:1,  title:"1 · Habitaciones 1",       em:"🏠", type:"learn", newV:[1,2,3,4],           theme:"Rooms — house, bedroom, living room, dining room"},
   {d:2,  title:"2 · Habitaciones 2",       em:"🍳", type:"learn", newV:[5,6,7,8],           theme:"Rooms — kitchen, bathroom, garage, corridor"},
   {d:3,  title:"3 · Habitaciones 3",       em:"📚", type:"learn", newV:[9,10,11,12],        theme:"Rooms — study, basement, attic, garden"},
+  {d:4,  title:"4 · Quiz de habitaciones", em:"🎯", type:"quiz",  newV:[],                  theme:"Review rooms and areas covered so far"},
+  {d:5,  title:"5 · Practice quiz 1",       em:"🎯", type:"quiz",  newV:[], practice:true,   theme:"Practice the La Casa words already covered"},
+  {d:6,  title:"6 · Practice quiz 2",       em:"🎯", type:"quiz",  newV:[], practice:true,   theme:"Practice the La Casa words already covered"},
+  {d:7,  title:"7 · Practice quiz 3",       em:"🎯", type:"quiz",  newV:[], practice:true,   theme:"Practice the La Casa words already covered"},
   {d:4,  title:"4 · Espacios abiertos",    em:"🌇", type:"learn", newV:[13,14,15,16],       theme:"Outdoor & entry — patio, balcony, terrace, entrance"},
+  {d:5,  title:"5 · Quiz de espacios",     em:"🎯", type:"quiz",  newV:[],                  theme:"Review spaces covered so far"},
   {d:5,  title:"5 · Partes de la casa",    em:"🪟", type:"learn", newV:[17,18,19,20,21,22], theme:"House parts — door, window, wall, ceiling, floor, stairs"},
   {d:6,  title:"6 · Quiz de la casa",      em:"🎯", type:"quiz",  newV:[],                  theme:"Review rooms, spaces, and house parts"},
   {d:7,  title:"7 · Muebles 1",            em:"🛏️", type:"learn", newV:[23,24,25,26],       theme:"Furniture — bed, sofa, table, chair"},
@@ -1454,9 +1547,341 @@ const LEVEL4_LESSONS = [
   {d:38, title:"38 · Quiz maestro",        em:"🎯", type:"quiz",  newV:[],                  theme:"Random quiz from covered La Casa words"},
   {d:39, title:"39 · Repaso campeon",      em:"🌟", type:"learn", newV:[],                  theme:"Champion review from all covered words"},
   {d:40, title:"40 · Quiz campeon",        em:"🏆", type:"quiz",  newV:[],                  theme:"Final random quiz from covered La Casa words"},
+].map((lesson, idx)=>({
+  ...lesson,
+  d: idx+1,
+  title: lesson.title.replace(/^\d+/, String(idx+1))
+}));
+
+/* =====================================================================
+   LEVEL 0 · Everyday Basics — 5 worksheets on SER + TENER
+   Each worksheet has the same 7 sections:
+     A · 10 SER fill-ins
+     B · 10 TENER fill-ins
+     C · 6 SER/TENER 2-option MCQ
+     D · 6 English→Spanish typed answers
+     E · 4-pair matching (pronoun ↔ verb form)
+     G · 5 error-correction typed answers  (F "Make sentences" is skipped — open-ended)
+     H · 8-blank paragraph fill
+   Data uses compact tuples: [pre, correct, post] etc.
+   ===================================================================== */
+const L0_SER_POOL = ["soy","eres","es","somos","sois","son"];
+const L0_TENER_POOL = ["tengo","tienes","tiene","tenemos","tenéis","tienen"];
+
+function _l0para(){
+  const blanks = Array.prototype.slice.call(arguments);
+  return blanks; // array of {pre, correct} pairs plus trailing text
+}
+
+const LEVEL0_WORKSHEETS = [
+  {
+    d:1, title:"1 · Hoja de Trabajo 1", em:"📝",
+    ser:[
+      ["Yo","soy","profesor."],
+      ["Tú","eres","inteligente."],
+      ["Él","es","alto."],
+      ["Nosotros","somos","simpáticos."],
+      ["Vosotros","sois","españoles."],
+      ["Ellas","son","amigas."],
+      ["Mi gato","es","negro."],
+      ["Mis hermanos","son","altos."],
+      ["Tus amigos y tú","sois","simpáticos."],
+      ["Usted","es","muy amable."],
+    ],
+    tener:[
+      ["Yo","tengo","un libro."],
+      ["Tú","tienes","una pluma."],
+      ["Ella","tiene","una hermana."],
+      ["Nosotros","tenemos","un coche."],
+      ["Vosotros","tenéis","una casa."],
+      ["Su tío","tiene","un perro."],
+      ["María","tiene","un cuaderno."],
+      ["Mis primos","tienen","muchos amigos."],
+      ["Tus abuelos y tú","tenéis","una finca."],
+      ["Mis profesores y yo","tenemos","una reunión."],
+    ],
+    choice:[
+      ["Yo","tengo","dieciséis años.", ["soy","tengo"]],
+      ["Ella","tiene","una gata blanca.", ["es","tiene"]],
+      ["Nosotros","somos","de México.", ["somos","tenemos"]],
+      ["Tú","tienes","una bicicleta nueva.", ["eres","tienes"]],
+      ["Ellos","son","muy inteligentes.", ["son","tienen"]],
+      ["Yo","tengo","una mochila azul.", ["soy","tengo"]],
+    ],
+    translate:[
+      ["You are a teacher.","tú eres profesor",["tu eres profesor","tú eres un profesor","usted es profesor"]],
+      ["I have a sister.","yo tengo una hermana",["tengo una hermana"]],
+      ["He is short.","él es bajo",["el es bajo"]],
+      ["We have a dog.","nosotros tenemos un perro",["tenemos un perro"]],
+      ["You all are friends.","vosotros sois amigos",["ustedes son amigos","vosotras sois amigas","vosotros somos amigos"]],
+      ["She has a notebook.","ella tiene un cuaderno",["tiene un cuaderno"]],
+    ],
+    match:{ pronouns:["Yo","Tú","Él","Nosotros"], pairs:["soy","tienes","tiene","somos"] },
+    errors:[
+      ["Yo tiene un libro.","yo tengo un libro"],
+      ["Ella son alta.","ella es alta"],
+      ["Nosotros eres estudiantes.","nosotros somos estudiantes"],
+      ["Tú tengo quince años.","tú tienes quince años",["tu tienes quince años"]],
+      ["Ellos es simpáticos.","ellos son simpáticos"],
+    ],
+    paragraph:{
+      intro:"Hola. Complete the story about Juan.",
+      parts:[
+        "Hola. Yo ", {c:"soy"}, " Juan. Yo ", {c:"tengo"}, " catorce años. Mi hermana ",
+        {c:"tiene"}, " trece años. Nosotros ", {c:"somos"}, " estudiantes. Nosotros ",
+        {c:"tenemos"}, " un perro grande. Mi perro ", {c:"es"}, " muy simpático. Mis amigos ",
+        {c:"son"}, " inteligentes y ellos ", {c:"tienen"}, " muchos libros."
+      ]
+    }
+  },
+  {
+    d:2, title:"2 · Hoja de Trabajo 2", em:"📝",
+    ser:[
+      ["Yo","soy","médico."],
+      ["Tú","eres","cómico."],
+      ["Usted","es","de Francia."],
+      ["Nosotros","somos","amigos."],
+      ["Vosotros","sois","listos."],
+      ["Ellas","son","simpáticas."],
+      ["El coche","es","rojo."],
+      ["Las casas","son","grandes."],
+      ["Tus abuelos y tú","sois","trabajadores."],
+      ["Él","es","rubio."],
+    ],
+    tener:[
+      ["Yo","tengo","un ordenador."],
+      ["Tú","tienes","una manzana."],
+      ["Pedro","tiene","un coche."],
+      ["Nosotros","tenemos","tiempo."],
+      ["Vosotros","tenéis","hambre."],
+      ["La profesora","tiene","una pregunta."],
+      ["Carmen","tiene","un vestido nuevo."],
+      ["Mis abuelos","tienen","una granja."],
+      ["Tus amigos y tú","tenéis","un examen."],
+      ["Mis hermanos y yo","tenemos","sed."],
+    ],
+    choice:[
+      ["Yo","tengo","una pluma negra.", ["soy","tengo"]],
+      ["Él","es","de Italia.", ["es","tiene"]],
+      ["Nosotros","tenemos","tres gatos.", ["somos","tenemos"]],
+      ["Tú","eres","muy alto.", ["eres","tienes"]],
+      ["Ellas","son","amigas de la infancia.", ["son","tienen"]],
+      ["Yo","tengo","dieciocho años.", ["soy","tengo"]],
+    ],
+    translate:[
+      ["You are a doctor.","tú eres médico",["tu eres medico","usted es médico"]],
+      ["I have a computer.","yo tengo un ordenador",["tengo un ordenador","yo tengo una computadora"]],
+      ["She is funny.","ella es cómica",["ella es comica","ella es divertida"]],
+      ["We have time.","nosotros tenemos tiempo",["tenemos tiempo"]],
+      ["They are students.","ellos son estudiantes",["ellas son estudiantes"]],
+      ["You have a house.","tú tienes una casa",["tu tienes una casa","usted tiene una casa"]],
+    ],
+    match:{ pronouns:["Yo","Tú","Ella","Vosotros"], pairs:["soy","eres","es","tenéis"] },
+    errors:[
+      ["Yo es alto.","yo soy alto"],
+      ["Tú soy simpático.","tú eres simpático",["tu eres simpático","tu eres simpatico"]],
+      ["Él tienen un libro.","él tiene un libro",["el tiene un libro"]],
+      ["Nosotros son de España.","nosotros somos de españa"],
+      ["Vosotros tengo hambre.","vosotros tenéis hambre",["vosotros teneis hambre"]],
+    ],
+    paragraph:{
+      intro:"Buenos días. Complete the story about Sofía.",
+      parts:[
+        "Buenos días. Yo ", {c:"soy"}, " Sofía. Yo ", {c:"tengo"}, " quince años. Mi hermano ",
+        {c:"tiene"}, " diecisiete años. Nosotros ", {c:"somos"}, " hermanos. Nosotros ",
+        {c:"tenemos"}, " una casa bonita. Mi casa ", {c:"es"}, " grande. Mis amigos ",
+        {c:"son"}, " muy divertidos y ellos ", {c:"tienen"}, " muchas bicicletas."
+      ]
+    }
+  },
+  {
+    d:3, title:"3 · Hoja de Trabajo 3", em:"📝",
+    ser:[
+      ["Yo","soy","deportista."],
+      ["Tú","eres","generoso."],
+      ["María","es","bonita."],
+      ["Nosotros","somos","músicos."],
+      ["Vosotros","sois","canarios."],
+      ["Ellos","son","listos."],
+      ["El libro","es","interesante."],
+      ["Las flores","son","rojas."],
+      ["Los chicos y tú","sois","simpáticos."],
+      ["Yo","soy","de Alemania."],
+    ],
+    tener:[
+      ["Yo","tengo","una mesa."],
+      ["Tú","tienes","una hoja."],
+      ["Carlos","tiene","un bolígrafo."],
+      ["Nosotros","tenemos","clases hoy."],
+      ["Vosotros","tenéis","una duda."],
+      ["Su tío","tiene","un coche rojo."],
+      ["Lucía","tiene","una muñeca."],
+      ["Mis amigos","tienen","un proyecto."],
+      ["Tus primos y tú","tenéis","paciencia."],
+      ["Mis padres y yo","tenemos","un viaje."],
+    ],
+    choice:[
+      ["Yo","tengo","un buen amigo.", ["soy","tengo"]],
+      ["Ella","tiene","veinte años.", ["es","tiene"]],
+      ["Nosotros","tenemos","un examen difícil.", ["somos","tenemos"]],
+      ["Tú","eres","de México.", ["eres","tienes"]],
+      ["Ellos","tienen","una piscina.", ["son","tienen"]],
+      ["Yo","tengo","sed.", ["soy","tengo"]],
+    ],
+    translate:[
+      ["I am athletic.","yo soy deportista",["soy deportista","yo soy atlético"]],
+      ["You have a table.","tú tienes una mesa",["tu tienes una mesa","usted tiene una mesa"]],
+      ["She is pretty.","ella es bonita"],
+      ["We have classes.","nosotros tenemos clases",["tenemos clases"]],
+      ["They are musicians.","ellos son músicos",["ellas son músicas","ellos son musicos"]],
+      ["You have a question.","tú tienes una pregunta",["tu tienes una pregunta","usted tiene una pregunta"]],
+    ],
+    match:{ pronouns:["Él","Nosotros","Vosotros","Yo"], pairs:["es","somos","tenéis","soy"] },
+    errors:[
+      ["Yo somos alto.","yo soy alto"],
+      ["Tú tiene un coche.","tú tienes un coche",["tu tienes un coche"]],
+      ["Ella son inteligente.","ella es inteligente"],
+      ["Nosotros tengo un perro.","nosotros tenemos un perro"],
+      ["Ustedes eres simpáticos.","ustedes son simpáticos"],
+    ],
+    paragraph:{
+      intro:"Hola a todos. Complete the story about Mateo.",
+      parts:[
+        "Hola a todos. Yo ", {c:"soy"}, " Mateo. Yo ", {c:"tengo"}, " dieciséis años. Mi hermana ",
+        {c:"tiene"}, " catorce años. Nosotros ", {c:"somos"}, " estudiantes de español. Nosotros ",
+        {c:"tenemos"}, " un profesor excelente. El profesor ", {c:"es"}, " muy amable. Mis amigos ",
+        {c:"son"}, " divertidos y ellos ", {c:"tienen"}, " una banda de música."
+      ]
+    }
+  },
+  {
+    d:4, title:"4 · Hoja de Trabajo 4", em:"📝",
+    ser:[
+      ["Yo","soy","arquitecto."],
+      ["Tú","eres","trabajador."],
+      ["Carmen","es","simpática."],
+      ["Nosotros","somos","altos."],
+      ["Vosotros","sois","jóvenes."],
+      ["Ustedes","son","simpáticos."],
+      ["El perro","es","pequeño."],
+      ["Las frutas","son","dulces."],
+      ["Tus hermanos y tú","sois","inteligentes."],
+      ["Yo","soy","cubano."],
+    ],
+    tener:[
+      ["Yo","tengo","una guitarra."],
+      ["Tú","tienes","un teléfono."],
+      ["Luis","tiene","un mapa."],
+      ["Nosotros","tenemos","un jardín."],
+      ["Vosotros","tenéis","una mascota."],
+      ["Su abuela","tiene","una receta."],
+      ["Sofía","tiene","un reloj."],
+      ["Mis tíos","tienen","una tienda."],
+      ["Tus amigos y tú","tenéis","suerte."],
+      ["Mis amigos y yo","tenemos","una fiesta."],
+    ],
+    choice:[
+      ["Yo","tengo","una guitarra vieja.", ["soy","tengo"]],
+      ["Él","tiene","veintidós años.", ["es","tiene"]],
+      ["Nosotros","somos","amigos leales.", ["somos","tenemos"]],
+      ["Tú","tienes","un teléfono nuevo.", ["eres","tienes"]],
+      ["Ellas","son","de Argentina.", ["son","tienen"]],
+      ["Yo","tengo","frío.", ["soy","tengo"]],
+    ],
+    translate:[
+      ["I am an architect.","yo soy arquitecto",["soy arquitecto"]],
+      ["You have a phone.","tú tienes un teléfono",["tu tienes un telefono","usted tiene un teléfono"]],
+      ["She is friendly.","ella es simpática",["ella es simpatica","ella es amistosa"]],
+      ["We have a garden.","nosotros tenemos un jardín",["tenemos un jardin"]],
+      ["They are young.","ellos son jóvenes",["ellos son jovenes","ellas son jóvenes"]],
+      ["You have a clock.","tú tienes un reloj",["tu tienes un reloj","usted tiene un reloj"]],
+    ],
+    match:{ pronouns:["Yo","Tú","Ellas","Nosotros"], pairs:["soy","eres","son","tenemos"] },
+    errors:[
+      ["Yo tiene un reloj.","yo tengo un reloj"],
+      ["Ella soy baja.","ella es baja"],
+      ["Nosotros tiene un jardín.","nosotros tenemos un jardín",["nosotros tenemos un jardin"]],
+      ["Tú es simpático.","tú eres simpático",["tu eres simpatico","tú eres simpatico"]],
+      ["Ellos tiene un coche.","ellos tienen un coche"],
+    ],
+    paragraph:{
+      intro:"Buenas tardes. Complete the story about Lucía.",
+      parts:[
+        "Buenas tardes. Yo ", {c:"soy"}, " Lucía. Yo ", {c:"tengo"}, " doce años. Mi hermano ",
+        {c:"tiene"}, " catorce años. Nosotros ", {c:"somos"}, " deportistas. Nosotros ",
+        {c:"tenemos"}, " una bicicleta nueva. Mi bicicleta ", {c:"es"}, " azul. Mis amigos ",
+        {c:"son"}, " muy simpáticos y ellos ", {c:"tienen"}, " muchos juguetes."
+      ]
+    }
+  },
+  {
+    d:5, title:"5 · Hoja de Trabajo 5", em:"📝",
+    ser:[
+      ["Yo","soy","cocinero."],
+      ["Tú","eres","amable."],
+      ["Elena","es","simpática."],
+      ["Nosotros","somos","listos."],
+      ["Vosotros","sois","simpáticos."],
+      ["Ellos","son","altos."],
+      ["El gato","es","gordo."],
+      ["Los libros","son","nuevos."],
+      ["Tus padres y tú","sois","amables."],
+      ["Yo","soy","mexicano."],
+    ],
+    tener:[
+      ["Yo","tengo","una regla."],
+      ["Tú","tienes","un cuaderno."],
+      ["Miguel","tiene","un lápiz."],
+      ["Nosotros","tenemos","una clase."],
+      ["Vosotros","tenéis","un examen."],
+      ["Su madre","tiene","una casa."],
+      ["Ana","tiene","un hermano."],
+      ["Mis primos","tienen","un perro."],
+      ["Tus amigos y tú","tenéis","un plan."],
+      ["Mis compañeros y yo","tenemos","un equipo."],
+    ],
+    choice:[
+      ["Yo","tengo","una regla larga.", ["soy","tengo"]],
+      ["Ella","es","de Chile.", ["es","tiene"]],
+      ["Nosotros","tenemos","una familia grande.", ["somos","tenemos"]],
+      ["Tú","eres","un buen estudiante.", ["eres","tienes"]],
+      ["Ellos","tienen","diecinueve años.", ["son","tienen"]],
+      ["Yo","tengo","miedo.", ["soy","tengo"]],
+    ],
+    translate:[
+      ["I am a cook.","yo soy cocinero",["soy cocinero","yo soy un cocinero"]],
+      ["You have a notebook.","tú tienes un cuaderno",["tu tienes un cuaderno","usted tiene un cuaderno"]],
+      ["She is kind.","ella es amable",["es amable"]],
+      ["We have a class.","nosotros tenemos una clase",["tenemos una clase"]],
+      ["They are tall.","ellos son altos",["ellas son altas"]],
+      ["You have a pencil.","tú tienes un lápiz",["tu tienes un lapiz","usted tiene un lápiz"]],
+    ],
+    match:{ pronouns:["Yo","Tú","Él","Vosotros"], pairs:["soy","eres","tiene","tenéis"] },
+    errors:[
+      ["Yo tiene un cuaderno.","yo tengo un cuaderno"],
+      ["Ella soy simpática.","ella es simpática",["ella es simpatica"]],
+      ["Nosotros tiene una clase.","nosotros tenemos una clase"],
+      ["Tú es mi profesor.","tú eres mi profesor",["tu eres mi profesor"]],
+      ["Ellos tiene un plan.","ellos tienen un plan"],
+    ],
+    paragraph:{
+      intro:"Hola. Complete the story about Pablo.",
+      parts:[
+        "Hola. Yo ", {c:"soy"}, " Pablo. Yo ", {c:"tengo"}, " trece años. Mi hermana ",
+        {c:"tiene"}, " diez años. Nosotros ", {c:"somos"}, " amigos. Nosotros ",
+        {c:"tenemos"}, " un gato negro. Mi gato ", {c:"es"}, " muy pequeño. Mis amigos ",
+        {c:"son"}, " muy alegres y ellos ", {c:"tienen"}, " muchos amigos."
+      ]
+    }
+  },
 ];
 
 const LEVELS = [
+  {id:0, name:"Level 0 · Everyday Basics", blurb:"SER + TENER through 5 daily worksheets", verbs:[], fills:{}, basics:true,
+    customPlan: LEVEL0_WORKSHEETS.map(w=>({
+      d:w.d, title:w.title, em:w.em, game:"basics_day", quizIdx:w.d-1, newV:[], basics:true
+    }))
+  },
   {id:1, name:"Level 1 · Regular Verbs", blurb:"The -AR, -ER & -IR basics", verbs:LEVEL1_VERBS, fills:LEVEL1_FILLS},
   {id:2, name:"Level 2 · Irregular Verbs", blurb:"Go verbs, stem changers, reflexives & core irregulars", verbs:LEVEL2_VERBS, fills:LEVEL2_FILLS},
   {id:3, name:"Level 3 · Verb Tenses", blurb:"Futuro cercano — ir + a + infinitive", verbs:[], fills:{}, tense:true,
@@ -1467,7 +1892,7 @@ const LEVELS = [
       d:L.d, title:L.title, em:L.em,
       game: L.type==="quiz" ? "house_quiz" : "house_lesson",
       newV: L.newV||[],
-      house:true, houseType:L.type, theme:L.theme
+      house:true, houseType:L.type, theme:L.theme, practice:!!L.practice
     }))
   },
 ];
@@ -1861,12 +2286,45 @@ function ensureExtraState(){
   STATE.sessionMinutes= STATE.sessionMinutes|| {};   // {YYYY-MM-DD: minutes}
   STATE.missHistory   = STATE.missHistory   || {};   // {YYYY-MM-DD: [miss records]}
   STATE.levelDailyDone= STATE.levelDailyDone|| {};   // {levelId: YYYY-MM-DD}; keeps each level's plants motivated separately
-  STATE.revive        = STATE.revive        || {couponSerial:0, active:null, history:[]};
+  STATE.dailyLevelActivity = STATE.dailyLevelActivity || {}; // {YYYY-MM-DD: {levelId: {count, sources}}}
+  STATE.dailyCrossLevelRevived = STATE.dailyCrossLevelRevived || {}; // {YYYY-MM-DD: true}
+  STATE.revive        = STATE.revive        || {couponSerial:0, active:null, history:[], saplingsSpent:0};
+  if(typeof STATE.revive.saplingsSpent!=="number") STATE.revive.saplingsSpent=0;
   if(STATE.lastDate===todayKey() && !STATE.levelDailyDone[1] && !STATE.level1AliveRepairDone){
     STATE.levelDailyDone[1]=todayKey();
     STATE.level1AliveRepairDone=true;
   }
   ensureSurpriseState(STATE);
+}
+
+function reviveAllLevelsForToday(){
+  ensureExtraState();
+  const tk=todayKey();
+  STATE.levelDailyDone=STATE.levelDailyDone||{};
+  LEVELS.forEach(l=>{ STATE.levelDailyDone[l.id]=tk; });
+  STATE.lastDate=tk;
+}
+
+function markDailyLevelActivity(levelId, sourceKey){
+  ensureExtraState();
+  const tk=todayKey();
+  const day = STATE.dailyLevelActivity[tk] = STATE.dailyLevelActivity[tk] || {};
+  const id = String(levelId);
+  const bucket = day[id] = day[id] || {count:0, sources:{}};
+  const src = sourceKey || `${id}:${Date.now()}`;
+  if(!bucket.sources[src]){
+    bucket.sources[src]=true;
+    bucket.count++;
+  }
+  STATE.levelDailyDone=STATE.levelDailyDone||{};
+  STATE.levelDailyDone[id]=tk;
+  const activeLevels = Object.keys(day).filter(k=>(day[k] && (day[k].count||0)>0));
+  if(activeLevels.length>=3 && !STATE.dailyCrossLevelRevived[tk]){
+    STATE.dailyCrossLevelRevived[tk]=true;
+    reviveAllLevelsForToday();
+    return true;
+  }
+  return false;
 }
 
 function completionKeysFromState(s){
@@ -1970,104 +2428,161 @@ function weightedSample(items, n){
   return out;
 }
 
+/* Trophy category taxonomy (drives the revamped Trophy Room grouping + colors) */
+const TROPHY_CATEGORIES = [
+  {id:"core",     title:"First Steps",       icon:"👟", tint:"#DDF5E5", accent:"#3FA46A"},
+  {id:"streak",   title:"Streaks",           icon:"🔥", tint:"#FFE7D6", accent:"#E85F17"},
+  {id:"stars",    title:"Stars",             icon:"⭐", tint:"#FFF3C4", accent:"#D9A400"},
+  {id:"regular",  title:"Regular Verbs",     icon:"🌷", tint:"#FFE1EE", accent:"#E94F72"},
+  {id:"irregular",title:"Irregular Verbs",   icon:"⚡", tint:"#EAE3FF", accent:"#7A5CFF"},
+  {id:"tense",    title:"Verb Tenses",       icon:"🔮", tint:"#E3ECFF", accent:"#3F79E5"},
+  {id:"house",    title:"La Casa",           icon:"🏠", tint:"#FFEED6", accent:"#B87A2F"},
+  {id:"practice", title:"Practice Tests",    icon:"📝", tint:"#E4F4FF", accent:"#2C9BC7"},
+  {id:"hw",       title:"Spanish Class HW",  icon:"📒", tint:"#EFE1FF", accent:"#8B5CE5"},
+  {id:"bonus",    title:"Bonus & Surprise",  icon:"🎁", tint:"#FFF3D8", accent:"#D48A00"},
+  {id:"lessons",  title:"Lesson Milestones", icon:"📅", tint:"#EFE9E1", accent:"#7A5C3E"},
+  {id:"mastery",  title:"Verb Mastery",      icon:"💎", tint:"#E4E7FF", accent:"#4A56C0"},
+  {id:"saplings", title:"Saplings",          icon:"🌱", tint:"#DDF5E5", accent:"#3FA46A"},
+  {id:"trees",    title:"Trees",             icon:"🌳", tint:"#C6E7CE", accent:"#2E7E50"},
+  {id:"levels",   title:"Level Champions",   icon:"🎓", tint:"#E0F0FF", accent:"#2F6BCF"},
+  {id:"perfect",  title:"Perfection",        icon:"🌟", tint:"#FFE7EF", accent:"#C93A73"},
+];
+function trophyCategory(id){
+  if(id==="first-step"||id==="three-star"||id==="conj-master") return "core";
+  if(id.startsWith("streak")) return "streak";
+  if(id.startsWith("stars-")) return "stars";
+  if(id.startsWith("regular")) return "regular";
+  if(id.startsWith("irregular")) return "irregular";
+  if(id.startsWith("tense")) return "tense";
+  if(id.startsWith("house")) return "house";
+  if(id.startsWith("practice")) return "practice";
+  if(id.startsWith("hw")) return "hw";
+  if(id.startsWith("bonus-")||id==="surprise-quiz"||id==="tree") return "bonus";
+  if(id.startsWith("lessons-")) return "lessons";
+  if(id.startsWith("master-")||id.startsWith("verbs-")) return "mastery";
+  if(id.startsWith("saplings-")) return "saplings";
+  if(id.startsWith("trees-")) return "trees";
+  if(id==="level1-done"||id==="level2-done") return "levels";
+  if(id.startsWith("perfect-")) return "perfect";
+  return "core";
+}
+/* Rarity tier: platinum / gold / silver / bronze — controls ring color + tier ribbon */
+function trophyTier(t){
+  const id=t.id;
+  const bigWords=/perfect|all|champion|grandmaster|legend|royalty|master|hero|sage|wizard|unstoppable|cosmic|storm/i;
+  const goldWords=/scholar|hunter|pro|architect|ace|listen(er|ing)|maker|sharp|storm|patch|forest|blooming|wildflower|marathon|streak30|streak60|streak14/i;
+  const silverWords=/sprout|explorer|trio|starter|steady|warrior|going|quarter/i;
+  if(/perfect|-all\b|-perfect\b/i.test(id) || bigWords.test(id)) return "platinum";
+  if(goldWords.test(id)) return "gold";
+  if(silverWords.test(id)) return "silver";
+  // Numeric heuristic: trailing large numbers = higher tier
+  const m=id.match(/-(\d+)(?:s-(\d+))?$/);
+  if(m){
+    const n = parseInt(m[2]||m[1],10);
+    if(n>=25) return "gold";
+    if(n>=10) return "silver";
+  }
+  return "bronze";
+}
+
 /* Trophies — earned automatically when conditions are met after each lesson commit. */
 const TROPHIES = [
-  {id:"first-step",  em:"🌱",  name:"First Step!",       desc:"Finish your first lesson",                check:s=>s.totalLessonsDone>=1},
+  {id:"first-step",  em:"👣",  name:"First Step!",       desc:"Finish your first lesson",                check:s=>s.totalLessonsDone>=1},
   {id:"three-star",  em:"⭐",  name:"Star Power!",       desc:"Get 3 stars in any lesson",               check:s=>s.anyThreeStars},
   {id:"tree",        em:"🌳",  name:"Tree Grower",       desc:"Get 3 stars in a bonus quiz",             check:s=>s.bonusThreeStars},
   {id:"streak3",     em:"🔥",  name:"On Fire!",          desc:"Reach a 3-day streak",                    check:s=>s.streak>=3},
-  {id:"streak7",     em:"🔥🔥", name:"Week Warrior!",     desc:"Reach a 7-day streak",                   check:s=>s.streak>=7},
-  {id:"streak30",    em:"🔥💎",name:"Unstoppable!",       desc:"Reach a 30-day streak",                   check:s=>s.streak>=30},
+  {id:"streak7",     em:"🔥",  name:"Week Warrior!",     desc:"Reach a 7-day streak",                    check:s=>s.streak>=7},
+  {id:"streak30",    em:"🏔️", name:"Unstoppable!",      desc:"Reach a 30-day streak",                   check:s=>s.streak>=30},
   {id:"verbs-10",    em:"📖",  name:"Word Sprout",       desc:"Collect 10 verbs",                        check:s=>s.verbsLearned>=10},
   {id:"verbs-25",    em:"📚",  name:"Word Bloom",        desc:"Collect 25 verbs",                        check:s=>s.verbsLearned>=25},
-  {id:"verbs-all",   em:"📚✨",name:"Word Wizard",        desc:"Collect all verbs in a level",            check:s=>s.allVerbsLearned},
-  {id:"stars-30",    em:"🌟",  name:"Star Collector",    desc:"Earn 30 stars total",                     check:s=>s.totalStars>=30},
+  {id:"verbs-all",   em:"🧙",  name:"Word Wizard",       desc:"Collect all verbs in a level",            check:s=>s.allVerbsLearned},
+  {id:"stars-30",    em:"🌠",  name:"Star Collector",    desc:"Earn 30 stars total",                     check:s=>s.totalStars>=30},
   {id:"stars-75",    em:"🏆",  name:"Star Champion",     desc:"Earn 75 stars total",                     check:s=>s.totalStars>=75},
   {id:"conj-master", em:"🎯",  name:"Conjugation Master",desc:"3 stars on AR, ER and IR endings",        check:s=>s.conjMasterDone},
   {id:"master-10",   em:"💎",  name:"Verb Master x10",   desc:"Master 10 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=10},
   {id:"master-25",   em:"👑",  name:"Verb Royalty",      desc:"Master 25 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=25},
-  {id:"practice-done",em:"📝✨",name:"Practice Champion", desc:"Finish all 10 regular-verb practice tests",check:s=>s.practiceFullyDone},
-  {id:"perfect-10",  em:"💫",  name:"Perfect Ten",       desc:"Earn 3 stars on 10 lessons or quizzes",    check:s=>s.perfectCount>=10},
-  {id:"perfect-25",  em:"🌟👑",name:"Perfect Garden",    desc:"Earn 3 stars on 25 lessons or quizzes",    check:s=>s.perfectCount>=25},
+  {id:"practice-done",em:"🏁", name:"Practice Champion", desc:"Finish all 10 regular-verb practice tests",check:s=>s.practiceFullyDone},
+  {id:"perfect-10",  em:"💯",  name:"Perfect Ten",       desc:"Earn 3 stars on 10 lessons or quizzes",    check:s=>s.perfectCount>=10},
+  {id:"perfect-25",  em:"🌈",  name:"Perfect Garden",    desc:"Earn 3 stars on 25 lessons or quizzes",    check:s=>s.perfectCount>=25},
   // Regular verbs — collection milestones
-  {id:"regular-5",   em:"🌷",   name:"Regular Starter",   desc:"Learn 5 regular verbs",                    check:s=>s.regularVerbsLearned>=5},
-  {id:"regular-15",  em:"🌷🌱", name:"Regular Sprout",    desc:"Learn 15 regular verbs",                   check:s=>s.regularVerbsLearned>=15},
-  {id:"regular-30",  em:"🌷📚", name:"Regular Scholar",   desc:"Learn 30 regular verbs",                   check:s=>s.regularVerbsLearned>=30},
-  {id:"regular-all", em:"🌷🏅",name:"Regular Verb Hero",  desc:"Learn all 41 regular verbs",               check:s=>s.regularVerbsLearned>=41},
+  {id:"regular-5",   em:"🌷",  name:"Regular Starter",   desc:"Learn 5 regular verbs",                    check:s=>s.regularVerbsLearned>=5},
+  {id:"regular-15",  em:"🌼",  name:"Regular Sprout",    desc:"Learn 15 regular verbs",                   check:s=>s.regularVerbsLearned>=15},
+  {id:"regular-30",  em:"🌻",  name:"Regular Scholar",   desc:"Learn 30 regular verbs",                   check:s=>s.regularVerbsLearned>=30},
+  {id:"regular-all", em:"💐",  name:"Regular Verb Hero", desc:"Learn all 41 regular verbs",               check:s=>s.regularVerbsLearned>=41},
   // Regular verbs — 3-star lesson milestones
-  {id:"regular-3s-5", em:"🌷🎯", name:"Regular Sharpshooter",desc:"3 stars on 5 Level 1 lessons",         check:s=>s.level1ThreeStarLessons>=5},
-  {id:"regular-3s-15",em:"🌷🏆",name:"Regular Ace",         desc:"3 stars on 15 Level 1 lessons",          check:s=>s.level1ThreeStarLessons>=15},
-  {id:"regular-3s-25",em:"🌷👑",name:"Regular Legend",      desc:"3 stars on 25 Level 1 lessons",          check:s=>s.level1ThreeStarLessons>=25},
-  {id:"regular-perfect",em:"🌷💯",name:"Regular Perfectionist",desc:"3 stars on every Level 1 lesson",     check:s=>s.level1Perfect},
+  {id:"regular-3s-5", em:"🎯", name:"Regular Sharpshooter",desc:"3 stars on 5 Level 1 lessons",          check:s=>s.level1ThreeStarLessons>=5},
+  {id:"regular-3s-15",em:"🏹", name:"Regular Ace",         desc:"3 stars on 15 Level 1 lessons",         check:s=>s.level1ThreeStarLessons>=15},
+  {id:"regular-3s-25",em:"🏆", name:"Regular Legend",      desc:"3 stars on 25 Level 1 lessons",         check:s=>s.level1ThreeStarLessons>=25},
+  {id:"regular-perfect",em:"💯",name:"Regular Perfectionist",desc:"3 stars on every Level 1 lesson",     check:s=>s.level1Perfect},
   // Irregular verbs — collection milestones
-  {id:"irregular-5", em:"⚡",   name:"Irregular Spark",    desc:"Learn 5 irregular verbs",                 check:s=>s.irregularVerbsLearned>=5},
-  {id:"irregular-10",em:"⚡🌱", name:"Irregular Explorer", desc:"Learn 10 irregular verbs",                check:s=>s.irregularVerbsLearned>=10},
-  {id:"irregular-20",em:"⚡📚", name:"Irregular Hunter",   desc:"Learn 20 irregular verbs",                check:s=>s.irregularVerbsLearned>=20},
-  {id:"irregular-40",em:"⚡🔥", name:"Irregular Master",   desc:"Learn 40 irregular verbs",                check:s=>s.irregularVerbsLearned>=40},
-  {id:"irregular-50",em:"⚡👑", name:"Irregular Legend",   desc:"Learn 50 irregular verbs",                check:s=>s.irregularVerbsLearned>=50},
-  {id:"irregular-all",em:"⚡🏆",name:"Irregular Collector",desc:"Learn every irregular verb",              check:s=>s.irregularVerbsLearned>=61},
+  {id:"irregular-5", em:"⚡",  name:"Irregular Spark",    desc:"Learn 5 irregular verbs",                 check:s=>s.irregularVerbsLearned>=5},
+  {id:"irregular-10",em:"🧭",  name:"Irregular Explorer", desc:"Learn 10 irregular verbs",                check:s=>s.irregularVerbsLearned>=10},
+  {id:"irregular-20",em:"🔎",  name:"Irregular Hunter",   desc:"Learn 20 irregular verbs",                check:s=>s.irregularVerbsLearned>=20},
+  {id:"irregular-40",em:"⚔️", name:"Irregular Master",    desc:"Learn 40 irregular verbs",                check:s=>s.irregularVerbsLearned>=40},
+  {id:"irregular-50",em:"🛡️", name:"Irregular Legend",    desc:"Learn 50 irregular verbs",                check:s=>s.irregularVerbsLearned>=50},
+  {id:"irregular-all",em:"🏛️", name:"Irregular Collector",desc:"Learn every irregular verb",              check:s=>s.irregularVerbsLearned>=61},
   // Irregular verbs — 3-star lesson milestones
-  {id:"irregular-3s-5", em:"⚡🎯",name:"Irregular Sharpshooter",desc:"3 stars on 5 Level 2 lessons",       check:s=>s.level2ThreeStarLessons>=5},
-  {id:"irregular-3s-15",em:"⚡🏆",name:"Irregular Ace",        desc:"3 stars on 15 Level 2 lessons",       check:s=>s.level2ThreeStarLessons>=15},
-  {id:"irregular-3s-25",em:"⚡👑",name:"Irregular Grandmaster",desc:"3 stars on 25 Level 2 lessons",       check:s=>s.level2ThreeStarLessons>=25},
-  {id:"irregular-perfect",em:"⚡💯",name:"Irregular Perfectionist",desc:"3 stars on every Level 2 lesson",  check:s=>s.level2Perfect},
-  {id:"practice-first",em:"📝",name:"Test Starter",      desc:"Finish your first regular practice test",  check:s=>s.practiceTestsDone>=1},
-  {id:"hw-first",    em:"📒",  name:"Homework Hero",     desc:"Finish your first Spanish Class HW quiz",  check:s=>s.hwDone>=1},
-  {id:"hw-5",        em:"🎧",  name:"Listening Learner", desc:"Finish 5 Spanish Class HW quizzes",        check:s=>s.hwDone>=5},
-  {id:"surprise-quiz",em:"🎁", name:"Surprise Solver",   desc:"Finish a surprise review quiz",           check:s=>s.surpriseFinished},
+  {id:"irregular-3s-5", em:"🎯",name:"Irregular Sharpshooter",desc:"3 stars on 5 Level 2 lessons",       check:s=>s.level2ThreeStarLessons>=5},
+  {id:"irregular-3s-15",em:"🥈",name:"Irregular Ace",        desc:"3 stars on 15 Level 2 lessons",       check:s=>s.level2ThreeStarLessons>=15},
+  {id:"irregular-3s-25",em:"🥇",name:"Irregular Grandmaster",desc:"3 stars on 25 Level 2 lessons",       check:s=>s.level2ThreeStarLessons>=25},
+  {id:"irregular-perfect",em:"💯",name:"Irregular Perfectionist",desc:"3 stars on every Level 2 lesson",  check:s=>s.level2Perfect},
+  {id:"practice-first",em:"🧪", name:"Test Starter",      desc:"Finish your first regular practice test", check:s=>s.practiceTestsDone>=1},
+  {id:"hw-first",    em:"🎒",   name:"Homework Hero",     desc:"Finish your first Spanish Class HW quiz", check:s=>s.hwDone>=1},
+  {id:"hw-5",        em:"🎧",   name:"Listening Learner", desc:"Finish 5 Spanish Class HW quizzes",       check:s=>s.hwDone>=5},
+  {id:"surprise-quiz",em:"🎁",  name:"Surprise Solver",   desc:"Finish a surprise review quiz",           check:s=>s.surpriseFinished},
   // Lesson-count milestones
   {id:"lessons-10", em:"📅",   name:"Getting Going",     desc:"Finish 10 lessons total",                 check:s=>s.totalLessonsDone>=10},
-  {id:"lessons-25", em:"📅✨", name:"Quarter Way",       desc:"Finish 25 lessons total",                 check:s=>s.totalLessonsDone>=25},
-  {id:"lessons-50", em:"📅🏅", name:"Half Marathon",     desc:"Finish 50 lessons total",                 check:s=>s.totalLessonsDone>=50},
-  {id:"lessons-100",em:"📅👑", name:"Marathon Master",   desc:"Finish 100 lessons total",                check:s=>s.totalLessonsDone>=100},
+  {id:"lessons-25", em:"🧱",   name:"Quarter Way",       desc:"Finish 25 lessons total",                 check:s=>s.totalLessonsDone>=25},
+  {id:"lessons-50", em:"🏃",   name:"Half Marathon",     desc:"Finish 50 lessons total",                 check:s=>s.totalLessonsDone>=50},
+  {id:"lessons-100",em:"🏁",   name:"Marathon Master",   desc:"Finish 100 lessons total",                check:s=>s.totalLessonsDone>=100},
   // Stars
-  {id:"stars-150",  em:"🌟🌟", name:"Star Storm",        desc:"Earn 150 stars total",                    check:s=>s.totalStars>=150},
-  {id:"stars-250",  em:"💫👑", name:"Cosmic Champion",   desc:"Earn 250 stars total",                    check:s=>s.totalStars>=250},
+  {id:"stars-150",  em:"🌌",   name:"Star Storm",        desc:"Earn 150 stars total",                    check:s=>s.totalStars>=150},
+  {id:"stars-250",  em:"🚀",   name:"Cosmic Champion",   desc:"Earn 250 stars total",                    check:s=>s.totalStars>=250},
   // Saplings (3-star regular lessons)
-  {id:"saplings-10",em:"🌱🌱", name:"Sapling Patch",     desc:"Grow 10 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=10},
+  {id:"saplings-10",em:"🌱",   name:"Sapling Patch",     desc:"Grow 10 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=10},
   {id:"saplings-25",em:"🌸",   name:"Blooming Garden",   desc:"Grow 25 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=25},
   {id:"saplings-50",em:"🌺",   name:"Wildflower Field",  desc:"Grow 50 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=50},
   // Trees (3-star bonus quizzes)
-  {id:"trees-3",    em:"🌳🌳", name:"Little Grove",      desc:"Grow 3 trees (3-star bonus quizzes)",     check:s=>s.treesCount>=3},
-  {id:"trees-10",   em:"🌲🌲", name:"Mighty Forest",     desc:"Grow 10 trees (3-star bonus quizzes)",    check:s=>s.treesCount>=10},
-  {id:"trees-25",   em:"🌴👑", name:"Forest Royalty",    desc:"Grow 25 trees (3-star bonus quizzes)",    check:s=>s.treesCount>=25},
+  {id:"trees-3",    em:"🌳",   name:"Little Grove",      desc:"Grow 3 trees (3-star bonus quizzes)",     check:s=>s.treesCount>=3},
+  {id:"trees-10",   em:"🌲",   name:"Mighty Forest",     desc:"Grow 10 trees (3-star bonus quizzes)",    check:s=>s.treesCount>=10},
+  {id:"trees-25",   em:"🌴",   name:"Forest Royalty",    desc:"Grow 25 trees (3-star bonus quizzes)",    check:s=>s.treesCount>=25},
   // Longer streaks
-  {id:"streak14",   em:"🔥🌟", name:"Two-Week Warrior",  desc:"Reach a 14-day streak",                   check:s=>s.streak>=14},
-  {id:"streak60",   em:"🔥👑", name:"Streak Legend",     desc:"Reach a 60-day streak",                   check:s=>s.streak>=60},
+  {id:"streak14",   em:"📆",   name:"Two-Week Warrior",  desc:"Reach a 14-day streak",                   check:s=>s.streak>=14},
+  {id:"streak60",   em:"🌋",   name:"Streak Legend",     desc:"Reach a 60-day streak",                   check:s=>s.streak>=60},
   // Bonus quiz repeats
-  {id:"bonus-3",    em:"🎁✨", name:"Surprise Trio",     desc:"Finish 3 bonus quizzes",                  check:s=>s.bonusLessonsDone>=3},
-  {id:"bonus-10",   em:"🎁🏅", name:"Bonus Hunter",      desc:"Finish 10 bonus quizzes",                 check:s=>s.bonusLessonsDone>=10},
+  {id:"bonus-3",    em:"🎲",   name:"Surprise Trio",     desc:"Finish 3 bonus quizzes",                  check:s=>s.bonusLessonsDone>=3},
+  {id:"bonus-10",   em:"🧰",   name:"Bonus Hunter",      desc:"Finish 10 bonus quizzes",                 check:s=>s.bonusLessonsDone>=10},
   // Level completion
-  {id:"level1-done",em:"📘✅", name:"Regular Verb Pro",  desc:"Finish every lesson in Level 1",          check:s=>s.level1Complete},
-  {id:"level2-done",em:"📕✅", name:"Irregular Verb Pro",desc:"Finish every lesson in Level 2",          check:s=>s.level2Complete},
+  {id:"level1-done",em:"📘",   name:"Regular Verb Pro",  desc:"Finish every lesson in Level 1",          check:s=>s.level1Complete},
+  {id:"level2-done",em:"📕",   name:"Irregular Verb Pro",desc:"Finish every lesson in Level 2",          check:s=>s.level2Complete},
   // Practice tests
-  {id:"practice-3", em:"📝🥉", name:"Practice Trio",     desc:"Finish 3 regular-verb practice tests",    check:s=>s.practiceTestsDone>=3},
-  {id:"practice-5", em:"📝🥈", name:"Practice Pro",      desc:"Finish 5 regular-verb practice tests",    check:s=>s.practiceTestsDone>=5},
-  {id:"practice-perfect-3",em:"📝🌟",name:"Practice Stars",desc:"Earn 3 stars on 3 practice tests",      check:s=>s.practiceThreeStar>=3},
+  {id:"practice-3", em:"🥉",   name:"Practice Trio",     desc:"Finish 3 regular-verb practice tests",    check:s=>s.practiceTestsDone>=3},
+  {id:"practice-5", em:"🥈",   name:"Practice Pro",      desc:"Finish 5 regular-verb practice tests",    check:s=>s.practiceTestsDone>=5},
+  {id:"practice-perfect-3",em:"⭐",name:"Practice Stars", desc:"Earn 3 stars on 3 practice tests",       check:s=>s.practiceThreeStar>=3},
   // Spanish HW
-  {id:"hw-3",       em:"📒✨", name:"Steady Student",    desc:"Finish 3 Spanish Class HW quizzes",       check:s=>s.hwDone>=3},
-  {id:"hw-all",     em:"📒👑", name:"HW Master",         desc:"Finish all Spanish Class HW quizzes",     check:s=>s.hwFullyDone},
-  {id:"hw-stars-3", em:"📒🌟", name:"HW Sharpshooter",   desc:"Earn 3 stars on 3 HW quizzes",            check:s=>s.hwThreeStar>=3},
+  {id:"hw-3",       em:"📓",   name:"Steady Student",    desc:"Finish 3 Spanish Class HW quizzes",       check:s=>s.hwDone>=3},
+  {id:"hw-all",     em:"🎓",   name:"HW Master",         desc:"Finish all Spanish Class HW quizzes",     check:s=>s.hwFullyDone},
+  {id:"hw-stars-3", em:"✏️",  name:"HW Sharpshooter",   desc:"Earn 3 stars on 3 HW quizzes",             check:s=>s.hwThreeStar>=3},
   // Mastery
-  {id:"master-40",  em:"💎👑", name:"Verb Sage",         desc:"Master 40 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=40},
+  {id:"master-40",  em:"🧠",   name:"Verb Sage",         desc:"Master 40 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=40},
   // Level 3 · Verb Tenses (Futuro cercano)
-  {id:"tense-first",em:"🔮",   name:"Tense Rookie",      desc:"Finish your first tense lesson",           check:s=>s.tenseLessonsDone>=1},
-  {id:"tense-3",    em:"🔮✨", name:"Tense Trio",        desc:"Finish 3 tense lessons",                   check:s=>s.tenseLessonsDone>=3},
-  {id:"tense-7",    em:"🔮🏅", name:"Tense Explorer",    desc:"Finish 7 tense lessons",                   check:s=>s.tenseLessonsDone>=7},
-  {id:"tense-all",  em:"📗✅", name:"Verb Tenses Pro",   desc:"Finish all 10 tense lessons",              check:s=>s.tenseAllDone},
-  {id:"tense-stars-3",em:"🔮🌟",name:"Tense Sharpshooter",desc:"Earn 3 stars on 3 tense lessons",         check:s=>s.tenseThreeStar>=3},
-  {id:"tense-perfect",em:"🔮👑",name:"Futuro Master",    desc:"Earn 3 stars on ALL 10 tense lessons",     check:s=>s.tensePerfect},
+  {id:"tense-first",em:"⏳",   name:"Tense Rookie",      desc:"Finish your first tense activity",        check:s=>s.tenseLessonsDone>=1},
+  {id:"tense-3",    em:"🕰️", name:"Tense Trio",         desc:"Finish 3 tense activities",               check:s=>s.tenseLessonsDone>=3},
+  {id:"tense-7",    em:"📆",   name:"Tense Explorer",    desc:"Finish 7 tense activities",               check:s=>s.tenseLessonsDone>=7},
+  {id:"tense-all",  em:"📗",   name:"Verb Tenses Pro",   desc:"Finish all 10 tense activities",          check:s=>s.tenseAllDone},
+  {id:"tense-stars-3",em:"⏱️",name:"Tense Sharpshooter", desc:"Earn 3 stars on 3 tense activities",      check:s=>s.tenseThreeStar>=3},
+  {id:"tense-perfect",em:"🔮", name:"Futuro Master",     desc:"Earn 3 stars on ALL 10 tense activities", check:s=>s.tensePerfect},
   // Level 4 · La Casa
-  {id:"house-first",   em:"🏠",   name:"Casa Explorer",     desc:"Finish your first La Casa lesson",              check:s=>s.houseLessonsDone>=1 || s.houseQuizzesDone>=1},
-  {id:"house-rooms",   em:"🚪✅", name:"Room Finder",       desc:"Learn every room / area word",                 check:s=>s.houseAllRoomsLearned},
-  {id:"house-furn",    em:"🛋️✅", name:"Furniture Collector",desc:"Learn every furniture / object word",         check:s=>s.houseAllFurnitureLearned},
-  {id:"house-all-words",em:"📖👑", name:"House Builder",     desc:"Learn every La Casa word",                    check:s=>s.houseAllWordsLearned},
-  {id:"house-quiz-3s", em:"🎯🌟", name:"Perfect Room Quiz", desc:"Get 3 stars on a La Casa quiz",                check:s=>s.houseThreeStarQuizzes>=1},
-  {id:"house-quiz-arch",em:"🎯👑", name:"Quiz Architect",    desc:"Get 3 stars on 5 La Casa quizzes",             check:s=>s.houseThreeStarQuizzes>=5},
-  {id:"house-listen",  em:"🎧🏠", name:"Listening Builder", desc:"Answer 10 La Casa listening questions",        check:s=>s.houseListeningCorrect>=10},
-  {id:"house-sentence",em:"✏️🏠", name:"Sentence Maker",    desc:"Answer 10 Hay/Está en… questions",             check:s=>s.houseSentenceCorrect>=10},
-  {id:"house-no-hint", em:"💡🚫", name:"No-Hint Home Hero", desc:"3-star a La Casa quiz with zero hints",        check:s=>s.houseNoHintQuiz},
-  {id:"house-champion",em:"🏆🏠", name:"La Casa Champion",  desc:"Finish every lesson in Level 4",               check:s=>s.houseLevelComplete},
+  {id:"house-first",   em:"🗝️",name:"Casa Explorer",    desc:"Finish your first La Casa lesson",         check:s=>s.houseLessonsDone>=1 || s.houseQuizzesDone>=1},
+  {id:"house-rooms",   em:"🚪", name:"Room Finder",       desc:"Learn every room / area word",            check:s=>s.houseAllRoomsLearned},
+  {id:"house-furn",    em:"🛋️",name:"Furniture Collector",desc:"Learn every furniture / object word",    check:s=>s.houseAllFurnitureLearned},
+  {id:"house-all-words",em:"🏡",name:"House Builder",    desc:"Learn every La Casa word",                 check:s=>s.houseAllWordsLearned},
+  {id:"house-quiz-3s", em:"🎯", name:"Perfect Room Quiz", desc:"Get 3 stars on a La Casa quiz",           check:s=>s.houseThreeStarQuizzes>=1},
+  {id:"house-quiz-arch",em:"🏗️",name:"Quiz Architect",   desc:"Get 3 stars on 5 La Casa quizzes",        check:s=>s.houseThreeStarQuizzes>=5},
+  {id:"house-listen",  em:"🔊", name:"Listening Builder", desc:"Answer 10 La Casa listening questions",   check:s=>s.houseListeningCorrect>=10},
+  {id:"house-sentence",em:"🧾", name:"Sentence Maker",    desc:"Answer 10 Hay/Está en… questions",        check:s=>s.houseSentenceCorrect>=10},
+  {id:"house-no-hint", em:"🕯️",name:"No-Hint Home Hero", desc:"3-star a La Casa quiz with zero hints",   check:s=>s.houseNoHintQuiz},
+  {id:"house-champion",em:"🏰", name:"La Casa Champion",  desc:"Finish every lesson in Level 4",          check:s=>s.houseLevelComplete},
 ];
 function trophySnapshot(){
   let totalLessonsDone=0, anyThreeStars=false, bonusThreeStars=false, totalStars=0, allVerbsLearned=false, verbsLearned=0;
@@ -2235,6 +2750,8 @@ function showNextTrophyPopup(){
   $("#steps").innerHTML="";
   stage.innerHTML=`
     <div class="trophy-popup">
+      <div class="tp-rays"></div>
+      <div class="tp-badge">Unlocked!</div>
       <div class="tp-em">${t.em}</div>
       <h2 class="tp-name">${t.name}</h2>
       <p class="tp-desc">${t.desc}</p>
@@ -2243,7 +2760,7 @@ function showNextTrophyPopup(){
     </div>`;
   $("#overlay").classList.add("show");
   document.body.style.overflow="hidden";
-  confetti(50);
+  trophyMegaBurst();
   try{ speak("New trophy!"); }catch(e){}
   $("#tpCont").onclick=()=>{
     $("#overlay").classList.remove("show");
@@ -2267,6 +2784,20 @@ function pixieConfetti(n){
     document.body.appendChild(c);
     setTimeout(()=>c.remove(),3600);
   }
+}
+function trophyMegaBurst(){
+  confetti(70);
+  pixieConfetti(60);
+  setTimeout(()=>pixieConfetti(40), 420);
+  setTimeout(()=>confetti(32), 760);
+  try{ SFX.right(); setTimeout(()=>SFX.pop(),120); setTimeout(()=>SFX.right(),260); }catch(e){}
+}
+function trophyRoomBurst(trophy, target){
+  celebrateSmallWin(target);
+  pixieConfetti(28);
+  confetti(18);
+  toast(`${trophy.name} trophy! 🏆`);
+  try{ speak(trophy.name); }catch(e){}
 }
 /* Chain: show a special celebration view for each newly-earned trophy, then run finalCb */
 function showTrophyChain(list, finalCb){
@@ -2305,9 +2836,8 @@ function showTrophyCelebration(trophy, onDone){
       <p class="tc-desc">${trophy.desc}</p>
       <button class="btn leaf big" id="tcCont">Continue ✨</button>
     </div>`;
-  pixieConfetti(50);
-  setTimeout(()=>pixieConfetti(30),  500);
-  setTimeout(()=>pixieConfetti(20), 1000);
+  trophyMegaBurst();
+  setTimeout(()=>pixieConfetti(30), 1000);
   try{ speak("New trophy!"); }catch(e){}
   $("#tcCont").onclick=()=>{ if(typeof onDone==="function") onDone(); };
 }
@@ -2356,76 +2886,108 @@ function couponOwedNow(){
   if(!closedAt) return false;
   return daysBetween(closedAt, todayKey()) >= 2;
 }
+/* Sapling wallet — saplings are earned by 3-starring regular lessons and spent on revival coupons.
+   Display = lifetime earned minus spent (never negative). Trophies still use lifetime count. */
+function saplingsEarnedLifetime(){
+  ensureExtraState();
+  let count=0;
+  for(const lid in STATE.levels){
+    const s=STATE.levels[lid]; const lv=LEVELS.find(l=>String(l.id)===String(lid));
+    if(!lv) continue;
+    const plan=planFor(lv);
+    for(const dk in (s.stars||{})){
+      if(!s.completed || !s.completed[dk]) continue;
+      if((s.stars[dk]||0)!==3) continue;
+      const p=plan.find(pp=>String(pp.d)===String(dk));
+      if(p && !p.bonus) count++;                                // 3-star regular (non-bonus) lesson
+    }
+  }
+  return count;
+}
+function saplingsAvailable(){
+  return Math.max(0, saplingsEarnedLifetime() - (STATE.revive.saplingsSpent||0));
+}
+const REVIVAL_COUPON_FIXED_COST = 5;
+function revivalCouponCost(){
+  return REVIVAL_COUPON_FIXED_COST;
+}
+
 function issueRevivalCoupon(){
   ensureExtraState();
   const r = STATE.revive;
   r.couponSerial = (r.couponSerial||0) + 1;
   const stage = getWiltStage();                                 // 2 or 3
   const tier = stage === 3 ? 3 : 2;
-  const target = tier === 3 ? 1 : 2;                            // per level target
   const themeTag = tier === 3 ? "PIXIE-" : "REVIVE-";
   const serial = themeTag + String(Date.now()).slice(-4) + "-" + String(r.couponSerial).padStart(3,"0");
-  const need = LEVELS.map(l=>({levelId:l.id, name:l.name, target, done:0}));
+  const cost = revivalCouponCost(r.couponSerial);
   r.active = {
-    serial, tier,
+    serial, tier, cost,
     issuedAt:new Date().toISOString(),
     daysAway:daysSinceLastActivity(),
-    need, redeemedAt:null, discardedAt:null
+    redeemedAt:null, discardedAt:null
   };
   Store.save();
   return r.active;
 }
-function markLevelChapterDone(levelId){
-  ensureExtraState();
-  const c = STATE.revive.active;
-  if(!c || c.redeemedAt || c.discardedAt) return false;
-  const row = c.need.find(n=>String(n.levelId)===String(levelId));
-  if(!row) return false;
-  const target = row.target || 1;
-  if((row.done||0) >= target) return false;                     // already met
-  row.done = (row.done||0) + 1;
-  Store.save();
-  if(c.need.every(n=>(n.done||0) >= (n.target||1))){
-    redeemRevivalCoupon();
-    return "redeemed";
-  }
-  return true;
-}
+/* Legacy hook — the old flow called this on every lesson commit to tick per-level progress.
+   With the sapling-cost coupon that's no longer needed, but keep the export as a no-op so
+   existing commitDay callers don't break. */
+function markLevelChapterDone(){ return false; }
+
 function redeemRevivalCoupon(){
   ensureExtraState();
   const c = STATE.revive.active;
-  if(!c || c.redeemedAt) return;
+  if(!c || c.redeemedAt) return {ok:false, reason:"no-active"};
+  c.cost = revivalCouponCost();
+  const avail = saplingsAvailable();
+  if(avail < c.cost) return {ok:false, reason:"not-enough", cost:c.cost, avail};
+  STATE.revive.saplingsSpent = (STATE.revive.saplingsSpent||0) + c.cost;
   c.redeemedAt = new Date().toISOString();
+  c.spent = c.cost;
   STATE.revive.history = STATE.revive.history || [];
-  STATE.revive.history.push({serial:c.serial, issuedAt:c.issuedAt, redeemedAt:c.redeemedAt, daysAway:c.daysAway});
-  // Refresh lastDate so saplings look alive again
+  STATE.revive.history.push({serial:c.serial, issuedAt:c.issuedAt, redeemedAt:c.redeemedAt, daysAway:c.daysAway, cost:c.cost});
+  // Refresh lastDate so saplings/plants look alive again
   STATE.lastDate = todayKey();
   Store.save();
   setTimeout(()=>{
     confetti(60);
-    toast("🎁 Coupon redeemed! Your garden is alive again 🌱🌸🌳");
+    toast(`🌟 ${c.cost} saplings spent — garden alive again 🌱🌸🌳`);
     renderLevels();
   }, 200);
+  return {ok:true, cost:c.cost};
 }
 
-/* Overlay UI for the revival coupon (shown on init when withered) */
+/* Overlay UI for the revival coupon — cost in saplings, spend to redeem. */
 function showRevivalCoupon(){
   ensureExtraState();
   const c = STATE.revive.active;
   if(!c) return;
   const stage=$("#stage");
   cur = null;
+  c.cost = revivalCouponCost();
   $("#dvEmoji").textContent="🎁";
   $("#dvTitle").textContent="Revive-your-Garden Coupon";
   $("#dvSub").textContent=`Because you were away for ${c.daysAway} days · one-time offer`;
   $("#steps").innerHTML="";
-  const rows = c.need.map(n=>
-    `<div class="rc-row ${n.done?"done":""}">
-       <span class="rc-check">${n.done?"✅":"⬜"}</span>
-       <span class="rc-name">${n.name}</span>
-       <span class="rc-status">${n.done?"done":"finish 1 lesson"}</span>
-     </div>`).join("");
-  const allDone = c.need.every(n=>n.done);
+  const cost = c.cost;
+  const avail = saplingsAvailable();
+  const canAfford = avail >= cost;
+  const needed = Math.max(0, cost - avail);
+  const walletHTML = `
+    <div class="rc-wallet ${canAfford?"ok":"short"}">
+      <div class="rc-wallet-row">
+        <span class="rc-wallet-label">Coupon cost</span>
+        <span class="rc-wallet-val">${"🌱".repeat(Math.min(cost,10))} <b>${cost}</b></span>
+      </div>
+      <div class="rc-wallet-row">
+        <span class="rc-wallet-label">Your saplings</span>
+        <span class="rc-wallet-val ${canAfford?"":"low"}">🌱 <b>${avail}</b></span>
+      </div>
+      ${canAfford
+        ? `<div class="rc-wallet-msg good">You have enough saplings to revive your garden! ✨</div>`
+        : `<div class="rc-wallet-msg short-msg">Need <b>${needed}</b> more sapling${needed===1?"":"s"} — 3-star regular lessons to earn more 🌱</div>`}
+    </div>`;
   stage.innerHTML = `
     <div class="coupon">
       <div class="coupon-perf"></div>
@@ -2441,21 +3003,27 @@ function showRevivalCoupon(){
             <span class="alive big">🌱</span><span class="alive big">🌸</span><span class="alive big">🌳</span>
           </div>
           <h2 class="coupon-title">Bring your garden back to life</h2>
-          <p class="coupon-sub">Complete <b>1 lesson in each level</b> to redeem this one-time offer. Your saplings will bloom again.</p>
+          <p class="coupon-sub">Spend <b>${cost} saplings</b> to redeem this one-time offer. Your garden will bloom again.</p>
         </div>
-        <div class="coupon-tasks">${rows}</div>
+        ${walletHTML}
         <div class="coupon-actions">
-          <button class="btn leaf big" id="rcGo">${allDone?"Redeem now 🌟":"Start now 🌱"}</button>
+          <button class="btn leaf big" id="rcGo" ${canAfford?"":"disabled"}>${canAfford?`Spend ${cost} 🌱 &amp; revive ✨`:`Not enough saplings`}</button>
           <button class="btn ghost sm" id="rcLater">Maybe later</button>
         </div>
-        <p class="coupon-fine">One-time offer · expires when redeemed · saplings stay withered until you finish</p>
+        <p class="coupon-fine">One-time offer · fixed 5-sapling cost · saplings stay withered until you redeem</p>
       </div>
     </div>`;
   $("#rcGo").onclick=()=>{
-    if(allDone){ redeemRevivalCoupon(); closeDay(); return; }
-    closeDay();
-    renderLevels();
-    toast("Pick a level below to start! 🌱");
+    if(!canAfford){
+      toast("Not enough saplings yet 🌱 — 3-star more regular lessons to save up.");
+      return;
+    }
+    const res = redeemRevivalCoupon();
+    if(res && res.ok){
+      closeDay();
+    } else if(res && res.reason==="not-enough"){
+      toast(`Need ${res.cost} saplings — you have ${res.avail}.`);
+    }
   };
   $("#rcLater").onclick=()=>{ closeDay(); renderLevels(); };
   $("#overlay").classList.add("show");
@@ -2575,6 +3143,19 @@ function miniConfetti(target){
   }catch(e){}
 }
 function celebrateSmallWin(target){ SFX.right(); miniConfetti(target); }
+function secondWrongAdvance(state, onAdvance){
+  if(state.advancing) return true;
+  state.wrongAttempts = (state.wrongAttempts||0) + 1;
+  SFX.wrong();
+  if(state.wrongAttempts >= 2){
+    state.advancing = true;
+    toast("Not quite — let's try the next one 💪");
+    setTimeout(onAdvance, 650);
+    return true;
+  }
+  sayOops();
+  return false;
+}
 
 /* progress within the current level */
 function maxDone(){ const st=lvState(LVID); let m=0; for(const k in st.completed){ if(st.completed[k]) m=Math.max(m,+k); } return m; }
@@ -2586,6 +3167,8 @@ function flowerFor(d){
   return FLOWERS[(d-1)%FLOWERS.length];
 }
 function freshDayPending(levelId){
+  const lv = LEVELS.find(l=>String(l.id)===String(levelId));
+  if(lv && lv.tense) return false;
   const tk=todayKey();
   if(levelId) return !STATE.levelDailyDone || STATE.levelDailyDone[levelId]!==tk;
   return !!STATE.lastDate && STATE.lastDate!==tk;
@@ -2650,7 +3233,7 @@ function renderLevels(){
       <div class="lc-badge">${lv.id}</div>
       <div class="lc-body">
         <h3>${lv.name}</h3>
-        <p>${lv.blurb} · ${lv.hw ? planFor(lv).length+" HW quizzes" : (lv.tense ? planFor(lv).length+" tense lessons" : (lv.house ? planFor(lv).length+" lessons · "+lv.verbs.length+" words" : lv.verbs.length+" verbs"))}</p>
+        <p>${lv.blurb} · ${lv.hw ? planFor(lv).length+" HW quizzes" : (lv.tense ? planFor(lv).length+" tense activities" : (lv.house ? planFor(lv).length+" lessons · "+lv.verbs.length+" words" : lv.verbs.length+" verbs"))}</p>
         <div class="lc-bar"><i style="width:${pct}%"></i></div>
         <div class="lc-meta">${done}/${total} lessons · ${stars}⭐</div>
       </div>
@@ -2775,6 +3358,13 @@ function openDay(d){
     // Verb Tense practice: MCQ quiz for one lesson from TENSE_LESSONS.
     stages.push({type:"tense_quiz", quizIdx:plan.quizIdx, plan});
     stages.push({type:"redo", plan});
+  } else if(plan.basics){
+    // Level 0 · Everyday Basics — one stage per section so the top progress bar
+    // shows all 7 worksheet sections (F is skipped — open-ended).
+    ["A","B","C","D","E","G","H"].forEach(sec=>{
+      stages.push({type:"basics_section", section:sec, plan});
+    });
+    stages.push({type:"redo", plan});
   } else if(plan.house){
     // Level 4 · La Casa
     if(plan.houseType==="quiz"){
@@ -2818,16 +3408,35 @@ function closeDay(){ endSession(); $("#overlay").classList.remove("show"); docum
 
 function renderSteps(){
   const s=$("#steps"); s.innerHTML="";
+  const subN = (cur.subPhases|0), subI = (cur.subPhase|0);
   cur.stages.forEach((_,i)=>{
-    const bar=document.createElement("i");
-    bar.className = i<cur.idx?"done":(i===cur.idx?"on":"");
-    s.appendChild(bar);
+    if(i===cur.idx && subN>1){
+      // Expand the current stage into sub-phase pips so multi-phase renderers show real progress.
+      for(let k=0;k<subN;k++){
+        const bar=document.createElement("i");
+        bar.className = k<subI?"done":(k===subI?"on":"");
+        s.appendChild(bar);
+      }
+    } else {
+      const bar=document.createElement("i");
+      bar.className = i<cur.idx?"done":(i===cur.idx?"on":"");
+      s.appendChild(bar);
+    }
   });
 }
-function nextStage(){ cur.idx++; if(cur.idx>=cur.stages.length){ finishDay(); } else { renderSteps(); runStage(); } }
+function setSubStage(idx, total){
+  if(!cur) return;
+  cur.subPhase = idx|0; cur.subPhases = total|0;
+  renderSteps();
+}
+function nextStage(){
+  if(cur){ cur.subPhase = 0; cur.subPhases = 0; }
+  cur.idx++;
+  if(cur.idx>=cur.stages.length){ finishDay(); } else { renderSteps(); runStage(); }
+}
 function runStage(){
   const st=cur.stages[cur.idx];
-  const map={intro:renderIntro, wordbuild:renderScramble, listenspell:renderListenSpell, voiceverb:renderVoiceVerb, match:renderMatch, quiz:renderQuiz, scramble:renderScramble, memory:renderMemory, conj:renderConj, fillblank:renderFill, truefalse:renderTF, bonus_review:renderBonusReview, tense_quiz:renderTenseQuiz, house_lesson:renderHouseLesson, house_quiz:renderHouseQuiz, redo:renderRedo, bloom:renderBloom};
+  const map={intro:renderIntro, wordbuild:renderScramble, listenspell:renderListenSpell, voiceverb:renderVoiceVerb, match:renderMatch, quiz:renderQuiz, scramble:renderScramble, memory:renderMemory, conj:renderConj, fillblank:renderFill, truefalse:renderTF, bonus_review:renderBonusReview, tense_quiz:renderTenseQuiz, house_lesson:renderHouseLesson, house_quiz:renderHouseQuiz, basics_section:renderBasicsSection, redo:renderRedo, bloom:renderBloom};
   (map[st.type]||renderBloom)(st);
 }
 
@@ -3000,6 +3609,7 @@ function renderQuiz(st){
     const others = sample(cur.pool.filter(x=>x.id!==v.id), 3).map(x=>askEs?x.en:x.es);
     const opts = shuffle([correct,...others]);
     let missed=false, pushed=false; done=false;
+    const wrongState={wrongAttempts:0};
     const promptHTML = askEs? `What does <b>${v.es}</b> mean?` : `How do you say <b>"${v.en}"</b>?`;
     stage.innerHTML=`
       <p class="lead">${lead}</p>
@@ -3017,7 +3627,7 @@ function renderQuiz(st){
         if(txt===correct){ done=true; b.classList.add("ok"); celebrateSmallWin(b); recordVerbAttempt(v.id, !missed); cur.score++;
           if(missed && !pushed){ addRedoQuestion({prompt:promptHTML, opts, correct, em:v.em, speak:v.inf, verbId:v.id}); pushed=true; }
           speak(v.inf); setTimeout(adv,650); }
-        else { missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); }
+        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv)) done=true; }
       };
       o.appendChild(b);
     });
@@ -3041,6 +3651,7 @@ function renderScramble(st){
     let scrambled=shuffle(letters);
     if(scrambled.join("")===v.inf.toLowerCase()) scrambled=shuffle(letters);
     let built=[]; let wordMissed=false;
+    const wrongState={wrongAttempts:0};
     stage.innerHTML=`
       <p class="lead">${isToday?"Spell today's words 🔤":"Build the Spanish word 🔤"}</p>
       <p class="sub">Word ${r+1} of ${rounds} — read the meaning, then tap the jumbled letters to spell the Spanish verb.</p>
@@ -3065,7 +3676,8 @@ function renderScramble(st){
           recordVerbAttempt(v.id, !wordMissed);
           cur.score++;
           setTimeout(()=>{ if(r<rounds-1){ r++; draw(); } else nextStage(); },800);
-        } else { wordMissed=true; SFX.wrong(); sayOops(); slots.querySelectorAll(".slot").forEach(s=>s.classList.add("filled"));
+        } else { wordMissed=true; slots.querySelectorAll(".slot").forEach(s=>s.classList.add("filled"));
+          if(secondWrongAdvance(wrongState, ()=>{ if(r<rounds-1){ r++; draw(); } else nextStage(); })) return;
           $("#slots").animate?$("#slots").animate([{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"none"}],{duration:300}):0;
           setTimeout(()=>{ built=[]; drawSlots(); drawTiles(); },450);
         }
@@ -3144,6 +3756,7 @@ function renderConj(st){
     const opts=shuffle([correct,...new Set(distract)]).slice(0,4);
     if(!opts.includes(correct)) opts[0]=correct;
     let missed=false, pushed=false; done=false;
+    const wrongState={wrongAttempts:0};
     const promptHTML=`<b>${PRON[p]}</b> ____ <span style="color:var(--ink-soft);font-size:16px;">(${v.inf} · ${v.en})</span>`;
     stage.innerHTML=`
       <p class="lead">Add the right ending 🧩</p>
@@ -3162,7 +3775,7 @@ function renderConj(st){
         if(txt===correct){ done=true; b.classList.add("ok"); celebrateSmallWin(b); recordVerbAttempt(v.id, !missed); cur.score++;
           if(missed && !pushed){ addRedoQuestion({prompt:promptHTML, opts, correct, em:v.em, speak:correct, verbId:v.id}); pushed=true; }
           speak(correct); setTimeout(adv,650); }
-        else { missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); }
+        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv)) done=true; }
       };
       o.appendChild(b);
     });
@@ -3185,6 +3798,7 @@ function renderFill(st){
     if(!opts.includes(correct)) opts[0]=correct;
     const sentence=data.es.replace("___",`<span class="blank">?</span>`);
     let missed=false, pushed=false; done=false;
+    const wrongState={wrongAttempts:0};
     stage.innerHTML=`
       <p class="lead">Finish the sentence ✏️</p>
       <div class="qcount">Sentence ${i+1} of ${items.length}</div>
@@ -3204,7 +3818,7 @@ function renderFill(st){
           if(missed && !pushed){ addRedoQuestion({prompt:sentence, opts, correct, em:v.em, speak:data.es.replace("___",correct), verbId:v.id}); pushed=true; }
           if(bl){bl.textContent=correct;bl.classList.add("done");}
           speak(data.es.replace("___",correct)); setTimeout(adv,900);
-        } else { missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); }
+        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv)) done=true; }
       };
       o.appendChild(b);
     });
@@ -3231,6 +3845,7 @@ function renderTF(st){
     const correctLabel=isTrue?"✅ True":"❌ False";
     const promptHTML=`<b>${v.es}</b> means <b>"${shownEn}"</b>`;
     let missed=false, pushed=false; done=false;
+    const wrongState={wrongAttempts:0};
     stage.innerHTML=`
       <p class="lead">True or False? 🤔</p>
       <div class="qcount">Statement ${i+1} of ${items.length}</div>
@@ -3248,7 +3863,7 @@ function renderTF(st){
         if(b.dataset.v===correct){ done=true; b.classList.add("ok"); celebrateSmallWin(b); recordVerbAttempt(v.id, !missed); cur.score++;
           if(missed && !pushed){ addRedoQuestion({prompt:promptHTML, opts:["✅ True","❌ False"], correct:correctLabel, em:v.em, speak:v.inf, verbId:v.id}); pushed=true; }
           speak(v.inf); setTimeout(adv,650); }
-        else { missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); toast(`${v.es} = ${v.en}`); }
+        else { missed=true; b.classList.add("no"); toast(`${v.es} = ${v.en}`); if(secondWrongAdvance(wrongState, adv)) done=true; }
       };
     });
     cur.max++;
@@ -3269,6 +3884,7 @@ function renderListenSpell(st){
     let scrambled=shuffle(letters);
     if(scrambled.join("")===v.inf.toLowerCase()) scrambled=shuffle(letters);
     let built=[], tries=0; let wordMissed=false;
+    const wrongState={wrongAttempts:0};
     stage.innerHTML=`
       <p class="lead">Listen and spell 🎧</p>
       <p class="sub">Word ${r+1} of ${verbs.length} — tap 🔊 to hear it, then spell what you hear.</p>
@@ -3294,8 +3910,9 @@ function renderListenSpell(st){
           recordVerbAttempt(v.id, !wordMissed);
           cur.score++;
           setTimeout(()=>{ if(r<verbs.length-1){ r++; draw(); } else nextStage(); },850);
-        } else { wordMissed=true; tries++; SFX.wrong(); sayOops();
+        } else { wordMissed=true; tries++;
           if(tries>=2){ $("#lh").innerHTML=`Hint: it means <b>"${v.en}"</b> ${v.em}`; }
+          if(secondWrongAdvance(wrongState, ()=>{ if(r<verbs.length-1){ r++; draw(); } else nextStage(); })) return;
           setTimeout(()=>{ built=[]; drawSlots(); drawTiles(); },500);
         }
       }
@@ -3380,8 +3997,10 @@ function renderBonusReview(st){
   }
   const prons = ["yo","tu","el","nos","ellos"];
   let phase = 0; // 0=vocab, 1=matching, 2=conj, 3=paragraph, 4=redo
+  setSubStage(0, 5);
 
   function runPhase(){
+    setSubStage(phase, 5);
     if(phase===0) vocabBlitz();
     else if(phase===1) matchingPhase();
     else if(phase===2) conjChallenge();
@@ -3396,40 +4015,58 @@ function renderBonusReview(st){
     const n = Math.min(10, matchPool.length);
     const picks = sample(matchPool, n);
     const left = shuffle(picks), right = shuffle(picks);
-    let selL=null, matched=0;
+    let selected=null, matched=0;
     const missedIds={};
     cur.max += n;
     const stage=$("#stage");
     stage.innerHTML=`
       <p class="lead">🔗 Matching <span style="font-size:13px;color:var(--ink-soft);font-weight:700"> — Part 2 of 4</span></p>
-      <p class="sub">Tap a Spanish word, then its English meaning.</p>
+      <p class="sub">Tap a Spanish word or meaning first, then its match.</p>
       <div class="match" id="bmWrap"></div>`;
     const wrap=$("#bmWrap");
     const colL=document.createElement("div"); const colR=document.createElement("div");
     colL.style.display=colR.style.display="grid"; colL.style.gap=colR.style.gap="10px";
+    function handleMatchChoice(b, v){
+      if(b.classList.contains("ok")) return;
+      if(b.dataset.side==="l") speak(v.inf);
+      if(!selected){
+        b.classList.add("sel");
+        selected=b;
+        return;
+      }
+      if(selected===b) return;
+      if(selected.dataset.side===b.dataset.side){
+        selected.classList.remove("sel");
+        b.classList.add("sel");
+        selected=b;
+        return;
+      }
+      const first=selected;
+      selected=null;
+      const id=first.dataset.id;
+      if(id===b.dataset.id){
+        SFX.right(); b.classList.add("ok"); first.classList.add("ok"); first.classList.remove("sel"); matched++;
+        cur.score++;
+        // Track verb attempt for spaced repetition (clean match = right first try)
+        const wasMissed=!!missedIds[id];
+        recordVerbAttempt(parseInt(id), !wasMissed);
+        if(matched===n){ toast("All matched! 🎉"); phase++; setTimeout(runPhase,650); }
+      } else {
+        SFX.wrong(); b.classList.add("bad"); first.classList.add("bad");
+        missedIds[id]=true;
+        missedIds[b.dataset.id]=true;
+        setTimeout(()=>{b.classList.remove("bad","sel"); first.classList.remove("bad","sel");},400);
+      }
+    }
     left.forEach(v=>{
-      const b=document.createElement("button"); b.className="mtile"; b.dataset.id=v.id;
+      const b=document.createElement("button"); b.className="mtile"; b.dataset.id=v.id; b.dataset.side="l";
       b.textContent=v.es; colL.appendChild(b);
-      b.onclick=()=>{ if(b.classList.contains("ok"))return; speak(v.inf);
-        colL.querySelectorAll(".mtile").forEach(x=>x.classList.remove("sel")); b.classList.add("sel"); selL=b; };
+      b.onclick=()=>handleMatchChoice(b, v);
     });
     right.forEach(v=>{
-      const b=document.createElement("button"); b.className="mtile"; b.dataset.id=v.id;
+      const b=document.createElement("button"); b.className="mtile"; b.dataset.id=v.id; b.dataset.side="r";
       b.innerHTML=`<span class="em">${v.em}</span>${v.en}`; colR.appendChild(b);
-      b.onclick=()=>{ if(b.classList.contains("ok")||!selL)return;
-        const id=selL.dataset.id;
-        if(id===b.dataset.id){
-          SFX.right(); b.classList.add("ok"); selL.classList.add("ok"); selL.classList.remove("sel"); selL=null; matched++;
-          cur.score++;
-          // Track verb attempt for spaced repetition (clean match = right first try)
-          const wasMissed=!!missedIds[id];
-          recordVerbAttempt(parseInt(id), !wasMissed);
-          if(matched===n){ toast("All matched! 🎉"); phase++; setTimeout(runPhase,650); }
-        } else {
-          SFX.wrong(); b.classList.add("bad"); const s=selL; s.classList.add("bad");
-          missedIds[id]=true;
-          setTimeout(()=>{b.classList.remove("bad"); s.classList.remove("bad","sel");},400); selL=null;
-        }};
+      b.onclick=()=>handleMatchChoice(b, v);
     });
     wrap.appendChild(colL); wrap.appendChild(colR);
   }
@@ -3447,6 +4084,7 @@ function renderBonusReview(st){
       const others=sample(pool.filter(x=>x.id!==v.id),3).map(x=>askEs?x.en:x.es);
       const opts=shuffle([correct,...others]);
       let missed=false, pushed=false; done=false;
+      const wrongState={wrongAttempts:0};
       const promptHTML=askEs?`What does <b>${v.es}</b> mean?`:`How do you say <b>"${v.en}"</b>?`;
       stage.innerHTML=`
         <p class="lead">⚡ Vocab Blitz <span style="font-size:13px;color:var(--ink-soft);font-weight:700"> — Part 1 of 4</span></p>
@@ -3465,7 +4103,7 @@ function renderBonusReview(st){
           if(txt===correct){ done=true; b.classList.add("ok"); celebrateSmallWin(b); recordVerbAttempt(v.id, !missed); cur.score++;
             if(missed && !pushed){ addRedoQuestion({prompt:promptHTML, opts, correct, em:v.em, speak:v.inf, verbId:v.id}); pushed=true; }
             speak(v.inf); setTimeout(adv,650); }
-          else{ missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); }
+          else{ missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv)) done=true; }
         };
         o.appendChild(b);
       });
@@ -3525,6 +4163,7 @@ function renderBonusReview(st){
       if(!opts.includes(q.correct)) opts[0]=q.correct;
       const sentence=`${q.pre}<span class="blank" style="background:#FFF7E2;min-width:72px">❓</span>${q.post}`;
       let missed=false, pushed=false; done=false;
+      const wrongState={wrongAttempts:0};
       stage.innerHTML=`
         <p class="lead">🧩 Conjugation Challenge <span style="font-size:13px;color:var(--ink-soft);font-weight:700"> — Part 3 of 4</span></p>
         <p class="sub"><b>SER</b> = permanent · <b>ESTAR</b> = temporary/location/emotion · watch the ending!</p>
@@ -3547,7 +4186,7 @@ function renderBonusReview(st){
             const bl=stage.querySelector(".blank"); if(bl){bl.textContent=q.correct; bl.classList.add("done");}
             speak(q.pre.trim()+" "+q.correct+" "+q.post.trim()); setTimeout(adv,900);
           }
-          else{ missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); }
+          else{ missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv)) done=true; }
         };
         o.appendChild(b);
       });
@@ -3580,7 +4219,8 @@ function renderBonusReview(st){
       const cur_item=items[i];
       const opts=shuffle([cur_item.correct,...cur_item.opts.filter(o=>o!==cur_item.correct)]).slice(0,4);
       if(!opts.includes(cur_item.correct)) opts[0]=cur_item.correct;
-      let missed=false, pushed=false;
+      let missed=false, pushed=false, done=false;
+      const wrongState={wrongAttempts:0};
       const singleSentencePrompt=`${cur_item.pre}<span class="blank" style="background:#FFF7E2;min-width:72px">❓</span>${cur_item.post}`;
       stage.innerHTML=`
         <p class="lead">📝 Paragraph Fill-in <span style="font-size:13px;color:var(--ink-soft);font-weight:700"> — Part 4 of 4</span></p>
@@ -3594,13 +4234,13 @@ function renderBonusReview(st){
       opts.forEach(txt=>{
         const b=document.createElement("button"); b.className="opt"; b.textContent=txt;
         b.onclick=()=>{
-          if(b.classList.contains("no"))return;
+          if(done||b.classList.contains("no"))return;
           if(txt===cur_item.correct){
-            b.classList.add("ok"); celebrateSmallWin(b); cur.score++; answers[i]=txt;
+            done=true; b.classList.add("ok"); celebrateSmallWin(b); cur.score++; answers[i]=txt;
             if(missed && !pushed){ addRedoQuestion({prompt:singleSentencePrompt, opts:cur_item.opts, correct:cur_item.correct, hint:cur_item.hint, speak:cur_item.pre.trim()+" "+cur_item.correct+" "+cur_item.post.trim()}); pushed=true; }
             speak(txt);
             setTimeout(()=>{ if(i<items.length-1){i++;render();} else{ confetti(18); toast("¡Excelente! Paragraph complete! 📝"); phase++; setTimeout(runPhase,800); } },700);
-          } else{ missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); }
+          } else{ missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv)) done=true; }
         };
         o.appendChild(b);
       });
@@ -3614,6 +4254,407 @@ function renderBonusReview(st){
 
 /* ---------- Bloom (finish) ---------- */
 /* ---------- Redo (practice round for items Kabir got wrong first try or used hint on) ---------- */
+/* ============================================================
+   LEVEL 0 · Everyday Basics — one worksheet per day
+   Sub-phases: A(SER fills) → B(TENER fills) → C(SER/TENER MCQ)
+             → D(translate typed) → E(match) → G(error rewrite)
+             → H(paragraph fill) → done
+   Section F (Make Sentences) is intentionally skipped — open-ended.
+   ============================================================ */
+function renderBasicsSection(st){
+  const plan = st.plan;
+  const ws = LEVEL0_WORKSHEETS[plan.quizIdx];
+  if(!ws){ nextStage(); return; }
+  const stage = $("#stage");
+  // Advance to the next OUTER stage (next section, or redo, or bloom).
+  function next(){ nextStage(); }
+
+  function norm(s){
+    return String(s||"").toLowerCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g,"")
+      .replace(/[¿?¡!.,;:"()]/g,"")
+      .replace(/\s+/g," ").trim();
+  }
+  function acceptSet(main, alts){
+    const s = new Set([norm(main)]);
+    (alts||[]).forEach(a=>s.add(norm(a)));
+    return s;
+  }
+  function pushRedo(item){ if(cur && cur.redoQueue) cur.redoQueue.push(item); }
+
+  function dispatch(){
+    switch(st.section){
+      case "A": return runFillSection("A · Completa con SER","Fill in with the correct form of SER.", ws.ser, L0_SER_POOL);
+      case "B": return runFillSection("B · Completa con TENER","Fill in with the correct form of TENER.", ws.tener, L0_TENER_POOL);
+      case "C": return runChoice();
+      case "D": return runTranslate();
+      case "E": return runMatch();
+      case "G": return runError();
+      case "H": return runParagraph();
+      default: return next();
+    }
+  }
+
+  /* Shared typed fill helper — one blank verb form in a sentence */
+  function runTypedFill(cfg){
+    // cfg: {title, sub, items, pool, letter, hintMaker}
+    const items = cfg.items; let i = 0;
+    cur.max += items.length;
+    function draw(){
+      const it = items[i];
+      const pre = it[0], correct = it[1], post = it[2];
+      const opts = cfg.pool || [];
+      const accepted = acceptSet(correct, []);
+      let missed = false, done = false;
+      const wrongState={wrongAttempts:0};
+      const sentence = `${pre} <span class="blank" style="background:#FFF7E2;min-width:70px">❓</span> ${post}`;
+      const hintTxt = cfg.hintMaker ? cfg.hintMaker(it) : "";
+      stage.innerHTML = `
+        <p class="lead">📝 ${cfg.title}</p>
+        <p class="sub">${cfg.sub}</p>
+        <div class="qcount">Question ${i+1} of ${items.length}</div>
+        <div class="q">
+          <div class="ask" style="font-size:19px;line-height:1.5">${sentence}</div>
+          <input id="fin" class="l0input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type the verb form…"/>
+          <div id="ffeed" class="l0feed"></div>
+          <div class="l0actions">
+            <button class="hint-btn" id="fHint" type="button">💡 Need a hint?</button>
+            <button class="btn leaf" id="fChk" type="button">Check ➜</button>
+            <button class="btn ghost sm" id="fSkip" type="button">Skip ⏭</button>
+          </div>
+        </div>`;
+      const inp=$("#fin"), feed=$("#ffeed"), chk=$("#fChk"), hint=$("#fHint"), skip=$("#fSkip");
+      let attempts = 0;
+      skip.onclick = ()=>{
+        if(done) return;
+        done = true;
+        feed.textContent = "Skipped ⏭"; feed.style.color="var(--ink-soft)";
+        chk.disabled=true; inp.disabled=true; hint.disabled=true; skip.disabled=true;
+        setTimeout(()=>{ if(i<items.length-1){ i++; draw(); } else next(); }, 350);
+      };
+      setTimeout(()=>{ try{ inp.focus(); }catch(e){} }, 50);
+      hint.onclick = ()=>{
+        feed.textContent = hintTxt ? ("Hint: "+hintTxt) : ("Hint: "+correct);
+        feed.style.color = "#a06800";
+        missed = true;
+        if(cur) cur.hintUsedInLesson = true;
+      };
+      function check(){
+        if(done) return;
+        const v = norm(inp.value); if(!v){ inp.focus(); return; }
+        if(accepted.has(v)){
+          done = true; SFX.right();
+          const bl=stage.querySelector(".blank"); if(bl){ bl.textContent=correct; bl.classList.add("done"); bl.style.background=""; }
+          feed.textContent="¡Correcto! "+correct+" ✅"; feed.style.color="var(--leaf-dark)";
+          chk.disabled=true; inp.disabled=true; hint.disabled=true;
+          speak((pre+" "+correct+" "+post).trim());
+          if(!missed) cur.score++;
+          if(missed && opts.length){
+            const distractors = opts.filter(x=>x!==correct);
+            const mcOpts = shuffle([correct, ...sample(distractors, Math.min(3, distractors.length))]);
+            pushRedo({prompt:sentence, opts:mcOpts, correct, speak:(pre+" "+correct+" "+post).trim()});
+          }
+          setTimeout(()=>{ if(i<items.length-1){ i++; draw(); } else next(); }, 800);
+        } else {
+          missed = true;
+          feed.textContent="Not quite — try again 💪"; feed.style.color="var(--berry)";
+          if(secondWrongAdvance(wrongState, ()=>{ done=true; chk.disabled=true; inp.disabled=true; hint.disabled=true; skip.disabled=true; if(i<items.length-1){ i++; draw(); } else next(); })) done=true;
+        }
+      }
+      chk.onclick = check;
+      inp.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); check(); }});
+    }
+    draw();
+  }
+
+  /* A / B — 10 typed fill-ins for SER or TENER */
+  function runFillSection(title, sub, items, pool){
+    runTypedFill({title, sub, items, pool, hintMaker:it=>(pool===L0_SER_POOL?"SER":"TENER")+" · "+ pronounFor(it[0])});
+  }
+
+  function pronounFor(pre){
+    const t = String(pre).toLowerCase().trim();
+    if(/\byo\b/.test(t)) return "yo";
+    if(/\btú\b|\btu\b/.test(t)) return "tú";
+    if(/\busted\b/.test(t)) return "usted";
+    if(/\bustedes\b/.test(t)) return "ustedes";
+    if(/\bvosotros\b|\bvosotras\b|y tú$/.test(t)) return "vosotros";
+    if(/\bnosotros\b|\bnosotras\b|y yo$/.test(t)) return "nosotros";
+    if(/\bellos\b|\bellas\b|mis |los |las /.test(t)) return "ellos/ellas";
+    return "él/ella";
+  }
+
+  /* C — 6 typed SER/TENER decision fills */
+  function runChoice(){
+    runTypedFill({
+      title:"C · Elige SER o TENER",
+      sub:"Type the correct verb form (SER or TENER).",
+      items: ws.choice.map(x=>[x[0], x[1], x[2]]),
+      pool: L0_SER_POOL.concat(L0_TENER_POOL),
+      hintMaker: it=>{
+        const isSer = L0_SER_POOL.indexOf(it[1])>=0;
+        return (isSer?"SER":"TENER")+" · "+pronounFor(it[0]);
+      }
+    });
+  }
+
+  /* D — 6 English → Spanish translations, typed */
+  function runTranslate(){
+    const items = ws.translate; let i=0;
+    cur.max += items.length;
+    function draw(){
+      const it = items[i];
+      const en = it[0], correct = it[1], alts = it[2];
+      const accepted = acceptSet(correct, alts);
+      let missed = false;
+      const wrongState={wrongAttempts:0};
+      stage.innerHTML = `
+        <p class="lead">🌐 D · Traduce al español</p>
+        <p class="sub">Type the Spanish translation. Accents are optional.</p>
+        <div class="qcount">Question ${i+1} of ${items.length}</div>
+        <div class="q">
+          <div class="ask" style="font-size:20px;line-height:1.4">${en}</div>
+          <input id="tin" class="l0input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type your answer…"/>
+          <div id="tfeed" class="l0feed"></div>
+          <div class="l0actions">
+            <button class="hint-btn" id="tinHint" type="button">💡 Need a hint?</button>
+            <button class="btn leaf" id="tinChk" type="button">Check ➜</button>
+            <button class="btn ghost sm" id="tinSkip" type="button">Skip ⏭</button>
+          </div>
+        </div>`;
+      const inp=$("#tin"), feed=$("#tfeed"), chk=$("#tinChk"), hint=$("#tinHint"), skip=$("#tinSkip");
+      let doneD = false;
+      setTimeout(()=>{ try{ inp.focus(); }catch(e){} }, 50);
+      hint.onclick = ()=>{ feed.textContent="Hint: "+correct; feed.style.color="#a06800"; missed = true; if(cur) cur.hintUsedInLesson = true; };
+      skip.onclick = ()=>{
+        if(doneD) return; doneD = true;
+        feed.textContent = "Skipped ⏭"; feed.style.color="var(--ink-soft)";
+        chk.disabled=true; inp.disabled=true; hint.disabled=true; skip.disabled=true;
+        setTimeout(()=>{ if(i<items.length-1){ i++; draw(); } else next(); }, 350);
+      };
+      function check(){
+        if(doneD) return;
+        const v = norm(inp.value); if(!v){ inp.focus(); return; }
+        if(accepted.has(v)){
+          doneD = true;
+          SFX.right(); speak(correct);
+          feed.textContent = "¡Correcto! " + correct + " ✅"; feed.style.color="#2b8a3e";
+          chk.disabled = true; inp.disabled = true;
+          if(!missed) cur.score++;
+          if(missed){
+            // Build a small MCQ for the redo round (correct + 3 other Spanish sentences from this section)
+            const others = items.filter((_,j)=>j!==i).map(x=>x[1]);
+            const opts = shuffle([correct, ...sample(others, Math.min(3, others.length))]);
+            pushRedo({prompt:"Translate: <b>"+en+"</b>", opts, correct, speak:correct});
+          }
+          setTimeout(()=>{ if(i<items.length-1){ i++; draw(); } else next(); }, 900);
+        } else {
+          missed = true;
+          feed.textContent = "Not quite — try again 💪"; feed.style.color="#c92a2a";
+          if(secondWrongAdvance(wrongState, ()=>{ doneD=true; chk.disabled=true; inp.disabled=true; hint.disabled=true; skip.disabled=true; if(i<items.length-1){ i++; draw(); } else next(); })) doneD=true;
+        }
+      }
+      chk.onclick = check;
+      inp.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); check(); }});
+    }
+    draw();
+  }
+
+  /* E — 4-pair matching (pronoun ↔ verb form) */
+  function runMatch(){
+    const m = ws.match;
+    const pairs = m.pronouns.map((p,idx)=>({id:idx, l:p, r:m.pairs[idx]}));
+    if(!pairs.length){ next(); return; }
+    const left = shuffle([...pairs]);
+    const right = shuffle([...pairs]);
+    let selected=null, matched=0;
+    const missedIds = {};
+    cur.max += pairs.length;
+    stage.innerHTML = `
+      <p class="lead">🔗 E · Une las columnas</p>
+      <p class="sub">Match each pronoun with its verb form.</p>
+      <div class="match" id="l0mwrap"></div>
+      <div class="l0actions" style="margin-top:14px"><button class="btn ghost sm" id="mSkip" type="button">Skip section ⏭</button></div>`;
+    $("#mSkip").onclick=()=>{ toast("Section skipped"); setTimeout(next, 400); };
+    const wrap=$("#l0mwrap");
+    const colL=document.createElement("div"), colR=document.createElement("div");
+    colL.style.display=colR.style.display="grid";
+    colL.style.gap=colR.style.gap="10px";
+    function handle(b){
+      if(b.classList.contains("ok")) return;
+      if(!selected){ b.classList.add("sel"); selected=b; return; }
+      if(selected===b) return;
+      if(selected.dataset.side===b.dataset.side){ selected.classList.remove("sel"); b.classList.add("sel"); selected=b; return; }
+      const first=selected; selected=null;
+      if(first.dataset.id===b.dataset.id){
+        SFX.right(); first.classList.add("ok"); b.classList.add("ok"); first.classList.remove("sel"); matched++;
+        if(!missedIds[first.dataset.id]) cur.score++;
+        if(matched===pairs.length){ toast("¡Todos emparejados! 🎉"); setTimeout(next, 700); }
+      } else {
+        SFX.wrong(); first.classList.add("bad"); b.classList.add("bad");
+        missedIds[first.dataset.id]=true; missedIds[b.dataset.id]=true;
+        setTimeout(()=>{ first.classList.remove("bad","sel"); b.classList.remove("bad"); }, 400);
+      }
+    }
+    left.forEach(p=>{
+      const b=document.createElement("button"); b.className="mtile"; b.dataset.id=p.id; b.dataset.side="l"; b.textContent=p.l;
+      b.onclick=()=>handle(b); colL.appendChild(b);
+    });
+    right.forEach(p=>{
+      const b=document.createElement("button"); b.className="mtile"; b.dataset.id=p.id; b.dataset.side="r"; b.textContent=p.r;
+      b.onclick=()=>handle(b); colR.appendChild(b);
+    });
+    wrap.appendChild(colL); wrap.appendChild(colR);
+  }
+
+  /* G — 5 error corrections, typed */
+  function runError(){
+    const items = ws.errors; let i=0;
+    cur.max += items.length;
+    function draw(){
+      const it = items[i];
+      const wrong = it[0], correct = it[1], alts = it[2];
+      const accepted = acceptSet(correct, alts);
+      let missed = false;
+      const wrongState={wrongAttempts:0};
+      stage.innerHTML = `
+        <p class="lead">🔎 G · Encuentra el error</p>
+        <p class="sub">Rewrite the sentence correctly.</p>
+        <div class="qcount">Question ${i+1} of ${items.length}</div>
+        <div class="q">
+          <div class="ask" style="font-size:19px;line-height:1.4">
+            <span class="l0wrong">${wrong}</span>
+          </div>
+          <input id="ein" class="l0input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type the correct sentence…"/>
+          <div id="efeed" class="l0feed"></div>
+          <div class="l0actions">
+            <button class="hint-btn" id="eHint" type="button">💡 Need a hint?</button>
+            <button class="btn leaf" id="eChk" type="button">Check ➜</button>
+            <button class="btn ghost sm" id="eSkip" type="button">Skip ⏭</button>
+          </div>
+        </div>`;
+      const inp=$("#ein"), feed=$("#efeed"), chk=$("#eChk"), hint=$("#eHint"), skip=$("#eSkip");
+      let doneG = false;
+      setTimeout(()=>{ try{ inp.focus(); }catch(e){} }, 50);
+      hint.onclick = ()=>{ feed.textContent="Hint: "+correct; feed.style.color="#a06800"; missed = true; if(cur) cur.hintUsedInLesson=true; };
+      skip.onclick = ()=>{
+        if(doneG) return; doneG = true;
+        feed.textContent = "Skipped ⏭"; feed.style.color="var(--ink-soft)";
+        chk.disabled=true; inp.disabled=true; hint.disabled=true; skip.disabled=true;
+        setTimeout(()=>{ if(i<items.length-1){ i++; draw(); } else next(); }, 350);
+      };
+      function check(){
+        if(doneG) return;
+        const v = norm(inp.value); if(!v){ inp.focus(); return; }
+        if(accepted.has(v)){
+          doneG = true;
+          SFX.right(); speak(correct);
+          feed.textContent="¡Perfecto! "+correct+" ✅"; feed.style.color="#2b8a3e";
+          chk.disabled=true; inp.disabled=true;
+          if(!missed) cur.score++;
+          if(missed){
+            const others = items.filter((_,j)=>j!==i).map(x=>x[1]);
+            const opts = shuffle([correct, ...sample(others, Math.min(3, others.length))]);
+            pushRedo({prompt:"Fix: <span class='l0wrong'>"+wrong+"</span>", opts, correct, speak:correct});
+          }
+          setTimeout(()=>{ if(i<items.length-1){ i++; draw(); } else next(); }, 900);
+        } else {
+          missed=true;
+          feed.textContent="Not quite — try again 💪"; feed.style.color="#c92a2a";
+          if(secondWrongAdvance(wrongState, ()=>{ doneG=true; chk.disabled=true; inp.disabled=true; hint.disabled=true; skip.disabled=true; if(i<items.length-1){ i++; draw(); } else next(); })) doneG=true;
+        }
+      }
+      chk.onclick = check;
+      inp.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); check(); }});
+    }
+    draw();
+  }
+
+  /* H — paragraph fill with sequential MCQ blanks */
+  function runParagraph(){
+    const para = ws.paragraph;
+    const blankObjs = para.parts.filter(p=>typeof p==="object");
+    if(!blankObjs.length){ next(); return; }
+    cur.max += blankObjs.length;
+    let bIdx = 0;
+    const missedBlanks = new Set();
+    function draw(){
+      let html="";
+      let counter=0;
+      para.parts.forEach(p=>{
+        if(typeof p==="string"){ html += p; }
+        else {
+          if(counter<bIdx) html += `<span class="l0paraFilled">${p.c}</span>`;
+          else if(counter===bIdx) html += `<span class="blank" style="background:#FFF7E2;min-width:70px">❓</span>`;
+          else html += `<span class="l0paraPend">_____</span>`;
+          counter++;
+        }
+      });
+      const cur_blank = blankObjs[bIdx];
+      const isSer = L0_SER_POOL.indexOf(cur_blank.c) >= 0;
+      const pool = isSer ? L0_SER_POOL : L0_TENER_POOL;
+      const accepted = acceptSet(cur_blank.c, []);
+      let done = false;
+      const wrongState={wrongAttempts:0};
+      stage.innerHTML = `
+        <p class="lead">📖 H · Completa el párrafo</p>
+        <p class="sub">${para.intro}</p>
+        <div class="qcount">Blank ${bIdx+1} of ${blankObjs.length}</div>
+        <div class="q">
+          <div class="ask l0para" style="font-size:17px;line-height:1.9;text-align:left">${html}</div>
+          <input id="pin" class="l0input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type the verb form…"/>
+          <div id="pfeed" class="l0feed"></div>
+          <div class="l0actions">
+            <button class="hint-btn" id="pHint" type="button">💡 Need a hint?</button>
+            <button class="btn leaf" id="pChk" type="button">Check ➜</button>
+            <button class="btn ghost sm" id="pSkip" type="button">Skip ⏭</button>
+          </div>
+        </div>`;
+      const inp=$("#pin"), feed=$("#pfeed"), chk=$("#pChk"), hint=$("#pHint"), skip=$("#pSkip");
+      skip.onclick = ()=>{
+        if(done) return; done = true;
+        feed.textContent = "Skipped ⏭"; feed.style.color="var(--ink-soft)";
+        chk.disabled=true; inp.disabled=true; hint.disabled=true; skip.disabled=true;
+        missedBlanks.add(bIdx);
+        setTimeout(()=>{ bIdx++; if(bIdx<blankObjs.length) draw(); else next(); }, 350);
+      };
+      setTimeout(()=>{ try{ inp.focus(); }catch(e){} }, 50);
+      hint.onclick = ()=>{
+        feed.textContent = "Hint: "+(isSer?"SER":"TENER")+" form";
+        feed.style.color = "#a06800";
+        missedBlanks.add(bIdx);
+        if(cur) cur.hintUsedInLesson = true;
+      };
+      function check(){
+        if(done) return;
+        const v = norm(inp.value); if(!v){ inp.focus(); return; }
+        if(accepted.has(v)){
+          done = true; SFX.right();
+          feed.textContent = "¡Correcto! "+cur_blank.c+" ✅"; feed.style.color="var(--leaf-dark)";
+          chk.disabled = true; inp.disabled = true; hint.disabled = true;
+          speak(cur_blank.c);
+          if(!missedBlanks.has(bIdx)) cur.score++;
+          if(missedBlanks.has(bIdx)){
+            const distr = pool.filter(x=>x!==cur_blank.c);
+            const mcOpts = shuffle([cur_blank.c, ...sample(distr, Math.min(3, distr.length))]);
+            pushRedo({prompt:"Paragraph blank ("+(isSer?"SER":"TENER")+")", opts:mcOpts, correct:cur_blank.c, speak:cur_blank.c});
+          }
+          setTimeout(()=>{ bIdx++; if(bIdx<blankObjs.length) draw(); else next(); }, 750);
+        } else {
+          missedBlanks.add(bIdx);
+          feed.textContent = "Not quite — try again 💪"; feed.style.color="var(--berry)";
+          if(secondWrongAdvance(wrongState, ()=>{ done=true; chk.disabled=true; inp.disabled=true; hint.disabled=true; skip.disabled=true; bIdx++; if(bIdx<blankObjs.length) draw(); else next(); })) done=true;
+        }
+      }
+      chk.onclick = check;
+      inp.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); check(); }});
+    }
+    draw();
+  }
+
+  dispatch();
+}
+
 function renderRedo(st){
   // each item: {prompt, opts, correct, em?, speak?, hint?}
   const queue = (cur.redoQueue||[]).slice();
@@ -3637,13 +4678,14 @@ function renderRedo(st){
       const hb=$("#redoHintBtn"); if(hb) hb.onclick=()=>{ const t=$("#redoHintText"); if(t){ t.hidden=false; } hb.style.display="none"; setTimeout(()=>{ if(t) t.hidden=true; hb.style.display=""; },1500); };
     }
       let done=false, missed=false;
+    const wrongState={wrongAttempts:0};
     const o=$("#opts");
     shuffle([q.correct, ...q.opts.filter(x=>x!==q.correct)]).slice(0,Math.max(2,Math.min(4,q.opts.length))).forEach(txt=>{
       const b=document.createElement("button"); b.className="opt"; b.textContent=txt;
       b.onclick=()=>{
         if(done||b.classList.contains("no"))return;
         if(txt===q.correct){ done=true; b.classList.add("ok"); celebrateSmallWin(b); if(q.verbId) recordVerbAttempt(q.verbId, !missed); cur.score++; if(q.speak) speak(q.speak); setTimeout(adv,650); }
-        else { missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); }
+        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv)) done=true; }
       };
       o.appendChild(b);
     });
@@ -3665,6 +4707,7 @@ function renderHWQuiz(st){
     if(!opts.includes(it.correct)) opts[0]=it.correct;
     const sentence = `${it.pre}<span class="blank" style="background:#FFF7E2;min-width:90px">❓</span>${it.post}`;
     let missed=false, pushed=false, done=false;
+    const wrongState={wrongAttempts:0};
     stage.innerHTML = `
       <p class="lead">📝 ${quiz.title}</p>
       <p class="sub">${quiz.intro}</p>
@@ -3690,7 +4733,7 @@ function renderHWQuiz(st){
           const bl=stage.querySelector(".blank"); if(bl){ bl.textContent=it.correct; bl.classList.add("done"); }
           speak((it.pre+it.correct+it.post).trim());
           setTimeout(adv, 850);
-        } else { missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); }
+        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv)) done=true; }
       };
       o.appendChild(b);
     });
@@ -3713,6 +4756,8 @@ function renderTenseQuiz(st){
   let i = 0;           // sentence index
   let paraIdx = 0;     // paragraph index
   const stage = $("#stage");
+  const HAS_PARA = paragraphs.length>0;
+  setSubStage(0, HAS_PARA?2:1);
 
   const DIFF_BADGE = {
     easy:   `<span class="diff-badge easy">🟢 Easy</span>`,
@@ -3728,6 +4773,7 @@ function renderTenseQuiz(st){
     const sentence = `${it.pre}<span class="blank" style="background:#FFF7E2;min-width:90px">❓</span>${it.post}`;
     const diffBadge = DIFF_BADGE[it.difficulty] || "";
     let missed=false, pushed=false, done=false;
+    const wrongState={wrongAttempts:0};
     stage.innerHTML = `
       <p class="lead">🔮 ${quiz.title}</p>
       <p class="sub">${quiz.intro}</p>
@@ -3753,7 +4799,7 @@ function renderTenseQuiz(st){
           const bl=stage.querySelector(".blank"); if(bl){ bl.textContent=it.correct; bl.classList.add("done"); }
           speak((it.pre+it.correct+it.post).trim());
           setTimeout(advItem, 850);
-        } else { missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); }
+        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, advItem)) done=true; }
       };
       o.appendChild(b);
     });
@@ -3765,6 +4811,7 @@ function renderTenseQuiz(st){
       toast("Sentences done! Now paragraphs 📝");
       phase = "paragraphs";
       paraIdx = 0;
+      setSubStage(1, 2);
       setTimeout(startParagraph, 700);
     }
     else { toast("¡Muy bien! Tense lesson done! 🔮"); setTimeout(nextStage, 700); }
@@ -3794,7 +4841,8 @@ function renderTenseQuiz(st){
       const cur_item = pItems[pi];
       const opts = shuffle([cur_item.correct, ...cur_item.opts.filter(o=>o!==cur_item.correct)]).slice(0,4);
       if(!opts.includes(cur_item.correct)) opts[0]=cur_item.correct;
-      let missed=false, pushed=false;
+      let missed=false, pushed=false, done=false;
+      const wrongState={wrongAttempts:0};
       stage.innerHTML=`
         <p class="lead">📝 Paragraph ${paraIdx+1} of ${paragraphs.length} · ${para.title}</p>
         <p class="sub">${para.intro || quiz.intro}</p>
@@ -3809,9 +4857,9 @@ function renderTenseQuiz(st){
       opts.forEach(txt=>{
         const b=document.createElement("button"); b.className="opt"; b.textContent=txt;
         b.onclick=()=>{
-          if(b.classList.contains("no"))return;
+          if(done||b.classList.contains("no"))return;
           if(txt===cur_item.correct){
-            b.classList.add("ok"); SFX.right(); cur.score++;
+            done=true; b.classList.add("ok"); SFX.right(); cur.score++;
             if(missed && !pushed){
               cur.redoQueue.push({prompt:single, opts:cur_item.opts, correct:cur_item.correct, hint:cur_item.hint, speak:(cur_item.pre+cur_item.correct+cur_item.post).trim()});
               pushed=true;
@@ -3822,7 +4870,7 @@ function renderTenseQuiz(st){
               if(pi<pItems.length-1){ pi++; render(); }
               else { paraIdx++; startParagraph(); }
             }, 750);
-          } else { missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); }
+          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(pi<pItems.length-1){ pi++; render(); } else { paraIdx++; startParagraph(); } })) done=true; }
         };
         o.appendChild(b);
       });
@@ -3899,6 +4947,32 @@ function selectUniqueByQuiz(list, day, n, stride){
   }
   return out;
 }
+function houseQuizWordSet(day, pool, n=12){
+  if(!pool.length) return [];
+  const count=Math.min(n, pool.length);
+  const q=Math.max(0, level4QuizNumber(day));
+  const start=(q*count)%pool.length;
+  const out=[];
+  for(let k=0; k<pool.length && out.length<count; k++){
+    out.push(pool[(start+k)%pool.length]);
+  }
+  return out;
+}
+function houseWordsThroughDay(day){
+  const ids=new Set();
+  LEVEL4_LESSONS.filter(x=>x.d<=day).forEach(x=>(x.newV||[]).forEach(id=>ids.add(id)));
+  return LEVEL4_HOUSE_VOCAB.filter(v=>ids.has(v.id));
+}
+function houseQuestionWordSlice(pool, day, n, offset=0){
+  if(!pool.length) return [];
+  const qn=Math.max(0, level4QuizNumber(day));
+  const start=(qn*7+offset)%pool.length;
+  const out=[];
+  for(let k=0; k<pool.length && out.length<n; k++){
+    out.push(pool[(start+k)%pool.length]);
+  }
+  return out;
+}
 function houseVocabQuestionBank(kind, pool){
   const poolIds=new Set(pool.map(v=>v.id));
   const variants = kind==="listen"
@@ -3931,6 +5005,28 @@ function houseVocabQuestionBank(kind, pool){
     variants.forEach(make=>out.push(make(v)));
   });
   return out;
+}
+function selectHouseVocabQuestions(kind, pool, day, n, offset=0){
+  if(!pool.length) return [];
+  const bank=houseVocabQuestionBank(kind, pool);
+  const byId=new Map();
+  bank.forEach(q=>{
+    const a=byId.get(q.v.id)||[];
+    a.push(q);
+    byId.set(q.v.id, a);
+  });
+  const words=houseQuestionWordSlice(pool, day, n, offset);
+  return words.map(v=>{
+    const variants=byId.get(v.id)||[];
+    if(!variants.length) return null;
+    const priorUses=LEVEL4_LESSONS
+      .filter(x=>x.type==="quiz" && x.d<day)
+      .reduce((sum,x)=>{
+        const prevPool=houseWordsThroughDay(x.d);
+        return sum + (houseQuestionWordSlice(prevPool, x.d, n, offset).some(p=>p.id===v.id) ? 1 : 0);
+      },0);
+    return variants[priorUses%variants.length];
+  }).filter(Boolean);
 }
 function finalizeHouseVocabQuestion(q, pool){
   const v=q.v;
@@ -4037,11 +5133,13 @@ function renderHouseLesson(st){
   // Sub-phases run one after another: intro -> wordbuild -> matching -> listen&spell -> sentences -> nextStage
   let phase = 0;
   const stage = $("#stage");
+  const PHASES = 5;
 
   const sentenceItems = pickHouseSentences(day, 5, newVerbs.concat(learnedPool));
 
   function next(){ phase++; runPhase(); }
   function runPhase(){
+    setSubStage(phase, PHASES);
     if(phase===0) runIntro();
     else if(phase===1) runWordbuild();
     else if(phase===2) runMatching();
@@ -4089,6 +5187,7 @@ function renderHouseLesson(st){
       let scrambled = shuffle(letters);
       if(scrambled.join("")===raw.toLowerCase()) scrambled = shuffle(letters);
       let built=[], wordMissed=false;
+      const wrongState={wrongAttempts:0};
       stage.innerHTML=`
         <p class="lead">Spell the word 🔤</p>
         <p class="sub">Word ${r+1} of ${verbs.length} — tap letters to spell.</p>
@@ -4110,7 +5209,10 @@ function renderHouseLesson(st){
           if(word.toLowerCase()===raw.toLowerCase()){ SFX.right(); toast("¡Perfecto! "+v.es+" 🌟"); speak(v.es);
             if(!wordMissed) cur.score++;
             setTimeout(()=>{ if(r<verbs.length-1){ r++; draw(); } else next(); }, 800);
-          } else { wordMissed=true; SFX.wrong(); sayOops(); slots.querySelectorAll(".slot").forEach(s=>s.classList.add("filled")); setTimeout(()=>{ built=[]; drawSlots(); drawTiles(); },450); }
+          } else { wordMissed=true; slots.querySelectorAll(".slot").forEach(s=>s.classList.add("filled"));
+            if(secondWrongAdvance(wrongState, ()=>{ if(r<verbs.length-1){ r++; draw(); } else next(); })) return;
+            setTimeout(()=>{ built=[]; drawSlots(); drawTiles(); },450);
+          }
         }
       }
       $("#undo").onclick=()=>{ built.pop(); drawSlots(); drawTiles(); };
@@ -4125,36 +5227,54 @@ function renderHouseLesson(st){
     if(n<2){ next(); return; }
     const picks = sample(matchPool, n);
     const left=shuffle(picks), right=shuffle(picks);
-    let selL=null, matched=0;
+    let selected=null, matched=0;
     const missedIds={};
     cur.max += n;
     stage.innerHTML=`
       <p class="lead">🔗 Match the pairs</p>
-      <p class="sub">Tap a Spanish word, then its English meaning.</p>
+      <p class="sub">Tap a Spanish word or meaning first, then its match.</p>
       <div class="match" id="hmWrap"></div>`;
     const wrap=$("#hmWrap");
     const colL=document.createElement("div"); const colR=document.createElement("div");
     colL.style.display=colR.style.display="grid"; colL.style.gap=colR.style.gap="10px";
+    function handleHouseMatchChoice(b, v){
+      if(b.classList.contains("ok")) return;
+      if(b.dataset.side==="l") speak(v.es);
+      if(!selected){
+        b.classList.add("sel");
+        selected=b;
+        return;
+      }
+      if(selected===b) return;
+      if(selected.dataset.side===b.dataset.side){
+        selected.classList.remove("sel");
+        b.classList.add("sel");
+        selected=b;
+        return;
+      }
+      const first=selected;
+      selected=null;
+      const id=first.dataset.id;
+      if(id===b.dataset.id){
+        SFX.right(); b.classList.add("ok"); first.classList.add("ok"); first.classList.remove("sel"); matched++;
+        if(!missedIds[id]) cur.score++;
+        if(matched===n){ toast("All matched! 🎉"); setTimeout(next, 650); }
+      } else {
+        SFX.wrong(); b.classList.add("bad"); first.classList.add("bad");
+        missedIds[id]=true;
+        missedIds[b.dataset.id]=true;
+        setTimeout(()=>{b.classList.remove("bad","sel"); first.classList.remove("bad","sel");},400);
+      }
+    }
     left.forEach(v=>{
-      const b=document.createElement("button"); b.className="mtile"; b.dataset.id=v.id;
+      const b=document.createElement("button"); b.className="mtile"; b.dataset.id=v.id; b.dataset.side="l";
       b.textContent=v.es; colL.appendChild(b);
-      b.onclick=()=>{ if(b.classList.contains("ok"))return; speak(v.es);
-        colL.querySelectorAll(".mtile").forEach(x=>x.classList.remove("sel")); b.classList.add("sel"); selL=b; };
+      b.onclick=()=>handleHouseMatchChoice(b, v);
     });
     right.forEach(v=>{
-      const b=document.createElement("button"); b.className="mtile"; b.dataset.id=v.id;
+      const b=document.createElement("button"); b.className="mtile"; b.dataset.id=v.id; b.dataset.side="r";
       b.innerHTML=`<span class="em">${v.em}</span>${v.en}`; colR.appendChild(b);
-      b.onclick=()=>{ if(b.classList.contains("ok")||!selL)return;
-        const id=selL.dataset.id;
-        if(id===b.dataset.id){
-          SFX.right(); b.classList.add("ok"); selL.classList.add("ok"); selL.classList.remove("sel"); selL=null; matched++;
-          if(!missedIds[id]) cur.score++;
-          if(matched===n){ toast("All matched! 🎉"); setTimeout(next, 650); }
-        } else {
-          SFX.wrong(); b.classList.add("bad"); const s=selL; s.classList.add("bad");
-          missedIds[id]=true;
-          setTimeout(()=>{b.classList.remove("bad"); s.classList.remove("bad","sel");},400); selL=null;
-        }};
+      b.onclick=()=>handleHouseMatchChoice(b, v);
     });
     wrap.appendChild(colL); wrap.appendChild(colR);
   }
@@ -4171,6 +5291,7 @@ function renderHouseLesson(st){
       let scrambled=shuffle(letters);
       if(scrambled.join("")===raw.toLowerCase()) scrambled=shuffle(letters);
       let built=[], wordMissed=false;
+      const wrongState={wrongAttempts:0};
       stage.innerHTML=`
         <p class="lead">Listen and spell 🎧</p>
         <p class="sub">Word ${r+1} of ${verbs.length} — tap 🔊 to hear it.</p>
@@ -4193,7 +5314,10 @@ function renderHouseLesson(st){
           if(word.toLowerCase()===raw.toLowerCase()){ SFX.right(); toast("¡Sí! "+v.es+" 🌟"); speak(v.es);
             if(!wordMissed) cur.score++;
             setTimeout(()=>{ if(r<verbs.length-1){ r++; draw(); } else next(); }, 850);
-          } else { wordMissed=true; SFX.wrong(); sayOops(); if(!$("#lh").innerHTML.includes("Hint")){ $("#lh").innerHTML=`Hint: it means <b>"${v.en}"</b> ${v.em}`; } setTimeout(()=>{ built=[]; drawSlots(); drawTiles(); },500); }
+          } else { wordMissed=true; if(!$("#lh").innerHTML.includes("Hint")){ $("#lh").innerHTML=`Hint: it means <b>"${v.en}"</b> ${v.em}`; }
+            if(secondWrongAdvance(wrongState, ()=>{ if(r<verbs.length-1){ r++; draw(); } else next(); })) return;
+            setTimeout(()=>{ built=[]; drawSlots(); drawTiles(); },500);
+          }
         }
       }
       $("#bs").onclick=()=>speak(v.es);
@@ -4213,6 +5337,7 @@ function renderHouseLesson(st){
       if(!opts.includes(it.correct)) opts[0]=it.correct;
       const sentence=`${it.pre}<span class="blank" style="background:#FFF7E2;min-width:90px">❓</span>${it.post}`;
       let missed=false, pushed=false, done=false;
+      const wrongState={wrongAttempts:0};
       stage.innerHTML=`
         <p class="lead">✏️ Sentence practice</p>
         <p class="sub">Complete the sentence.</p>
@@ -4236,7 +5361,7 @@ function renderHouseLesson(st){
             const bl=stage.querySelector(".blank"); if(bl){ bl.textContent=it.correct; bl.classList.add("done"); }
             speak((it.pre+it.correct+it.post).trim());
             setTimeout(()=>{ if(i<sentenceItems.length-1){ i++; draw(); } else next(); }, 850);
-          } else { missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); }
+          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(i<sentenceItems.length-1){ i++; draw(); } else next(); })) done=true; }
         };
         o.appendChild(b);
       });
@@ -4248,22 +5373,24 @@ function renderHouseLesson(st){
   runPhase();
 }
 
-/* ---------- Level 4 quiz day (15 mixed questions) ---------- */
+/* ---------- Level 4 quiz day (12-word matching + 15 mixed questions) ---------- */
 function renderHouseQuiz(st){
   const plan = st.plan;
   const pool = houseAvailable();
-  if(pool.length<4){
+  const minWords = plan.practice ? 2 : 12;
+  if(pool.length<minWords){
     // safety: not enough vocab yet
-    $("#stage").innerHTML=`<p class="lead">Learn a few more words first! 🏠</p><p class="sub">Come back after Day 7.</p><button class="btn leaf big" id="skipHQ">Continue</button>`;
+    $("#stage").innerHTML=`<p class="lead">Learn a few more words first! 🏠</p><p class="sub">This quiz needs at least ${minWords} covered La Casa words.</p><button class="btn leaf big" id="skipHQ">Continue</button>`;
     $("#skipHQ").onclick=nextStage;
     return;
   }
-  // Compose 15 questions: 5 ES→EN, 5 EN→ES, 3 sentence fill-in, 2 listening
+  const quizWords = houseQuizWordSet(plan.d, pool, 12);
+  // Matching covers up to 12 learned words; mixed questions draw from the full already-covered pool.
   const qs = [];
-  const esToEnPicks = selectUniqueByQuiz(houseVocabQuestionBank("es-en", pool), plan.d, 5, 5)
+  const esToEnPicks = selectHouseVocabQuestions("es-en", pool, plan.d, 5, 0)
     .map(q=>finalizeHouseVocabQuestion(q, pool));
   esToEnPicks.forEach(q=>qs.push(q));
-  const enToEsPicks = selectUniqueByQuiz(houseVocabQuestionBank("en-es", pool), plan.d, 5, 5)
+  const enToEsPicks = selectHouseVocabQuestions("en-es", pool, plan.d, 5, 5)
     .map(q=>finalizeHouseVocabQuestion(q, pool));
   enToEsPicks.forEach(q=>qs.push(q));
   // 3 sentence fill-ins
@@ -4275,18 +5402,87 @@ function renderHouseQuiz(st){
     qs.push({kind:"fill", em:"✏️", ask:sentenceHTML, opts, correct:it.correct, hint:it.hint, speak:(it.pre+it.correct+it.post).trim(), sentenceQuestion:true});
   });
   // 2 listening (play word, pick English)
-  const listenPicks = selectUniqueByQuiz(houseVocabQuestionBank("listen", pool), plan.d, Math.min(2, pool.length), 2)
+  const listenPicks = selectHouseVocabQuestions("listen", pool, plan.d, 2, 10)
     .map(q=>finalizeHouseVocabQuestion(q, pool));
   listenPicks.forEach(q=>qs.push(q));
 
   const questions = shuffle(qs);
-  cur.max += questions.length;
+  cur.max += quizWords.length + questions.length;
 
   let i=0;
   const stage = $("#stage");
+  setSubStage(0, 2);
+  function runMatching(){
+    const left=shuffle(quizWords), right=shuffle(quizWords);
+    let selected=null, matched=0;
+    const missedIds={};
+    stage.innerHTML=`
+      <p class="lead">🔗 ${plan.title}</p>
+      <p class="sub">First, match ${quizWords.length} covered La Casa words. Tap either side first.</p>
+      <div class="qcount">Matching round · ${quizWords.length} pairs</div>
+      <div class="match" id="hqMatch"></div>`;
+    const wrap=$("#hqMatch");
+    const colL=document.createElement("div"); const colR=document.createElement("div");
+    colL.style.display=colR.style.display="grid"; colL.style.gap=colR.style.gap="10px";
+    function choose(btn){
+      if(btn.classList.contains("ok")) return;
+      if(btn.dataset.side==="es") speak(btn.dataset.word);
+      if(!selected){
+        selected=btn;
+        btn.classList.add("sel");
+        return;
+      }
+      if(selected===btn) return;
+      if(selected.dataset.side===btn.dataset.side){
+        selected.classList.remove("sel");
+        selected=btn;
+        btn.classList.add("sel");
+        return;
+      }
+      const first=selected;
+      selected=null;
+      if(first.dataset.id===btn.dataset.id){
+        SFX.right();
+        first.classList.add("ok"); btn.classList.add("ok");
+        first.classList.remove("sel"); btn.classList.remove("sel");
+        matched++;
+        if(!missedIds[first.dataset.id]) cur.score++;
+        if(matched===quizWords.length){
+          toast("All matched! 🎉");
+          setSubStage(1, 2);
+          setTimeout(draw, 650);
+        }
+      } else {
+        missedIds[first.dataset.id]=true;
+        missedIds[btn.dataset.id]=true;
+        SFX.wrong(); sayOops();
+        first.classList.add("bad"); btn.classList.add("bad");
+        setTimeout(()=>{
+          first.classList.remove("bad","sel");
+          btn.classList.remove("bad","sel");
+        },400);
+      }
+    }
+    left.forEach(v=>{
+      const b=document.createElement("button");
+      b.className="mtile"; b.dataset.id=v.id; b.dataset.side="es"; b.dataset.word=v.es;
+      b.textContent=v.es;
+      b.onclick=()=>choose(b);
+      colL.appendChild(b);
+    });
+    right.forEach(v=>{
+      const b=document.createElement("button");
+      b.className="mtile"; b.dataset.id=v.id; b.dataset.side="en"; b.dataset.word=v.es;
+      b.innerHTML=`<span class="em">${v.em}</span>${v.en}`;
+      b.onclick=()=>choose(b);
+      colR.appendChild(b);
+    });
+    wrap.appendChild(colL); wrap.appendChild(colR);
+  }
   function draw(){
     const q = questions[i];
     let missed=false, pushed=false, done=false;
+    const wrongState={wrongAttempts:0};
     stage.innerHTML=`
       <p class="lead">🎯 ${plan.title}</p>
       <p class="sub">${plan.theme || "Level 4 quiz"}</p>
@@ -4315,12 +5511,12 @@ function renderHouseQuiz(st){
           if(missed && !pushed){ cur.redoQueue.push({prompt:q.ask, opts:q.opts, correct:q.correct, hint:q.hint, speak:q.speak}); pushed=true; }
           if(q.speak) speak(q.speak);
           setTimeout(()=>{ if(i<questions.length-1){ i++; draw(); } else { toast("Quiz done! 🎯"); setTimeout(nextStage, 650); } }, 750);
-        } else { missed=true; b.classList.add("no"); SFX.wrong(); sayOops(); }
+        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(i<questions.length-1){ i++; draw(); } else { toast("Quiz done! 🎯"); setTimeout(nextStage, 650); } })) done=true; }
       };
       o.appendChild(b);
     });
   }
-  draw();
+  runMatching();
 }
 
 /* Pick sentence/fill prompts from a large authored/generated bank.
@@ -4372,20 +5568,29 @@ function pickHouseSentences(day, n, availableWords){
 function renderBloom(st){
   // stars from score vs max (the scoring games set score/max). If no scoring game, give 3.
   let stars=3;
-  if(cur.max>0){ const ratio=cur.score/cur.max; stars = ratio>=0.8?3 : ratio>=0.5?2 : 1; }
+  if(cur.max>0){
+    const ratio=cur.score/cur.max;
+    // Global thresholds: <25% not done (0★), 25-50% 1★, 50-75% 2★, 75+% 3★.
+    stars = ratio>=0.75?3 : ratio>=0.5?2 : ratio>=0.25?1 : 0;
+  }
   cur.earnedStars=stars;
   const isBonus=!!cur.plan.bonus;
   // Warm, never-discouraging messages — even 1 star feels good (#4)
   const msgs={
     3:["¡Increíble, Kabir! You're a star! 🌟","Perfect! You grew a strong plant! 💚","Wow! Three stars! ¡Súper! 🌻"],
     2:["¡Muy bien! Almost perfect! 🌱","Great job! So close to three stars! 🌼","Nice work, Kabir! Keep growing! 🌿"],
-    1:["Good try! Every word helps you grow! 🌱","You did it! Practice makes perfect! 💪","Well done for finishing! Try again for more stars! 🌟"]
+    1:["Good try! Every word helps you grow! 🌱","You did it! Practice makes perfect! 💪","Well done for finishing! Try again for more stars! 🌟"],
+    0:["Let's try again — you've got this! 💪","Practice a little more and try once more! 🌱","Don't give up, Kabir — you'll grow with practice! 🌟"]
   };
   const headline=isBonus
     ? (stars===3? "🌳 You grew a TREE! 🌳" : "Bonus complete! 🌳")
-    : (stars===3? "🌱 You grew a sapling! 🌱" : `Lesson ${cur.plan.d} done!`);
+    : (stars===0? `Lesson ${cur.plan.d} — try again 🔁`
+       : stars===3? "🌱 You grew a sapling! 🌱"
+       : `Lesson ${cur.plan.d} done!`);
   const bigIcon=isBonus? "🌳" : flowerFor(cur.plan.d);
-  const retry = stars<3
+  const retry = stars===0
+    ? `<button class="btn sun big" id="retry" style="margin-bottom:10px">🔁 Try again</button>`
+    : stars<3
     ? `<button class="btn sun big" id="retry" style="margin-bottom:10px">🔁 Try again for 3 stars</button>`
     : "";
   const stage=$("#stage");
@@ -4400,9 +5605,10 @@ function renderBloom(st){
     </div>`;
   const d=cur.plan.d;
   if($("#retry")) $("#retry").onclick=()=>{ closeDay(); openDay(d); };
-  saveDayProgress(stars);
+  if(stars>0) saveDayProgress(stars);
   if($("#viewLevel").style.display!=="none") renderDash();
   $("#done").onclick=()=>{
+    if(stars===0){ closeDay(); return; }
     const trophies=(cur && cur.newlyEarnedTrophies) || [];
     if(!trophies.length){ commitDay(stars); return; }
     if(cur) cur.newlyEarnedTrophies=[]; // clear so we don't re-show on any subsequent click
@@ -4424,6 +5630,8 @@ function saveDayProgress(stars){
   const d=cur.plan.d;
   const st=lvState(LVID);
   const wasCompleted=!!st.completed[d];
+  // <25% (0★) leaves the lesson/activity marked "not done" so Kabir retries it.
+  if(stars===0) return;
   st.completed[d]=true;
   st.stars[d]=Math.max(st.stars[d]||0, stars);
   // Level 4 · La Casa persistent counters (drive trophy checks)
@@ -4450,6 +5658,14 @@ function saveDayProgress(stars){
   }
   STATE.levelDailyDone=STATE.levelDailyDone||{};
   STATE.levelDailyDone[LVID]=tk;
+  const crossLevelRevived = markDailyLevelActivity(LVID, `level:${LVID}:day:${d}`);
+  if(crossLevelRevived && cur){
+    cur.crossLevelRevived=true;
+    setTimeout(()=>{
+      confetti(50);
+      toast("Three levels today! Every garden is alive again 🌱🌸🌳");
+    }, 250);
+  }
   const newlyEarnedNow = checkTrophies();
   if(cur && newlyEarnedNow && newlyEarnedNow.length){
     cur.newlyEarnedTrophies = (cur.newlyEarnedTrophies||[]).concat(newlyEarnedNow);
@@ -4769,16 +5985,74 @@ function renderTrophies(){
   ensureExtraState();
   const newly=checkTrophies(true);
   if(newly.length) Store.save();
-  const html=TROPHIES.map(t=>{
-    const earned=STATE.trophies[t.id];
-    return `<div class="trophy ${earned?"":"locked"}">
-      <div class="em">${earned?t.em:"🔒"}</div>
-      <div class="name">${t.name}</div>
-      <div class="desc">${t.desc}</div>
-      ${earned?`<div class="desc">Earned ${new Date(earned.earnedAt).toLocaleDateString()}</div>`:""}
-    </div>`;
+  const earnedCount=TROPHIES.filter(t=>STATE.trophies[t.id]).length;
+  const pct=Math.round((earnedCount/TROPHIES.length)*100);
+
+  // Group trophies by category
+  const byCat = {};
+  TROPHIES.forEach(t=>{
+    const c = trophyCategory(t.id);
+    (byCat[c] = byCat[c] || []).push(t);
+  });
+
+  // Preserve original TROPHIES order within each category (already meaningful)
+  // Category chips summary (shown in hero)
+  const catChips = TROPHY_CATEGORIES.filter(cat=>byCat[cat.id] && byCat[cat.id].length).map(cat=>{
+    const list = byCat[cat.id];
+    const earned = list.filter(t=>STATE.trophies[t.id]).length;
+    return `<span class="trophy-cat-chip">${cat.icon} ${cat.title} <span class="chip-count">${earned}/${list.length}</span></span>`;
   }).join("");
-  openInfoPanel("🏆","Trophy room","Badges Kabir can collect",`<div class="trophy-grid">${html}</div>`);
+
+  // Sections HTML — one per category present
+  let delayCounter = 0;
+  const sectionsHTML = TROPHY_CATEGORIES.filter(cat=>byCat[cat.id] && byCat[cat.id].length).map(cat=>{
+    const list = byCat[cat.id];
+    const earned = list.filter(t=>STATE.trophies[t.id]).length;
+    const cardsHTML = list.map(t=>{
+      const isEarned = !!STATE.trophies[t.id];
+      const tier = trophyTier(t);
+      const delay = Math.min(delayCounter * 22, 700); delayCounter++;
+      const stamp = isEarned
+        ? `<div class="stamp">Earned ${new Date(STATE.trophies[t.id].earnedAt).toLocaleDateString()}</div>`
+        : `<div class="stamp" style="background:rgba(255,255,255,.55);color:#8a7a6a">🔒 Locked</div>`;
+      return `
+        <div class="trophy ${isEarned?"earned":"locked"}" data-trophy="${t.id}" data-tier="${tier}"
+             style="--delay:${delay}ms;--cat-accent:${cat.accent};--cat-tint:${cat.tint}">
+          <span class="tier-badge">${tier}</span>
+          <div class="emblem"><span class="em">${isEarned ? t.em : cat.icon}</span></div>
+          <div class="name">${isEarned ? t.name : "???"}</div>
+          <div class="desc">${t.desc}</div>
+          ${stamp}
+        </div>`;
+    }).join("");
+    return `
+      <div class="trophy-section" style="--cat-accent:${cat.accent};--cat-tint:${cat.tint}">
+        <div class="sec-head">
+          <div class="sec-icon">${cat.icon}</div>
+          <div class="sec-title">${cat.title}</div>
+          <div class="sec-count">${earned}/${list.length}</div>
+        </div>
+        <div class="trophy-grid">${cardsHTML}</div>
+      </div>`;
+  }).join("");
+
+  openInfoPanel("🏆","Trophy room","Every badge Kabir can collect",`
+    <div class="trophy-room">
+      <div class="trophy-hero">
+        <p>Trophies collected</p>
+        <div class="th-count">${earnedCount}<small> / ${TROPHIES.length}</small></div>
+        <div class="trophy-meter"><i style="width:${pct}%"></i></div>
+        <div class="trophy-cats">${catChips}</div>
+      </div>
+      ${sectionsHTML}
+    </div>`);
+
+  $("#stage").querySelectorAll(".trophy.earned").forEach(card=>{
+    card.onclick=()=>{
+      const t=TROPHIES.find(x=>x.id===card.dataset.trophy);
+      if(t) trophyRoomBurst(t, card);
+    };
+  });
 }
 
 $("#parentsBtn").onclick=renderParents;
@@ -4840,13 +6114,34 @@ function resetTenseLesson1Once(){
   return true;
 }
 
+/* One-time reset: clear Level 4 · Day 4, the quiz immediately after lesson 3,
+   so Kabir can take that quiz fresh after the Level 4 quiz cadence changed. */
+function resetHouseQuizAfterLesson3Once(){
+  if(STATE._houseQuizAfterLesson3Reset_v1) return false;
+  const st=STATE.levels && STATE.levels[4];
+  if(st){
+    if(st.completed) delete st.completed[4];
+    if(st.stars) delete st.stars[4];
+    if(st.house && st.house.quizDaysDone) delete st.house.quizDaysDone[4];
+  }
+  const key="level:4:day:4";
+  const q=STATE.surpriseQuiz;
+  if(q && q.completedKeys && q.completedKeys[key]){
+    delete q.completedKeys[key];
+    q.completedCount=Math.max(0,(q.completedCount||1)-1);
+  }
+  STATE._houseQuizAfterLesson3Reset_v1=true;
+  return true;
+}
+
 (async function init(){
   STATE = await Store.load();
   ensureExtraState();
   const repaired=repairCollectedFromCompleted();
   const l3Reset=resetTenseLesson1Once();
+  const l4QuizReset=resetHouseQuizAfterLesson3Once();
   const newly=checkTrophies(true);
-  if(repaired || l3Reset || newly.length) await Store.save();
+  if(repaired || l3Reset || l4QuizReset || newly.length) await Store.save();
   applyGardenSettings();
   renderLevels();
   setTimeout(()=>{

@@ -200,6 +200,29 @@ function loadState(){
   catch(e){ return {levels:{},streak:0,lastDate:null}; }
 }
 function saveState(s){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }catch(e){} }
+function markDailyLevelActivity(s, levelId, sourceKey){
+  const tk=new Date().toISOString().slice(0,10);
+  s.levelDailyDone=s.levelDailyDone||{};
+  s.dailyLevelActivity=s.dailyLevelActivity||{};
+  s.dailyCrossLevelRevived=s.dailyCrossLevelRevived||{};
+  const day=s.dailyLevelActivity[tk]=s.dailyLevelActivity[tk]||{};
+  const id=String(levelId);
+  const bucket=day[id]=day[id]||{count:0,sources:{}};
+  if(!bucket.sources[sourceKey]){
+    bucket.sources[sourceKey]=true;
+    bucket.count++;
+  }
+  s.levelDailyDone[id]=tk;
+  const activeLevels=Object.keys(day).filter(k=>day[k] && (day[k].count||0)>0);
+  if(activeLevels.length>=3 && !s.dailyCrossLevelRevived[tk]){
+    s.dailyCrossLevelRevived[tk]=true;
+    const knownLevelIds=new Set(["0","1","2","3","4", ...Object.keys(s.levels||{})]);
+    knownLevelIds.forEach(lid=>{ s.levelDailyDone[lid]=tk; });
+    s.lastDate=tk;
+    return true;
+  }
+  return false;
+}
 function completionKeysFromState(s){
   const keys=[];
   for(const lid in (s.levels||{})){
@@ -236,6 +259,7 @@ function recordGlobalCompletion(s, sourceKey){
   return q.pending;
 }
 function savePracticeProgress(testNum, stars, score, total){
+  if(stars===0) return;
   const s=loadState();
   s.levels=s.levels||{};
   ensureSurpriseState(s);
@@ -247,6 +271,7 @@ function savePracticeProgress(testNum, stars, score, total){
   s.practiceRegular.totalPerTest=total;
   s.levelDailyDone=s.levelDailyDone||{};
   s.levelDailyDone[1]=new Date().toISOString().slice(0,10);
+  markDailyLevelActivity(s, 1, `practiceRegular:${testNum}`);
   if(!wasCompleted) recordGlobalCompletion(s, `practiceRegular:${testNum}`);
   saveState(s);
 }
@@ -342,7 +367,7 @@ function buildTests(){
   return tests;
 }
 const TESTS=buildTests();
-let current=null, qi=0, score=0, answers=[], redoQueue=[], redoIndex=0, inRedo=false;
+let current=null, qi=0, score=0, answers=[], redoQueue=[], redoIndex=0, inRedo=false, questionAttempts=0, redoAttempts=0;
 function renderHome(){
   const wrap=$("#tests"); wrap.innerHTML="";
   const pr=(loadState().practiceRegular)||{completed:{},stars:{},scores:{}};
@@ -370,6 +395,7 @@ function startTest(num){
   scrollTo(0,0);
 }
 function renderQuestion(){
+  questionAttempts=0;
   const q=current.qs[qi];
   $("#runner").innerHTML=`<div class="section-title"><h2>Practice Test ${current.num}</h2><span>${q.type}</span></div>
     <div class="panel">
@@ -391,7 +417,15 @@ function answer(opt, btn){
   const q=current.qs[qi];
   const correct=opt===q.correct;
   if(correct){ btn.classList.add("ok"); score++; confetti(8); }
-  else { btn.classList.add("no"); [...document.querySelectorAll(".opt")].forEach(b=>{ if(b.textContent===q.correct) b.classList.add("ok"); }); }
+  else {
+    questionAttempts++;
+    btn.classList.add("no");
+    if(questionAttempts<2){
+      btn.disabled=true;
+      return;
+    }
+    [...document.querySelectorAll(".opt")].forEach(b=>{ if(b.textContent===q.correct) b.classList.add("ok"); });
+  }
   answers.push({q, opt, correct});
   if(!correct){ redoQueue.push(q); recordPracticeMiss(q,opt); }
   document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
@@ -412,7 +446,16 @@ function answerTyped(value, input){
   const correct=isTypedCorrect(q,value);
   input.classList.add(correct?"ok":"no");
   if(correct){ score++; confetti(8); }
-  else { $("#typedFeedback").textContent=`Correct answer: ${q.correct}`; redoQueue.push(q); recordPracticeMiss(q,value); }
+  else {
+    questionAttempts++;
+    if(questionAttempts<2){
+      $("#typedFeedback").textContent="Not quite — try one more time.";
+      input.classList.remove("no");
+      input.focus();
+      return;
+    }
+    $("#typedFeedback").textContent=`Correct answer: ${q.correct}`; redoQueue.push(q); recordPracticeMiss(q,value);
+  }
   answers.push({q, opt:value, correct});
   $("#submitTyped").disabled=true; input.disabled=true;
   setTimeout(()=>{ qi++; qi<current.qs.length ? renderQuestion() : (redoQueue.length ? startRedo() : renderResult()); },950);
@@ -421,6 +464,7 @@ function startRedo(){
   inRedo=true; redoIndex=0; confetti(14); renderRedoQuestion();
 }
 function renderRedoQuestion(){
+  redoAttempts=0;
   const q=redoQueue[redoIndex];
   $("#runner").innerHTML=`<div class="section-title"><h2>Practice Test ${current.num}</h2><span>Redo missed questions</span></div>
     <div class="panel">
@@ -442,7 +486,15 @@ function answerRedo(opt, btn){
   const q=redoQueue[redoIndex];
   const correct=opt===q.correct;
   if(correct){ btn.classList.add("ok"); confetti(8); }
-  else { btn.classList.add("no"); [...document.querySelectorAll(".opt")].forEach(b=>{ if(b.textContent===q.correct) b.classList.add("ok"); }); }
+  else {
+    redoAttempts++;
+    btn.classList.add("no");
+    if(redoAttempts<2){
+      btn.disabled=true;
+      return;
+    }
+    [...document.querySelectorAll(".opt")].forEach(b=>{ if(b.textContent===q.correct) b.classList.add("ok"); });
+  }
   document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
   setTimeout(()=>{ redoIndex++; redoIndex<redoQueue.length ? renderRedoQuestion() : renderResult(); },850);
 }
@@ -451,19 +503,30 @@ function answerRedoTyped(value, input){
   const correct=isTypedCorrect(q,value);
   input.classList.add(correct?"ok":"no");
   if(correct){ confetti(8); }
-  else { $("#typedFeedback").textContent=`Correct answer: ${q.correct}`; }
+  else {
+    redoAttempts++;
+    if(redoAttempts<2){
+      $("#typedFeedback").textContent="Not quite — try one more time.";
+      input.classList.remove("no");
+      input.focus();
+      return;
+    }
+    $("#typedFeedback").textContent=`Correct answer: ${q.correct}`;
+  }
   $("#submitTyped").disabled=true; input.disabled=true;
   setTimeout(()=>{ redoIndex++; redoIndex<redoQueue.length ? renderRedoQuestion() : renderResult(); },950);
 }
 function renderResult(){
   const pct=Math.round(score/current.qs.length*100);
-  const stars=pct>=90?3:pct>=70?2:1;
-  savePracticeProgress(current.num, stars, score, current.qs.length);
+  const ratio=score/current.qs.length;
+  const stars=ratio>=0.75?3:ratio>=0.5?2:ratio>=0.25?1:0;
+  if(stars>0) savePracticeProgress(current.num, stars, score, current.qs.length);
   $("#runner").innerHTML=`<div class="panel result">
-    <div class="big">${pct>=90?"🏆":"🌟"}</div>
-    <h2>Test ${current.num} complete!</h2>
+    <div class="big">${stars===0?"🔁":stars===3?"🏆":"🌟"}</div>
+    <h2>${stars===0?`Test ${current.num} needs another try`:`Test ${current.num} complete!`}</h2>
     <div class="starline">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div>
     <p><b>${score}/${current.qs.length}</b> correct - ${pct}%</p>
+    ${stars===0?`<p>Let’s try again — you’ve got this.</p>`:""}
     ${redoQueue.length?`<p>${redoQueue.length} missed question${redoQueue.length===1?"":"s"} repeated at the end.</p>`:""}
     <div class="actions" style="justify-content:center">
       <button class="btn sun" id="retry">Try again</button>
