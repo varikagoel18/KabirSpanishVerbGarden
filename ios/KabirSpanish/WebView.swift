@@ -5,12 +5,35 @@ final class WebViewStore: NSObject, ObservableObject {
     static let shared = WebViewStore()
     let webView: WKWebView
 
+    private let mainHTMLName = "learn-verb-activity"
+    private let siblingHTMLNames = [
+        "regular-verb-practice-tests",
+        "spanish-class-hw"
+    ]
+
+    private var documentsDirectoryURL: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    }
+
     /// Where over-the-air HTML updates are stored. If present, we boot from
     /// here instead of the bundled copy — so a Wi-Fi push is picked up on
     /// the next launch (and immediately after write via `loadApp()`).
     private var documentsHTMLURL: URL {
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("learn-verb-activity.html")
+        documentsDirectoryURL.appendingPathComponent("\(mainHTMLName).html")
+    }
+
+    /// Relative links resolve within the directory of the loaded main page.
+    /// When an OTA main page lives in Documents, stage the bundled sibling
+    /// pages there too so Practice Tests and Spanish Class HW still open.
+    private func stageBundledSiblingHTML() throws {
+        for name in siblingHTMLNames {
+            guard let bundledURL = Bundle.main.url(forResource: name, withExtension: "html") else {
+                throw CocoaError(.fileNoSuchFile)
+            }
+            let data = try Data(contentsOf: bundledURL)
+            let destination = documentsDirectoryURL.appendingPathComponent("\(name).html")
+            try data.write(to: destination, options: .atomic)
+        }
     }
 
     override init() {
@@ -43,11 +66,16 @@ final class WebViewStore: NSObject, ObservableObject {
     func loadApp() {
         let updated = documentsHTMLURL
         if FileManager.default.fileExists(atPath: updated.path) {
-            print("[WebView] loading updated HTML from \(updated.path)")
-            webView.loadFileURL(updated, allowingReadAccessTo: updated.deletingLastPathComponent())
-            return
+            do {
+                try stageBundledSiblingHTML()
+                print("[WebView] loading updated HTML from \(updated.path)")
+                webView.loadFileURL(updated, allowingReadAccessTo: documentsDirectoryURL)
+                return
+            } catch {
+                print("[WebView] OTA support-page staging failed; using bundled app: \(error)")
+            }
         }
-        guard let url = Bundle.main.url(forResource: "learn-verb-activity", withExtension: "html") else {
+        guard let url = Bundle.main.url(forResource: mainHTMLName, withExtension: "html") else {
             print("[KabirSpanish] learn-verb-activity.html not in bundle — add it to the Xcode target.")
             return
         }
@@ -98,6 +126,7 @@ final class WebViewStore: NSObject, ObservableObject {
     func saveUpdatedHTML(_ data: Data, completion: @escaping (Bool, Int) -> Void) {
         do {
             try data.write(to: documentsHTMLURL, options: .atomic)
+            try stageBundledSiblingHTML()
             loadApp()
             completion(true, data.count)
         } catch {
@@ -110,6 +139,10 @@ final class WebViewStore: NSObject, ObservableObject {
     @MainActor
     func resetToBundledHTML() {
         try? FileManager.default.removeItem(at: documentsHTMLURL)
+        for name in siblingHTMLNames {
+            let url = documentsDirectoryURL.appendingPathComponent("\(name).html")
+            try? FileManager.default.removeItem(at: url)
+        }
         loadApp()
     }
 }

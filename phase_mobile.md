@@ -4,6 +4,27 @@ Branch: `codex/web-mobile-ux-flow-plan`
 
 Goal: improve interaction flow, button placement, and visual hierarchy for both the browser version and the installed iPhone app without changing lesson/scoring/progress logic unless explicitly planned.
 
+## Live Phase Status
+
+Last updated: 2026-08-05 13:16 IST
+
+| Phase | Branch | Status | Commit / push | QA / notes |
+|---|---|---|---|---|
+| Plan | `codex/web-mobile-ux-flow-plan` | Complete | `17bba81` committed | Iterated review complete. |
+| 1 - Audit | `codex/mobile-ux-phase-1-audit` | Complete | `8fe1eb1` pushed; remote SHA verified | Source audit, syntax, bundle parity, signed iPhone install/launch complete; fresh visual screenshots deferred to Phase 9 because local `file://` automation was blocked. |
+| 1a - iOS OTA sibling pages | `codex/mobile-ux-phase-1a-ios-sibling-pages` | Complete | Phase commit is the pushed branch tip; remote SHA verified | Signed physical-device build succeeded; all three bundle resources match the web files; the exact build installed and launched on the paired iPhone. CoreDevice process enumeration was unreliable after launch, so that secondary inspection remains deferred. |
+| 2 - Sticky mobile action | Not created | Pending | - | Starts after Phase 1a is complete and pushed. |
+| 3-prereq - `lastLevelId` | Not created | Pending | - | - |
+| 3 - Today card | Not created | Pending | - | - |
+| 2b - Full-screen overlay | Not created | Pending | - | - |
+| 4 - Button hierarchy | Not created | Pending | - | - |
+| 5 - Level cards | Not created | Pending | - | - |
+| 6a - Audio audit | Not created | Pending | - | - |
+| 6b - Audio polish | Not created | Pending | - | Runs only if 6a confirms useful audio surfaces. |
+| 7 - Celebration and trophies | Not created | Pending | - | - |
+| 8 - Desktop and iPad | Not created | Pending | - | - |
+| 9 - Final cross-device QA | Not created | Pending | - | Includes the deferred desktop/iPad/iPhone visual baselines. |
+
 ## Phase Execution Protocol
 
 - Create a dedicated branch for every phase from the latest user-approved phase commit. Use `codex/mobile-ux-phase-<number>-<short-name>`; sub-phases such as `3-prereq`, `2b`, `6a`, and `6b` get separate branches and approvals because they have separate commits in the implementation order.
