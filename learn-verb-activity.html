@@ -6273,7 +6273,7 @@ function showLearnedVerbs(levelId){
   $("#overlay").classList.remove("lesson-active","sticky-action-enabled");
   const rows=[];
   for(const lid in STATE.levels){
-    if(levelId && String(lid)!==String(levelId)) continue;
+    if(levelId!=null && String(lid)!==String(levelId)) continue;
     const s=STATE.levels[lid];
     const lv=LEVELS.find(l=>String(l.id)===String(lid));
     if(!lv) continue;
@@ -6285,7 +6285,7 @@ function showLearnedVerbs(levelId){
   // de-dupe by the Spanish label; verbs use .inf, vocab items use .es
   const seen=new Set();
   const unique=rows.filter(r=>{ const k=r.v.inf||r.v.es; if(seen.has(k)) return false; seen.add(k); return true; });
-  const lid = String(levelId||"1");
+  const lid = String(levelId!=null?levelId:"1");
   const meta = lid==="0"
     ? {title:"Vocab Fiesta words learned",emoji:"🎉", unit:"word", where:"Level 0"}
     : lid==="4"
