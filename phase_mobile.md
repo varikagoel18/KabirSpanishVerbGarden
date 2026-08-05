@@ -6,14 +6,14 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 
 ## Live Phase Status
 
-Last updated: 2026-08-05 13:16 IST
+Last updated: 2026-08-05 13:24 IST
 
 | Phase | Branch | Status | Commit / push | QA / notes |
 |---|---|---|---|---|
 | Plan | `codex/web-mobile-ux-flow-plan` | Complete | `17bba81` committed | Iterated review complete. |
 | 1 - Audit | `codex/mobile-ux-phase-1-audit` | Complete | `8fe1eb1` pushed; remote SHA verified | Source audit, syntax, bundle parity, signed iPhone install/launch complete; fresh visual screenshots deferred to Phase 9 because local `file://` automation was blocked. |
-| 1a - iOS OTA sibling pages | `codex/mobile-ux-phase-1a-ios-sibling-pages` | Complete | Phase commit is the pushed branch tip; remote SHA verified | Signed physical-device build succeeded; all three bundle resources match the web files; the exact build installed and launched on the paired iPhone. CoreDevice process enumeration was unreliable after launch, so that secondary inspection remains deferred. |
-| 2 - Sticky mobile action | Not created | Pending | - | Starts after Phase 1a is complete and pushed. |
+| 1a - iOS OTA sibling pages | `codex/mobile-ux-phase-1a-ios-sibling-pages` | Complete | `6cacb45` pushed; remote SHA verified | Signed physical-device build succeeded; all three bundle resources match the web files; the exact build installed and launched on the paired iPhone. CoreDevice process enumeration was unreliable after launch, so that secondary inspection remains deferred. |
+| 2 - Sticky mobile action | Not created | Handoff created | - | Separate task titled `Phase 2 - Sticky Mobile Action`; create its branch from the latest pushed handoff commit before editing. |
 | 3-prereq - `lastLevelId` | Not created | Pending | - | - |
 | 3 - Today card | Not created | Pending | - | - |
 | 2b - Full-screen overlay | Not created | Pending | - | - |
@@ -28,6 +28,7 @@ Last updated: 2026-08-05 13:16 IST
 ## Phase Execution Protocol
 
 - Create a dedicated branch for every phase from the latest user-approved phase commit. Use `codex/mobile-ux-phase-<number>-<short-name>`; sub-phases such as `3-prereq`, `2b`, `6a`, and `6b` get separate branches and approvals because they have separate commits in the implementation order.
+- Run every new phase in a separate Codex task, and title that task with the exact phase name shown in this document (for example, `Phase 2 - Sticky Mobile Action`). At phase completion, pass the plan path, pushed commit, QA state, device-authorization state, and next phase title into the newly named task.
 - Work on one phase only. Do not begin, branch for, or mix in the next phase while the current phase is under implementation or review.
 - For the current phase: implement its scoped changes, run its specific exit checks, review the diff with fresh eyes, fix every in-scope finding, and repeat review/testing until a full pass finds no new in-scope issue.
 - Run pre-commit QA, create one `Phase N: ...` commit, push the phase branch, verify the pushed SHA, and run the phase's smoke QA against that committed tree.
