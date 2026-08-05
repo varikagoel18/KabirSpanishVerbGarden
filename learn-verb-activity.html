@@ -685,6 +685,24 @@
   .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
 
   .levels{display:grid;gap:14px;}
+  .today-card{display:flex;align-items:center;gap:18px;margin:18px 0 8px;padding:20px;
+    background:linear-gradient(135deg,#FFF2B8 0%,#FFE2A4 100%);border:2px solid var(--sun);
+    border-radius:24px;box-shadow:var(--shadow);}
+  .today-card[hidden]{display:none;}
+  .today-icon{flex:0 0 auto;font-size:42px;line-height:1;}
+  .today-copy{flex:1;min-width:0;}
+  .today-copy h2{font-size:22px;color:var(--ink);}
+  .today-copy p{margin:5px 0 0;color:var(--ink-soft);font-size:13px;font-weight:800;}
+  .today-play{flex:0 0 auto;min-height:48px;padding:12px 20px;border-radius:16px;background:var(--berry);
+    color:#fff;font-size:15px;font-weight:900;box-shadow:0 4px 0 var(--berry-dark);white-space:nowrap;}
+  .today-play:active{transform:translateY(2px);box-shadow:0 2px 0 var(--berry-dark);}
+  @media(max-width:640px){
+    .today-card{align-items:stretch;gap:12px;padding:16px;flex-wrap:wrap;}
+    .today-icon{font-size:34px;}
+    .today-copy{flex-basis:calc(100% - 50px);}
+    .today-copy h2{font-size:19px;}
+    .today-play{width:100%;}
+  }
   .level-card{display:flex;align-items:center;gap:14px;text-align:left;width:100%;background:var(--card);
     border-radius:22px;padding:16px;box-shadow:var(--shadow);border:none;transition:transform .1s;cursor:pointer;}
   .level-card:active{transform:scale(.99);}
@@ -742,6 +760,14 @@
 
   <!-- LEVEL SELECT -->
   <div id="viewLevels">
+    <section class="today-card" id="todayCard" aria-labelledby="todayTitle" hidden>
+      <div class="today-icon" aria-hidden="true">☀️</div>
+      <div class="today-copy">
+        <h2 id="todayTitle"></h2>
+        <p id="todaySubtitle"></p>
+      </div>
+      <button class="today-play" id="todayPlay" type="button">Play Now ▶</button>
+    </section>
     <div class="section-title">
       <h2>Choose a level</h2>
       <span>Pick where to play 🎮</span>
@@ -3279,9 +3305,13 @@ function starsForScore(score, max){
    ============================================================ */
 const $ = s => document.querySelector(s);
 const UX_FLAGS = (()=>{
-  let stickyBar=true;
-  try{ stickyBar=new URLSearchParams(location.search).get("stickyBar")!=="0"; }catch(e){}
-  return {stickyBar};
+  let stickyBar=true, todayCard=true;
+  try{
+    const params=new URLSearchParams(location.search);
+    stickyBar=params.get("stickyBar")!=="0";
+    todayCard=params.get("todayCard")!=="0";
+  }catch(e){}
+  return {stickyBar,todayCard};
 })();
 
 function stageBottom(config){
@@ -3538,8 +3568,42 @@ function refreshStats(){
 }
 
 /* ---------- Level select ---------- */
+function unlockedTodayCandidate(level){
+  if(!level) return null;
+  const plan=planFor(level);
+  const st=(STATE.levels&&STATE.levels[level.id])||{completed:{}};
+  const completed=st.completed||{};
+  let maxCompleted=0;
+  for(const d in completed){ if(completed[d]) maxCompleted=Math.max(maxCompleted,+d); }
+  const unlockedThrough=Math.min(plan.length,maxCompleted+1);
+  const day=plan.find(p=>p.d<=unlockedThrough && !completed[p.d]);
+  return day ? {level,day,completedCount:Object.values(completed).filter(Boolean).length} : null;
+}
+function pickTodayCard(){
+  if(!UX_FLAGS.todayCard || couponOwedNow()) return null;
+  const recent=LEVELS.find(level=>String(level.id)===String(STATE.lastLevelId));
+  const recentPick=unlockedTodayCandidate(recent);
+  if(recentPick) return recentPick;
+  const picks=LEVELS.map(unlockedTodayCandidate).filter(Boolean)
+    .sort((a,b)=>a.completedCount-b.completedCount);
+  if(picks.length) return picks[0];
+  const level=LEVELS.find(item=>item.id===0);
+  const day=level && planFor(level)[0];
+  return level && day ? {level,day,completedCount:0} : null;
+}
+function renderTodayCard(){
+  const card=$("#todayCard");
+  if(!card) return;
+  const pick=pickTodayCard();
+  card.hidden=!pick;
+  if(!pick) return;
+  $("#todayTitle").textContent=`Today: Level ${pick.level.id} - ${pick.day.title}`;
+  $("#todaySubtitle").textContent=pick.level.blurb;
+  $("#todayPlay").onclick=()=>{ openLevel(pick.level.id); openDay(pick.day.d); };
+}
 function renderLevels(){
   refreshStats();
+  renderTodayCard();
   const wrap=$("#levels"); wrap.innerHTML="";
   LEVELS.forEach(lv=>{
     const st=STATE.levels[lv.id];
