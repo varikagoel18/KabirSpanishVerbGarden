@@ -6,7 +6,7 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 
 ## Live Phase Status
 
-Last updated: 2026-08-05 17:24 IST
+Last updated: 2026-08-05 17:36 IST
 
 | Phase | Branch | Status | Commit / push | QA / notes |
 |---|---|---|---|---|
@@ -19,7 +19,7 @@ Last updated: 2026-08-05 17:24 IST
 | 2b - Full-screen overlay | `codex/mobile-ux-phase-2b-full-screen-overlay` | Complete | Phase commit pushed; remote SHA verified | Phone/desktop/non-lesson/rescue responsive QA, syntax, parity, simulator build/install/launch, portrait check, and `git diff --check` passed. See `phase_mobile_phase2b_notes.md`. |
 | 4 - Button hierarchy | `codex/mobile-ux-phase-4-button-hierarchy` | Complete | Phase commit pushed; remote SHA verified | Responsive hierarchy/overflow QA, source invariants, syntax, parity, simulator and authorized physical-iPhone install/launch, exact progress fingerprint, portrait check, and `git diff --check` passed. See `phase_mobile_phase4_notes.md`. |
 | 5 - Level cards | `codex/mobile-ux-phase-5-level-card-polish` | Complete | Phase commit pushed; remote SHA verified | Mapping invariants, responsive mobile/desktop QA, syntax, parity, simulator build/install/launch, and `git diff --check` passed. See `phase_mobile_phase5_notes.md`. |
-| 6a - Audio audit | Not created | Pending | - | - |
+| 6a - Audio audit | `codex/mobile-ux-phase-6a-audio-audit` | Complete | Phase audit commit pushed; remote SHA verified | TTS/SFX inventory complete; no media timeline exists; Phase 6b should proceed without scrub bars. See `phase_mobile_phase6a_notes.md`. |
 | 6b - Audio polish | Not created | Pending | - | Runs only if 6a confirms useful audio surfaces. |
 | 7 - Celebration and trophies | Not created | Pending | - | - |
 | 8 - Desktop and iPad | Not created | Pending | - | - |
