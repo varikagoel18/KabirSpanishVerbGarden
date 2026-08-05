@@ -6,14 +6,14 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 
 ## Live Phase Status
 
-Last updated: 2026-08-05 13:24 IST
+Last updated: 2026-08-05 14:52 IST
 
 | Phase | Branch | Status | Commit / push | QA / notes |
 |---|---|---|---|---|
 | Plan | `codex/web-mobile-ux-flow-plan` | Complete | `17bba81` committed | Iterated review complete. |
 | 1 - Audit | `codex/mobile-ux-phase-1-audit` | Complete | `8fe1eb1` pushed; remote SHA verified | Source audit, syntax, bundle parity, signed iPhone install/launch complete; fresh visual screenshots deferred to Phase 9 because local `file://` automation was blocked. |
 | 1a - iOS OTA sibling pages | `codex/mobile-ux-phase-1a-ios-sibling-pages` | Complete | `6cacb45` pushed; remote SHA verified | Signed physical-device build succeeded; all three bundle resources match the web files; the exact build installed and launched on the paired iPhone. CoreDevice process enumeration was unreliable after launch, so that secondary inspection remains deferred. |
-| 2 - Sticky mobile action | Not created | Handoff created | - | Separate task titled `Phase 2 - Sticky Mobile Action`; create its branch from the latest pushed handoff commit before editing. |
+| 2 - Sticky mobile action | `codex/mobile-ux-phase-2-sticky-action` | Complete | `Phase 2: sticky portrait lesson actions`; push and remote SHA verification are the final handoff step | Responsive browser QA, simulator build/install/launch, signed physical-iPhone install/launch, portrait-only plist verification, and exact before/after progress comparison passed. Work stops here before Phase 3. |
 | 3-prereq - `lastLevelId` | Not created | Pending | - | - |
 | 3 - Today card | Not created | Pending | - | - |
 | 2b - Full-screen overlay | Not created | Pending | - | - |
@@ -89,7 +89,7 @@ Last updated: 2026-08-05 13:24 IST
 - **Height math:** use a fallback pair: `height: 100vh; height: 100dvh;` so modern mobile browsers get the dynamic viewport while older browsers still render.
 - **DOM location:** the sticky bar is a **sibling of `#stage` inside the overlay panel**, not injected into the stage HTML. This way `runStage()` (in the code) can rewrite `$("#stage").innerHTML` without wiping the bar. Renderers push their primary action's `{label, onClick, disabled}` into a shared `stageBottom({...})` helper.
 - **Keyboard handling:** on iOS the on-screen keyboard shifts the viewport; use `visualViewport` events to reposition the sticky bar when a text input is focused so it stays visible above the keyboard. Fall back to `window.innerHeight` polling on `focus`/`blur` when `window.visualViewport` is undefined (older Safari).
-- **Landscape iPhone:** in short landscape (height < 500px), the sticky bar collapses its vertical padding to `6px + env(safe-area-inset-bottom)`, and the primary button shrinks its font-size by ~2px so answers stay above the fold. Never hide the sticky bar in landscape — it's the only visible primary action.
+- **Orientation:** the installed iOS app is portrait-only. Keep both iPhone and iPad supported-orientation declarations limited to `UIInterfaceOrientationPortrait`; landscape-specific lesson-shell support and QA are out of scope.
 - **Reduce Transparency:** iOS "Settings > Accessibility > Display & Text Size > Reduce Transparency" disables `backdrop-filter`. The sticky bar and utility buttons must remain readable without blur — use a solid fallback color (`--leaf-dark` at 92% alpha) when `@media (prefers-reduced-transparency: reduce)` matches.
 - **Dark Mode:** the app uses fixed light-cream backgrounds. Do not automatically flip to dark on iOS system dark mode; if we ever add dark support it should be an opt-in toggle in Parents. For now, force `color-scheme: light` in the root CSS so iOS doesn't invert form controls.
 
@@ -114,6 +114,7 @@ Do not wire every renderer blindly into `stageBottom()`. Classify the renderer f
 - Verify keyboard-focused inputs keep the primary action visible or intentionally move it away.
 - Verify desktop modal layout still works and does not inherit cramped mobile-only behavior.
 - Verify scoring and two-attempt behavior are unchanged with a wrong-first-attempt test.
+- Verify the built iOS app advertises portrait as its only supported orientation.
 - Commit Phase 2 before starting Phase 3.
 
 ## Phase 3 - Home Screen Flow
@@ -355,6 +356,7 @@ Phases below map back to the sections above.
 ## Guardrails
 
 - Do not change scoring, stars, unlock rules, or progress storage unless explicitly requested. Two pre-authorized exceptions defined in this plan: (a) Phase 3-prereq adds `STATE.lastLevelId`; (b) Phase 7 relocates `maybeShowSurpriseQuiz()` and adds `STATE.surpriseQuiz.pendingCard`. Everything else is off-limits.
+- **Progress preservation is a release invariant for every phase.** Run browser QA on an isolated localhost origin or temporary profile; never reset, restore, overwrite, or sync into Kabir's real browser/iPhone state. Before any physical-iPhone install or real sync, record a read-only progress fingerprint containing each level's completed count, stars by day, and collected count plus the total trophy count. Update the app in place (never uninstall it or clear its data), then verify every value is unchanged or greater after launch. A decrease blocks the phase commit/push and requires restoring the saved backup before further work.
 - Keep all app-code `localStorage` access guarded (`try/catch` around every `getItem`/`setItem`). Console-only QA or emergency restore snippets are allowed but should be labeled as manual rescue steps.
 - Keep `ios/build/` ignored (prevents committing ~90 MB of Xcode-generated derived data).
 - Keep all bundled iOS web resources in sync with their web originals: `learn-verb-activity.html`, `regular-verb-practice-tests.html`, and `spanish-class-hw.html` (verified in Phase 9 QA).

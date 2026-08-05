@@ -15,6 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
 <style>
   :root{
+    color-scheme:light;
     --cream:#FFF8EE;
     --soil:#7A5C3E;
     --soil-dark:#5E4630;
@@ -546,6 +547,27 @@
   .steps i.on{background:var(--sun);}
   .steps i.done{background:var(--leaf);}
   .stage{padding:18px;}
+  .stage-bottom[hidden]{display:none!important;}
+  .stage-bottom{position:relative;bottom:0;z-index:4;padding:10px 18px calc(14px + env(safe-area-inset-bottom));
+    border-top:1px solid rgba(67,51,42,.1);background:rgba(255,248,238,.96);backdrop-filter:blur(10px);}
+  .stage-bottom-inner{display:flex;align-items:center;justify-content:flex-end;gap:10px;max-width:524px;margin:0 auto;}
+  .stage-bottom .btn{min-height:48px;margin:0;}
+  .stage-bottom .stage-primary{flex:1 1 220px;}
+  .stage-bottom .stage-secondary{flex:0 1 auto;min-width:96px;}
+  .stage-bottom button:disabled{opacity:.55;box-shadow:none;transform:none;cursor:default;}
+  @media(max-width:640px){
+    .overlay.lesson-active.sticky-action-enabled{overflow:hidden;}
+    .overlay.lesson-active.sticky-action-enabled .sheet{display:flex;flex-direction:column;
+      max-height:calc(100vh - 28px);max-height:calc(100dvh - 28px);}
+    .overlay.lesson-active.sticky-action-enabled .sheet-top,
+    .overlay.lesson-active.sticky-action-enabled .steps,
+    .overlay.lesson-active.sticky-action-enabled .stage-bottom{flex:0 0 auto;}
+    .overlay.lesson-active.sticky-action-enabled .stage{flex:1 1 auto;min-height:0;overflow-y:auto;}
+    .overlay.lesson-active.sticky-action-enabled .stage-bottom{position:sticky;margin-bottom:var(--keyboard-offset,0px);}
+  }
+  @media(prefers-reduced-transparency:reduce){
+    .stage-bottom{background:rgba(46,126,80,.98);backdrop-filter:none;border-top-color:rgba(255,255,255,.28);}
+  }
   .stage .lead{font-family:'Baloo 2';font-weight:700;font-size:18px;color:var(--leaf-dark);margin:0 0 4px;}
   .stage .sub{font-size:13.5px;color:var(--ink-soft);font-weight:700;margin:0 0 16px;}
 
@@ -764,6 +786,9 @@
     </div>
     <div class="steps" id="steps"></div>
     <div class="stage" id="stage"></div>
+    <div class="stage-bottom" id="stageBottom" hidden>
+      <div class="stage-bottom-inner" id="stageBottomInner"></div>
+    </div>
   </div>
 </div>
 
@@ -2909,6 +2934,8 @@ function queueTrophyPopups(list){
 function showNextTrophyPopup(){
   if(!_trophyQueue.length){ _trophyBusy=false; return; }
   _trophyBusy=true;
+  stageBottom(null);
+  $("#overlay").classList.remove("lesson-active","sticky-action-enabled");
   const t=_trophyQueue.shift();
   const stage=$("#stage");
   cur = cur || null;
@@ -2979,6 +3006,7 @@ function showTrophyChain(list, finalCb){
 }
 /* Render the spinning-trophy-with-pixie-dust view in the lesson overlay stage. */
 function showTrophyCelebration(trophy, onDone){
+  stageBottom(null);
   const stage=$("#stage");
   $("#dvEmoji").textContent="🏆";
   $("#dvTitle").textContent="New trophy!";
@@ -3130,6 +3158,8 @@ function redeemRevivalCoupon(){
 
 /* Overlay UI for the revival coupon — cost in saplings, spend to redeem. */
 function showRevivalCoupon(){
+  stageBottom(null);
+  $("#overlay").classList.remove("lesson-active","sticky-action-enabled");
   ensureExtraState();
   const c = STATE.revive.active;
   if(!c) return;
@@ -3247,6 +3277,57 @@ function starsForScore(score, max){
    Helpers
    ============================================================ */
 const $ = s => document.querySelector(s);
+const UX_FLAGS = (()=>{
+  let stickyBar=true;
+  try{ stickyBar=new URLSearchParams(location.search).get("stickyBar")!=="0"; }catch(e){}
+  return {stickyBar};
+})();
+
+function stageBottom(config){
+  const bar=$("#stageBottom"), inner=$("#stageBottomInner");
+  if(!bar || !inner) return {};
+  inner.innerHTML="";
+  if(!config){ bar.hidden=true; bar.style.setProperty("--keyboard-offset","0px"); return {}; }
+  bar.hidden=false;
+  let secondary=null;
+  if(config.secondary){
+    secondary=document.createElement("button");
+    secondary.type="button"; secondary.className="btn ghost stage-secondary";
+    secondary.textContent=config.secondary.label; secondary.disabled=!!config.secondary.disabled;
+    secondary.onclick=config.secondary.onClick; inner.appendChild(secondary);
+  }
+  const primary=document.createElement("button");
+  primary.type="button"; primary.className="btn leaf stage-primary";
+  primary.textContent=config.label; primary.disabled=!!config.disabled;
+  primary.onclick=config.onClick; inner.appendChild(primary);
+  updateStageBottomForKeyboard();
+  return {primary,secondary};
+}
+
+let stageViewportBase=window.innerHeight, stageKeyboardPoll=0;
+function updateStageBottomForKeyboard(){
+  const bar=$("#stageBottom");
+  if(!bar || bar.hidden || !UX_FLAGS.stickyBar) return;
+  const active=document.activeElement;
+  const typing=!!(active && active.matches && active.matches("input,textarea,select,[contenteditable=true]"));
+  if(!typing){ stageViewportBase=Math.max(stageViewportBase,window.innerHeight); bar.style.setProperty("--keyboard-offset","0px"); return; }
+  const vv=window.visualViewport;
+  const covered=vv ? Math.max(0,window.innerHeight-vv.height-vv.offsetTop) : Math.max(0,stageViewportBase-window.innerHeight);
+  bar.style.setProperty("--keyboard-offset",covered>60?covered+"px":"0px");
+}
+if(window.visualViewport){
+  window.visualViewport.addEventListener("resize",updateStageBottomForKeyboard);
+  window.visualViewport.addEventListener("scroll",updateStageBottomForKeyboard);
+}
+document.addEventListener("focusin",e=>{
+  if(!e.target.matches("input,textarea,select,[contenteditable=true]")) return;
+  clearInterval(stageKeyboardPoll); stageKeyboardPoll=setInterval(updateStageBottomForKeyboard,150);
+  setTimeout(updateStageBottomForKeyboard,0);
+});
+document.addEventListener("focusout",()=>{
+  clearInterval(stageKeyboardPoll); stageKeyboardPoll=0;
+  setTimeout(updateStageBottomForKeyboard,120);
+});
 const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
 const sample = (arr,n) => shuffle(arr).slice(0,n);
 const todayKey = () => new Date().toISOString().slice(0,10);
@@ -3356,6 +3437,7 @@ function normAnswer(s){
 function startQuestionTimer(seconds, onExpire){
   const q = document.querySelector('#stage .q');
   if(!q) return {cancel(){}};
+  const owner = cur;
   const bar = document.createElement('div');
   bar.className = 'qtimer';
   bar.innerHTML = '<i></i><span class="qtimer-label">'+seconds+'s</span>';
@@ -3368,12 +3450,13 @@ function startQuestionTimer(seconds, onExpire){
   iEl.style.width = '0%';
   const start = Date.now();
   const tick = setInterval(()=>{
+    if(cur!==owner){ clearInterval(tick); return; }
     const remaining = Math.max(0, seconds - Math.floor((Date.now()-start)/1000));
     lbl.textContent = remaining+'s';
     if(remaining<=3) bar.classList.add('danger');
     else if(remaining<=6) bar.classList.add('warn');
   }, 250);
-  const to = setTimeout(()=>{ clearInterval(tick); bar.classList.add('expired'); onExpire(); }, seconds*1000);
+  const to = setTimeout(()=>{ clearInterval(tick); if(cur!==owner)return; bar.classList.add('expired'); onExpire(); }, seconds*1000);
   return { cancel(){ clearInterval(tick); clearTimeout(to); if(bar.parentNode) bar.parentNode.removeChild(bar); } };
 }
 function secondWrongAdvance(state, onAdvance){
@@ -3652,11 +3735,16 @@ function openDay(d){
   $("#dvTitle").textContent="Lesson "+d;
   $("#dvSub").textContent=plan.title;
   renderSteps();
-  $("#overlay").classList.add("show");
+  $("#overlay").classList.add("show","lesson-active");
+  $("#overlay").classList.toggle("sticky-action-enabled",UX_FLAGS.stickyBar);
   document.body.style.overflow="hidden";
   runStage();
 }
-function closeDay(){ endSession(); $("#overlay").classList.remove("show"); document.body.style.overflow=""; cur=null; }
+function closeDay(){
+  endSession(); stageBottom(null);
+  $("#overlay").classList.remove("show","lesson-active","sticky-action-enabled");
+  document.body.style.overflow=""; cur=null;
+}
 
 function renderSteps(){
   const s=$("#steps"); s.innerHTML="";
@@ -3687,6 +3775,7 @@ function nextStage(){
   if(cur.idx>=cur.stages.length){ finishDay(); } else { renderSteps(); runStage(); }
 }
 function runStage(){
+  stageBottom(null);
   const st=cur.stages[cur.idx];
   const map={intro:renderIntro, wordbuild:renderScramble, listenspell:renderListenSpell, voiceverb:renderVoiceVerb, match:renderMatch, quiz:renderQuiz, scramble:renderScramble, memory:renderMemory, conj:renderConj, fillblank:renderFill, truefalse:renderTF, para_fill:renderParaFill, bonus_review:renderBonusReview, tense_quiz:renderTenseQuiz, house_lesson:renderHouseLesson, house_quiz:renderHouseQuiz, redo:renderRedo, bloom:renderBloom};
   (map[st.type]||renderBloom)(st);
@@ -3776,11 +3865,13 @@ function renderIntro(st){
       <div class="fc-progress">Card ${i+1} of ${verbs.length}</div>
       <div class="fc-controls">
         <button class="speak" id="sp">🔊</button>
-        <button class="btn leaf" id="nx">${i===verbs.length-1?"Let's play! 🎮":"Next ➜"}</button>
       </div>`;
     $("#fc").onclick=(e)=>{ if(e.target.id==="sp")return; flipped=!flipped; $("#fc").classList.toggle("flip"); };
     $("#sp").onclick=(e)=>{ e.stopPropagation(); speak(v.inf); };
-    $("#nx").onclick=()=>{ if(i<verbs.length-1){ i++; flipped=false; draw(); } else { nextStage(); } };
+    stageBottom({
+      label:i===verbs.length-1?"Let's play! 🎮":"Next ➜",
+      onClick:()=>{ if(i<verbs.length-1){ i++; flipped=false; draw(); } else { nextStage(); } }
+    });
     // (Verbs are only counted after the lesson is FINISHED — happens in commitDay)
   }
   draw();
@@ -4106,13 +4197,13 @@ function renderFill(st){
           <div class="sub" style="margin:8px 0 0">${data.en}</div>
           <input id="fillIn" class="l0input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type the verb form…"/>
           <div id="fillFeed" class="l0feed"></div>
-          <div class="l0actions">
-            <button class="btn leaf" id="fillChk" type="button">Check ➜</button>
-            <button class="btn ghost sm" id="fillSkip" type="button">Skip ⏭</button>
-          </div>
         </div>`;
-      const inp=$("#fillIn"), feed=$("#fillFeed"), chk=$("#fillChk"), skip=$("#fillSkip");
-      setTimeout(()=>{ try{ inp.focus(); }catch(e){} }, 50);
+      const inp=$("#fillIn"), feed=$("#fillFeed");
+      let actions={};
+      function disableActions(){
+        if(actions.primary) actions.primary.disabled=true;
+        if(actions.secondary) actions.secondary.disabled=true;
+      }
       function fillBlank(){ const bl=stage.querySelector(".blank"); if(bl){bl.textContent=correct;bl.classList.add("done");} }
       function check(){
         if(done) return;
@@ -4120,7 +4211,7 @@ function renderFill(st){
         if(accepted.has(val)){
           done=true; SFX.right(); fillBlank();
           feed.textContent="¡Correcto! "+correct+" ✅"; feed.style.color="var(--leaf-dark)";
-          chk.disabled=true; inp.disabled=true; skip.disabled=true;
+          disableActions(); inp.disabled=true;
           recordVerbAttempt(v.id, !missed); cur.score++;
           if(missed && !pushed){ addRedoQuestion({prompt:sentence, opts:[correct], correct, em:v.em, speak:data.es.replace("___",correct), verbId:v.id}); pushed=true; }
           speak(data.es.replace("___",correct));
@@ -4128,16 +4219,19 @@ function renderFill(st){
         } else {
           missed=true;
           feed.textContent="Not quite — try again 💪"; feed.style.color="var(--berry)";
-          if(secondWrongAdvance(wrongState, ()=>{ done=true; chk.disabled=true; inp.disabled=true; skip.disabled=true; adv(); })) done=true;
+          if(secondWrongAdvance(wrongState, ()=>{ done=true; disableActions(); inp.disabled=true; adv(); })){
+            done=true; disableActions(); inp.disabled=true;
+          }
         }
       }
-      chk.onclick = check;
-      skip.onclick = ()=>{
+      function skipQuestion(){
         if(done) return; done=true;
         feed.textContent="Skipped ⏭"; feed.style.color="var(--ink-soft)";
-        chk.disabled=true; inp.disabled=true; skip.disabled=true;
+        disableActions(); inp.disabled=true;
         setTimeout(adv, 350);
-      };
+      }
+      actions=stageBottom({label:"Check ➜",onClick:check,secondary:{label:"Skip ⏭",onClick:skipQuestion}});
+      setTimeout(()=>{ try{ inp.focus(); }catch(e){} }, 50);
       inp.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); check(); }});
     }
     cur.max++;
@@ -4270,16 +4364,13 @@ function renderVoiceVerb(st){
         <div class="say-en">${v.en}</div>
         <button class="speak" id="hear" style="margin:10px auto 0">🔊</button>
       </div>
-      <div style="text-align:center;margin-top:10px;">
-        <button class="btn leaf big" id="next">✅ I said it!</button>
-      </div>
       <div style="text-align:center;margin-top:12px;">
         <button class="mic" id="mic" style="width:64px;height:64px;font-size:30px;margin:4px auto">🎤</button>
         <div class="heard" id="heard" style="font-size:13px">${SR?"Want to try the mic? (optional)":""}</div>
       </div>`;
     const heard=$("#heard"), mic=$("#mic");
     $("#hear").onclick=()=>speak(v.inf);
-    $("#next").onclick=(e)=>{ celebrateSmallWin(e.currentTarget); adv(); };
+    const actions=stageBottom({label:"✅ I said it!",onClick:()=>{ celebrateSmallWin(actions.primary); adv(); }});
     setTimeout(()=>speak(v.inf),250);
     // Mic is fully optional and NEVER fails — always encouraging, always lets Kabir move on (#1)
     mic.onclick=()=>{
@@ -5134,6 +5225,7 @@ function renderHouseLesson(st){
 
   function next(){ phase++; runPhase(); }
   function runPhase(){
+    stageBottom(null);
     setSubStage(phase, PHASES);
     if(phase===0) runIntro();
     else if(phase===1) runWordbuild();
@@ -5161,11 +5253,13 @@ function renderHouseLesson(st){
         <div class="fc-progress">Card ${i+1} of ${cards.length}</div>
         <div class="fc-controls">
           <button class="speak" id="sp">🔊</button>
-          <button class="btn leaf" id="nx">${i===cards.length-1?"Next activity ➜":"Next ➜"}</button>
         </div>`;
       $("#fc").onclick=e=>{ if(e.target.id==="sp") return; flipped=!flipped; $("#fc").classList.toggle("flip"); };
       $("#sp").onclick=e=>{ e.stopPropagation(); speak(v.es); };
-      $("#nx").onclick=()=>{ if(i<cards.length-1){ i++; flipped=false; draw(); } else next(); };
+      stageBottom({
+        label:i===cards.length-1?"Next activity ➜":"Next ➜",
+        onClick:()=>{ if(i<cards.length-1){ i++; flipped=false; draw(); } else next(); }
+      });
     }
     draw();
   }
@@ -5375,8 +5469,8 @@ function renderHouseQuiz(st){
   const minWords = plan.practice ? 2 : 12;
   if(pool.length<minWords){
     // safety: not enough vocab yet
-    $("#stage").innerHTML=`<p class="lead">Learn a few more words first! 🏠</p><p class="sub">This quiz needs at least ${minWords} covered La Casa words.</p><button class="btn leaf big" id="skipHQ">Continue</button>`;
-    $("#skipHQ").onclick=nextStage;
+    $("#stage").innerHTML=`<p class="lead">Learn a few more words first! 🏠</p><p class="sub">This quiz needs at least ${minWords} covered La Casa words.</p>`;
+    stageBottom({label:"Continue",onClick:nextStage});
     return;
   }
   const quizWords = houseQuizWordSet(plan.d, pool, 12);
@@ -5579,11 +5673,6 @@ function renderBloom(st){
        : stars===3? "🌱 You grew a sapling! 🌱"
        : `Lesson ${cur.plan.d} done!`);
   const bigIcon=isBonus? "🌳" : flowerFor(cur.plan.d);
-  const retry = stars===0
-    ? `<button class="btn sun big" id="retry" style="margin-bottom:10px">🔁 Try again</button>`
-    : stars<3
-    ? `<button class="btn sun big" id="retry" style="margin-bottom:10px">🔁 Try again for 3 stars</button>`
-    : "";
   const stage=$("#stage");
   stage.innerHTML=`
     <div class="bloom ${isBonus?'bonus-bloom':''}">
@@ -5591,21 +5680,28 @@ function renderBloom(st){
       <h2>${headline}</h2>
       <div class="starline">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div>
       <p>${cur.max>0? `You got ${cur.score} of ${cur.max} right. `:""}${msgs[stars][Math.floor(Math.random()*msgs[stars].length)]}</p>
-      ${retry}
-      <button class="btn leaf big" id="done">Back to lessons 🌿</button>
     </div>`;
   const d=cur.plan.d;
-  if($("#retry")) $("#retry").onclick=()=>{ closeDay(); openDay(d); };
   if(stars>0) saveDayProgress(stars);
   if($("#viewLevel").style.display!=="none") renderDash();
-  $("#done").onclick=()=>{
+  function retryLesson(){ closeDay(); openDay(d); }
+  function finishLesson(){
+    stageBottom(null);
     if(stars===0){ closeDay(); return; }
     const trophies=(cur && cur.newlyEarnedTrophies) || [];
     if(!trophies.length){ commitDay(stars); return; }
     if(cur) cur.newlyEarnedTrophies=[]; // clear so we don't re-show on any subsequent click
     // Sequential celebration for each newly-earned trophy, then finish commitDay
     showTrophyChain(trophies.slice(), ()=>commitDay(stars));
-  };
+  }
+  if(stars===0){
+    stageBottom({label:"🔁 Try again",onClick:retryLesson,secondary:{label:"Back to lessons",onClick:finishLesson}});
+  } else {
+    stageBottom({
+      label:"Back to lessons 🌿",onClick:finishLesson,
+      secondary:stars<3?{label:"Try again for 3 stars",onClick:retryLesson}:null
+    });
+  }
   confetti(32);
   if(isBonus){
     // Extra-special celebration for the tree (#5)
@@ -5729,6 +5825,8 @@ $("#backBtn").onclick=backToLevels;
 
 /* Learned-verbs popup — header tiles show regular vs irregular progress separately. */
 function showLearnedVerbs(levelId){
+  stageBottom(null);
+  $("#overlay").classList.remove("lesson-active","sticky-action-enabled");
   const rows=[];
   for(const lid in STATE.levels){
     if(levelId && String(lid)!==String(levelId)) continue;
@@ -5778,6 +5876,8 @@ if($("#stHouseBtn")) $("#stHouseBtn").onclick=()=>showLearnedVerbs(4);
 if($("#stFiestaBtn")) $("#stFiestaBtn").onclick=()=>showLearnedVerbs(0);
 
 function openInfoPanel(emoji, title, sub, html){
+  stageBottom(null);
+  $("#overlay").classList.remove("lesson-active","sticky-action-enabled");
   $("#dvEmoji").textContent=emoji;
   $("#dvTitle").textContent=title;
   $("#dvSub").textContent=sub;
@@ -5826,6 +5926,8 @@ function maybeShowSurpriseQuiz(){
 }
 
 function renderSurpriseQuiz(learnedRows){
+  stageBottom(null);
+  $("#overlay").classList.remove("lesson-active","sticky-action-enabled");
   cur=null;
   endSession();
   const rows=shuffle(learnedRows.slice());
