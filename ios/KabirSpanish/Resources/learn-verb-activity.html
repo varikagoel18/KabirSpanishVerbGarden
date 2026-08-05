@@ -68,7 +68,7 @@
   /* Any element that needs to scroll gets momentum scrolling on iOS */
   .overlay,.sheet,.stage,.trv2,.wrap{-webkit-overflow-scrolling:touch;}
   /* Hardware-accelerate the elements that animate often */
-  .cell,.opt,.mtile,.trv2-card,.fcard,.confetti{will-change:transform;}
+  .cell:active,.opt:active,.mtile:active,.trv2-card:active,.fcard,.confetti{will-change:transform;}
   .wrap{max-width:760px;margin:0 auto;padding:18px 16px 60px;padding-top:calc(18px + env(safe-area-inset-top));}
   h1,h2,h3,.disp{font-family:'Baloo 2',cursive;margin:0;line-height:1.05;}
   button{font-family:'Nunito',sans-serif;cursor:pointer;border:none;}
@@ -1834,7 +1834,7 @@ const LEVEL5_VOCAB = [
   {id:82, es:"diciembre",  inf:"diciembre",  en:"December",    em:"🎄", group:"month"},
 ];
 
-/* 15 lesson-day plan for Level 5. Uses the standard verb-level renderers
+/* 41 lesson-day plan for Level 0. Uses the standard verb-level renderers
    (intro / wordbuild / match / memory / quiz), grouped by vocab theme. */
 const LEVEL5_LESSONS = (function(){
   // Each topic gets 2 learning lessons (match + memory) and 3 dedicated quizzes.
@@ -2672,8 +2672,8 @@ const TROPHIES = [
   {id:"hw-stars-5",em:"✒️", name:"HW Ace",              desc:"Earn 3 stars on 5 HW quizzes",             check:s=>s.hwThreeStar>=5},
   // --- Tense (extra tier) ---
   {id:"tense-5",   em:"🕓", name:"Tense Explorer II",    desc:"Finish 5 tense activities",               check:s=>s.tenseLessonsDone>=5},
-  // --- Level 5 · Vocab Fiesta ---
-  {id:"fiesta-first",   em:"🎉", name:"Fiesta Rookie",     desc:"Finish your first Level 5 activity",     check:s=>s.fiestaLessonsDone>=1 || s.fiestaQuizzesDone>=1},
+  // --- Level 0 · Vocab Fiesta ---
+  {id:"fiesta-first",   em:"🎉", name:"Fiesta Rookie",     desc:"Finish your first Level 0 activity",     check:s=>s.fiestaLessonsDone>=1 || s.fiestaQuizzesDone>=1},
   {id:"fiesta-colors",  em:"🎨", name:"Color Master",      desc:"Learn every color",                      check:s=>s.fiestaColorsAll},
   {id:"fiesta-phys",    em:"📏", name:"Descriptions Pro",   desc:"Learn every physical adjective",         check:s=>s.fiestaPhysAll},
   {id:"fiesta-pers",    em:"😊", name:"Personality Explorer",desc:"Learn every personality adjective",     check:s=>s.fiestaPersAll},
@@ -2682,12 +2682,12 @@ const TROPHIES = [
   {id:"fiesta-profession",em:"👨‍🏫",name:"Profession Pro", desc:"Learn every profession",                 check:s=>s.fiestaProfAll},
   {id:"fiesta-weekday", em:"📅", name:"Weekday Winner",    desc:"Learn every day of the week",            check:s=>s.fiestaWeekdayAll},
   {id:"fiesta-month",   em:"🗓️",name:"Month Master",      desc:"Learn every month of the year",          check:s=>s.fiestaMonthAll},
-  {id:"fiesta-all-words",em:"🎊",name:"Vocab All-Star",    desc:"Learn every Level 5 word",               check:s=>s.fiestaAllWords},
+  {id:"fiesta-all-words",em:"🎊",name:"Vocab All-Star",    desc:"Learn every Level 0 word",               check:s=>s.fiestaAllWords},
   {id:"fiesta-quiz-3s", em:"🎯", name:"Fiesta Sharpshooter",desc:"Earn 3 stars on any Fiesta quiz",       check:s=>s.fiestaThreeStarQuizzes>=1},
   {id:"fiesta-quiz-5",  em:"🥇", name:"Fiesta Ace",        desc:"Earn 3 stars on 5 Fiesta quizzes",       check:s=>s.fiestaThreeStarQuizzes>=5},
   {id:"fiesta-quiz-15", em:"🏆", name:"Fiesta Legend",     desc:"Earn 3 stars on 15 Fiesta quizzes",      check:s=>s.fiestaThreeStarQuizzes>=15},
-  {id:"fiesta-lessons-10",em:"🎪",name:"Fiesta Regular",   desc:"Finish 10 Level 5 lessons",              check:s=>s.fiestaLessonsDone>=10},
-  {id:"fiesta-champion",em:"🎡", name:"Fiesta Champion",   desc:"Finish every Level 5 lesson",            check:s=>s.fiestaLevelComplete},
+  {id:"fiesta-lessons-10",em:"🎪",name:"Fiesta Regular",   desc:"Finish 10 Level 0 lessons",              check:s=>s.fiestaLessonsDone>=10},
+  {id:"fiesta-champion",em:"🎡", name:"Fiesta Champion",   desc:"Finish every Level 0 lesson",            check:s=>s.fiestaLevelComplete},
   // --- General vocab collection (across all levels) ---
   {id:"verbs-50",  em:"🌸", name:"Word Meadow",         desc:"Collect 50 unique words across all levels",  check:s=>s.verbsLearned>=50},
   {id:"verbs-100", em:"🌳", name:"Vocab Marathon",      desc:"Collect 100 unique words across all levels", check:s=>s.verbsLearned>=100},
@@ -3633,8 +3633,8 @@ function openDay(d){
       stages.push({type:"listenspell", plan});
       stages.push({type:"fillblank", plan});
       stages.push({type:"para_fill", plan});
-    } else if(LVID===5){
-      // Level 5 · Vocab Fiesta — skip sentence fill / paragraph fill so the generic
+    } else if(LVID===0){
+      // Level 0 · Vocab Fiesta — skip sentence fill / paragraph fill so the generic
       // "Me gusta ___" default doesn't repeat across every lesson & quiz.
       stages.push({type:"listenspell", plan});
     } else {
@@ -6137,6 +6137,23 @@ function fetchTO(url, opts, ms){
   return fetch(url, Object.assign({signal:ctl.signal, cache:"no-store"}, opts||{}))
     .finally(()=>clearTimeout(to));
 }
+const SYNC_STATE_KEY = "learn_verb_activity_v2";
+const SYNC_BACKUP_KEY = "learn_verb_activity_v2_backup";
+const SYNC_DEVICE_URL_KEY = "syncDeviceUrl";
+function syncStoreGet(key){
+  try{ return window.localStorage.getItem(key); }catch(e){ return null; }
+}
+function syncStoreSet(key, value, opts){
+  try{
+    window.localStorage.setItem(key, value);
+    return true;
+  }catch(e){
+    if(!(opts && opts.quiet)){
+      try{ toast("Storage is blocked, so sync could not save on this device."); }catch(_){}
+    }
+    return false;
+  }
+}
 /* Called on whichever device RECEIVES a state push — merges incoming with
    current local instead of blindly overwriting, so nothing done on this side
    between the sender's GET and POST can be lost. Returns true on success.
@@ -6146,14 +6163,12 @@ function syncMergeIncoming(remoteJson){
     const remote = remoteJson ? JSON.parse(remoteJson) : null;
     if(!remote) return false;
     let local = null;
-    try{ local = JSON.parse(localStorage.getItem("learn_verb_activity_v2")||"null"); }catch(e){}
+    try{ local = JSON.parse(syncStoreGet(SYNC_STATE_KEY)||"null"); }catch(e){}
     // Backup the current state before overwriting (once per merge).
-    try{
-      const prev = localStorage.getItem("learn_verb_activity_v2");
-      if(prev) localStorage.setItem("learn_verb_activity_v2_backup", prev);
-    }catch(e){}
+    const prev = syncStoreGet(SYNC_STATE_KEY);
+    if(prev) syncStoreSet(SYNC_BACKUP_KEY, prev, {quiet:true});
     const merged = syncMergeState(remote, local);
-    localStorage.setItem("learn_verb_activity_v2", JSON.stringify(merged));
+    if(!syncStoreSet(SYNC_STATE_KEY, JSON.stringify(merged), {quiet:true})) return false;
     return true;
   }catch(e){ return false; }
 }
@@ -6177,12 +6192,14 @@ async function syncWithDevice(baseUrl){
   }
   // 2) Read local state
   let local = null;
-  try{ local = JSON.parse(localStorage.getItem("learn_verb_activity_v2")||"null"); }catch(e){}
+  try{ local = JSON.parse(syncStoreGet(SYNC_STATE_KEY)||"null"); }catch(e){}
   // 3) Merge
   const merged = syncMergeState(remote, local);
   const mergedJson = JSON.stringify(merged);
   // 4) Write merged locally
-  localStorage.setItem("learn_verb_activity_v2", mergedJson);
+  if(!syncStoreSet(SYNC_STATE_KEY, mergedJson)){
+    throw new Error("Browser storage is blocked, so sync could not save progress here.");
+  }
   // 5) Push merged to iPhone (they end up with identical state)
   const res2 = await fetchTO(base+"/state", {method:"POST", headers:{"Content-Type":"application/json"}, body:mergedJson}, 15000);
   if(!res2.ok) throw new Error("Push to iPhone failed — HTTP "+res2.status);
@@ -6194,7 +6211,7 @@ async function syncWithDevice(baseUrl){
 }
 
 function showSyncPanel(){
-  const savedUrl = localStorage.getItem("syncDeviceUrl") || "http://192.168.1.10:8181";
+  const savedUrl = syncStoreGet(SYNC_DEVICE_URL_KEY) || "http://192.168.1.10:8181";
   openInfoPanel("🔄","Wi-Fi Sync","Merge progress with the iPhone app",`
     <div style="display:grid;gap:14px">
       <div style="background:var(--panel-cream,#FFF6E8);border:1px solid #EAD6A8;border-radius:14px;padding:14px;font-size:14px;line-height:1.5">
@@ -6244,7 +6261,7 @@ function showSyncPanel(){
   $("#syncNowBtn").onclick = async ()=>{
     const url = $("#syncUrlIn").value.trim().replace(/\/+$/,"");
     if(!url){ setStatus("Enter your iPhone address first.","var(--berry)"); return; }
-    localStorage.setItem("syncDeviceUrl", url);
+    syncStoreSet(SYNC_DEVICE_URL_KEY, url, {quiet:true});
     setStatus("Syncing…");
     try{
       const r = await syncWithDevice(url);
@@ -6257,7 +6274,7 @@ function showSyncPanel(){
   $("#syncPushHtmlBtn").onclick = async ()=>{
     const url = $("#syncUrlIn").value.trim().replace(/\/+$/,"");
     if(!url){ setStatus("Enter your iPhone address first.","var(--berry)"); return; }
-    localStorage.setItem("syncDeviceUrl", url);
+    syncStoreSet(SYNC_DEVICE_URL_KEY, url, {quiet:true});
     setStatus("Sending latest HTML to iPhone…");
     try{
       const r = await pushHTMLToDevice(url);
