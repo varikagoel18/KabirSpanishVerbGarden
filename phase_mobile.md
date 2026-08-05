@@ -6,7 +6,7 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 
 ## Live Phase Status
 
-Last updated: 2026-08-05 14:52 IST
+Last updated: 2026-08-05 15:22 IST
 
 | Phase | Branch | Status | Commit / push | QA / notes |
 |---|---|---|---|---|
@@ -14,7 +14,7 @@ Last updated: 2026-08-05 14:52 IST
 | 1 - Audit | `codex/mobile-ux-phase-1-audit` | Complete | `8fe1eb1` pushed; remote SHA verified | Source audit, syntax, bundle parity, signed iPhone install/launch complete; fresh visual screenshots deferred to Phase 9 because local `file://` automation was blocked. |
 | 1a - iOS OTA sibling pages | `codex/mobile-ux-phase-1a-ios-sibling-pages` | Complete | `6cacb45` pushed; remote SHA verified | Signed physical-device build succeeded; all three bundle resources match the web files; the exact build installed and launched on the paired iPhone. CoreDevice process enumeration was unreliable after launch, so that secondary inspection remains deferred. |
 | 2 - Sticky mobile action | `codex/mobile-ux-phase-2-sticky-action` | Complete | `Phase 2: sticky portrait lesson actions`; push and remote SHA verification are the final handoff step | Responsive browser QA, simulator build/install/launch, signed physical-iPhone install/launch, portrait-only plist verification, and exact before/after progress comparison passed. Work stops here before Phase 3. |
-| 3-prereq - `lastLevelId` | Not created | Pending | - | - |
+| 3-prereq - `lastLevelId` | `codex/mobile-ux-phase-3-prereq-last-level-id` | Complete | Ready to commit/push from exact Phase 2 commit `b8ba982` | Focused migration/persistence tests, all-script syntax, three-resource parity, and `git diff --check` passed; no scoring/content/progress fields changed. |
 | 3 - Today card | Not created | Pending | - | - |
 | 2b - Full-screen overlay | Not created | Pending | - | - |
 | 4 - Button hierarchy | Not created | Pending | - | - |

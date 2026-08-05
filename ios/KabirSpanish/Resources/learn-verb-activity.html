@@ -2356,6 +2356,7 @@ function ensureExtraState(){
   STATE.levelDailyDone= STATE.levelDailyDone|| {};   // {levelId: YYYY-MM-DD}; keeps each level's plants motivated separately
   STATE.dailyLevelActivity = STATE.dailyLevelActivity || {}; // {YYYY-MM-DD: {levelId: {count, sources}}}
   STATE.dailyCrossLevelRevived = STATE.dailyCrossLevelRevived || {}; // {YYYY-MM-DD: true}
+  if(!Object.prototype.hasOwnProperty.call(STATE,"lastLevelId")) STATE.lastLevelId=null;
   STATE.revive        = STATE.revive        || {couponSerial:0, active:null, history:[], saplingsSpent:0};
   if(typeof STATE.revive.saplingsSpent!=="number") STATE.revive.saplingsSpent=0;
   if(STATE.lastDate===todayKey() && !STATE.levelDailyDone[1] && !STATE.level1AliveRepairDone){
@@ -3612,6 +3613,8 @@ function renderLevels(){
 }
 function openLevel(id){
   LV=LEVELS.find(l=>l.id===id); LVID=id; lvState(id);
+  STATE.lastLevelId=id;
+  Store.save();
   $("#viewLevels").style.display="none";
   $("#viewLevel").style.display="";
   $("#lvName").textContent=LV.name;
