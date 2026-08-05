@@ -556,13 +556,15 @@
   .stage-bottom .stage-secondary{flex:0 1 auto;min-width:96px;}
   .stage-bottom button:disabled{opacity:.55;box-shadow:none;transform:none;cursor:default;}
   @media(max-width:640px){
-    .overlay.lesson-active.sticky-action-enabled{overflow:hidden;}
-    .overlay.lesson-active.sticky-action-enabled .sheet{display:flex;flex-direction:column;
-      max-height:calc(100vh - 28px);max-height:calc(100dvh - 28px);}
-    .overlay.lesson-active.sticky-action-enabled .sheet-top,
-    .overlay.lesson-active.sticky-action-enabled .steps,
-    .overlay.lesson-active.sticky-action-enabled .stage-bottom{flex:0 0 auto;}
-    .overlay.lesson-active.sticky-action-enabled .stage{flex:1 1 auto;min-height:0;overflow-y:auto;}
+    .overlay.lesson-active{padding:0;overflow:hidden;align-items:stretch;background:var(--cream);}
+    .overlay.lesson-active .sheet{display:flex;flex-direction:column;width:100%;max-width:none;
+      height:100vh;height:100dvh;max-height:none;margin:0;border-radius:0;box-shadow:none;animation:none;}
+    .overlay.lesson-active .sheet-top{padding-top:calc(16px + env(safe-area-inset-top));
+      padding-right:calc(18px + env(safe-area-inset-right));padding-left:calc(18px + env(safe-area-inset-left));}
+    .overlay.lesson-active .sheet-top,
+    .overlay.lesson-active .steps,
+    .overlay.lesson-active .stage-bottom{flex:0 0 auto;}
+    .overlay.lesson-active .stage{flex:1 1 auto;min-height:0;overflow-y:auto;}
     .overlay.lesson-active.sticky-action-enabled .stage-bottom{position:sticky;margin-bottom:var(--keyboard-offset,0px);}
   }
   @media(prefers-reduced-transparency:reduce){
