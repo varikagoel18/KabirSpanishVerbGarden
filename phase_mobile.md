@@ -22,8 +22,8 @@ Last updated: 2026-08-05 19:18 IST
 | 6a - Audio audit | `codex/mobile-ux-phase-6a-audio-audit` | Complete | Phase audit commit pushed; remote SHA verified | TTS/SFX inventory complete; no media timeline exists; Phase 6b should proceed without scrub bars. See `phase_mobile_phase6a_notes.md`. |
 | 6b - Audio polish | `codex/mobile-ux-phase-6b-audio-polish` | Complete | `f736ccd` pushed; remote SHA verified | Responsive browser QA, syntax, parity, simulator build/install/launch, signed in-place iPhone install, and exact progress fingerprint passed. Physical launch/audio audition was blocked because the iPhone was locked; retry in Phase 9. See `phase_mobile_phase6b_notes.md`. |
 | 7 - Celebration and trophies | `codex/mobile-ux-phase-7-celebration-trophies` | Complete | `ed40386` pushed; remote SHA verified | Focused state/lifecycle tests, reduced-motion review, responsive trophy QA, syntax, parity, simulator build/install/launch, and `git diff --check` passed. See `phase_mobile_phase7_notes.md`. |
-| 8 - Desktop and iPad | `codex/mobile-ux-phase-8-desktop-ipad` | Complete | Commit/push pending | Desktop, iPad-portrait, and iPhone-portrait responsive QA, syntax, parity, simulator build/install/launch, and `git diff --check` passed. See `phase_mobile_phase8_notes.md`. |
-| 8b - Mobile Listen-and-Speak Practice | Not created | Pending | No branch/commit | Native iPhone app only; hidden on every web surface. Task title: `Phase 8b - Mobile Listen-and-Speak Practice`. |
+| 8 - Desktop and iPad | `codex/mobile-ux-phase-8-desktop-ipad` | Complete | `3029ba3` pushed; remote SHA verified | Desktop, iPad-portrait, and iPhone-portrait responsive QA, syntax, parity, simulator build/install/launch, and `git diff --check` passed. See `phase_mobile_phase8_notes.md`. |
+| 8b - Mobile Listen-and-Speak Practice | `codex/mobile-ux-phase-8b-listen-speak` | Complete; quality gate blocked | Commit/push pending | Implementation and automated QA complete; installed iOS app only on iPhone/iPad portrait. Capability remains false because the locked physical iPhone prevented the mandatory spoken acceptance/rejection gate. See `phase_mobile_phase8b_notes.md`. |
 | 9 - Final cross-device QA | Not created | Pending | - | Includes the deferred desktop/iPad/iPhone visual baselines. |
 
 ## Phase Execution Protocol
@@ -318,7 +318,7 @@ Do not wire every renderer blindly into `stageBottom()`. Classify the renderer f
 ### Purpose and availability
 
 - Add a short Listen & Speak stage to not-yet-completed lessons and quizzes. Kabir hears a Spanish model at normal or slow speed, then says a target word or a short curated sentence. Recognition succeeds only when a Spanish transcript matches the reviewed target.
-- This is installed-iOS-app-only functionality. Swift must inject an explicit capability marker such as `window.KABIR_NATIVE_CAPABILITIES.speechPractice`; stage composition must require that marker to be true.
+- This is installed-iOS-app-only functionality on iPhone and iPad in portrait. Swift must inject an explicit capability marker such as `window.KABIR_NATIVE_CAPABILITIES.speechPractice`; stage composition must require that marker to be true. iPhone/iPad landscape is not supported or required.
 - Do not infer availability from viewport width, touch support, platform, or user-agent strings. With the capability absent/false, do not compose or show the stage at all. Desktop web at wide or narrow widths, mobile Safari/browser, Practice Tests, and Spanish HW remain unchanged and hidden unless explicitly brought into scope later.
 - Add a QA rescue override `speechPractice=0`. A false native capability or override disables the stage. No bridge/capability means hidden—not a fake web fallback stage.
 - Refactor/replace the existing unscored `voiceverb` stage instead of adding a duplicate. Remove the existing web `voiceverb` from stage composition.
@@ -360,7 +360,7 @@ Do not wire every renderer blindly into `stageBottom()`. Classify the renderer f
 
 ### Required QA and exit gate
 
-- Confirm desktop web at wide and 390px widths has no stage/mic; mobile Safari has no stage; the installed iPhone app has the stage.
+- Confirm desktop web at wide and 390px widths has no stage/mic; mobile Safari has no stage; the installed iPhone and iPad apps in portrait have the stage. Landscape is out of scope for both device families.
 - Test a lesson and quiz in every level type, pending versus completed activity behavior, word/sentence acceptance and rejection (including the `ir`/`vivir` guard), accents/punctuation, both attempts, all permission states, timeout/no-speech/offline, TTS/recognition mutual cancellation, and screen/lock/background cancellation.
 - Confirm no autoplay, minimum-44pt targets, no overflow, reduced-motion behavior, no transcript/audio persistence, and deterministic no-repeat prompt-audit coverage.
 - Run JS syntax checks, Swift build, all web/iOS resource parity checks, signed in-place physical-iPhone installation, and exact before/after progress fingerprinting.
@@ -373,7 +373,7 @@ Do not wire every renderer blindly into `stageBottom()`. Classify the renderer f
 - Validate iPhone-width browser flow.
 - Validate installed iPhone app.
 - Validate with `prefers-reduced-motion: reduce` in Safari / iOS Settings > Accessibility > Motion > Reduce Motion.
-- Validate iPhone landscape orientation (currently allowed via Info.plist).
+- Confirm the app remains portrait-only on both iPhone and iPad; landscape support and landscape QA are out of scope by user direction.
 - Normally rerun the implemented Phase 8b mobile-only visibility, permission-state, acceptance/rejection, cancellation, no-persistence, and physical-device quality-gate checks.
 - Contingency only: if Phase 8b was disabled because its physical-device exit gate failed, confirm the capability remains false, no speech stage is exposed, and the blocker is documented.
 - **Validate offline:** put the iPhone in airplane mode with the app open. Confirm: (a) lessons and progress continue to work (all state is local), (b) the Sync panel surfaces a clear "no Wi-Fi" or "iPhone unreachable" message within 6 s instead of hanging, (c) Google Fonts fallback to system fonts without layout collapse.

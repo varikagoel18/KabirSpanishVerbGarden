@@ -606,6 +606,7 @@
   .say-word{font-family:'Baloo 2';font-weight:800;font-size:38px;text-align:center;color:var(--ink);}
   .say-en{text-align:center;font-weight:700;color:var(--ink-soft);margin-top:2px;}
   .heard{text-align:center;font-weight:800;color:var(--ink-soft);min-height:22px;margin-top:8px;}
+  .speech-practice{text-align:center;max-width:460px;margin:0 auto}.speech-target{background:#fff;border-radius:20px;padding:18px;box-shadow:var(--shadow-sm);margin:12px 0}.speech-target .es{font-family:'Baloo 2';font-size:30px;font-weight:800;color:var(--leaf-dark)}.speech-target .en{font-weight:800;color:var(--ink-soft)}.speech-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.speech-actions button{min-height:48px;min-width:96px;border-radius:14px;font-weight:900}.speech-mic{background:var(--berry);color:#fff;font-size:22px}.speech-stop{background:#fff;color:var(--berry-dark);border:2px solid var(--berry)}.speech-status{min-height:52px;margin:12px 0;font-weight:800;color:var(--ink-soft)}.speech-count{font-family:'Baloo 2';font-size:20px;color:var(--sky-deep)}
   .fc-controls{display:flex;gap:10px;align-items:center;justify-content:center;}
   .fc-progress{text-align:center;font-weight:800;color:var(--ink-soft);font-size:13px;margin-bottom:10px;}
 
@@ -3341,14 +3342,15 @@ function starsForScore(score, max){
    ============================================================ */
 const $ = s => document.querySelector(s);
 const UX_FLAGS = (()=>{
-  let stickyBar=true, todayCard=true, surpriseEventCard=true;
+  let stickyBar=true, todayCard=true, surpriseEventCard=true, speechPractice=true;
   try{
     const params=new URLSearchParams(location.search);
     stickyBar=params.get("stickyBar")!=="0";
     todayCard=params.get("todayCard")!=="0";
     surpriseEventCard=params.get("surpriseEventCard")!=="0";
+    speechPractice=params.get("speechPractice")!=="0";
   }catch(e){}
-  return {stickyBar,todayCard,surpriseEventCard};
+  return {stickyBar,todayCard,surpriseEventCard,speechPractice};
 })();
 
 function prefersReducedMotion(){
@@ -3407,6 +3409,7 @@ const escHTML = s => String(s||"").replace(/[&<>"']/g, ch=>({"&":"&amp;","<":"&l
 
 function stopSpeech(){
   try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+  try{ if(window.KABIR_SPEECH_BRIDGE) window.KABIR_SPEECH_BRIDGE.stop(); }catch(e){}
 }
 function speak(text, rate=.85){
   try{
@@ -3445,6 +3448,50 @@ function sayOops(){
     const u=new SpeechSynthesisUtterance(OOPS[Math.floor(Math.random()*OOPS.length)]);
     u.lang="en-US"; u.pitch=1.6; u.rate=1.05; speechSynthesis.cancel(); speechSynthesis.speak(u);
   }catch(e){}
+}
+
+const SPEECH_FUNCTION_WORDS=new Set(["a","al","de","del","el","ella","en","la","las","los","mi","mis","por","que","su","sus","tu","un","una","y","yo"]);
+const SPEECH_PROMPT_BANK=[
+  {id:"l1-walk",levelId:1,sourceIds:[1],kind:"sentence",es:"Yo camino a la escuela",en:"I walk to school"},
+  {id:"l1-run",levelId:1,sourceIds:[2],kind:"sentence",es:"El perro corre rápido",en:"The dog runs fast"},
+  {id:"l1-swim",levelId:1,sourceIds:[3],kind:"sentence",es:"Yo nado en la piscina",en:"I swim in the pool"},
+  {id:"l1-speak",levelId:1,sourceIds:[4],kind:"sentence",es:"Nosotros hablamos español",en:"We speak Spanish"},
+  {id:"l1-eat",levelId:1,sourceIds:[10],kind:"sentence",es:"Yo como una manzana",en:"I eat an apple"},
+  {id:"l1-read",levelId:1,sourceIds:[22],kind:"sentence",es:"Yo leo un libro",en:"I read a book"},
+  {id:"l2-have",levelId:2,sourceIds:[1],kind:"sentence",es:"Yo tengo una mochila",en:"I have a backpack"},
+  {id:"l2-say",levelId:2,sourceIds:[2],kind:"sentence",es:"Yo digo la verdad",en:"I tell the truth"},
+  {id:"l2-do",levelId:2,sourceIds:[3],kind:"sentence",es:"Yo hago mi tarea",en:"I do my homework"},
+  {id:"l2-hear",levelId:2,sourceIds:[5],kind:"sentence",es:"Yo oigo la música",en:"I hear the music"},
+  {id:"l2-come",levelId:2,sourceIds:[7],kind:"sentence",es:"Ella viene a casa",en:"She comes home"},
+  {id:"l2-sleep",levelId:2,sourceIds:[18],kind:"sentence",es:"Yo duermo en mi cama",en:"I sleep in my bed"},
+  {id:"l3-1",levelId:3,sourceIds:["tense:0"],kind:"sentence",es:"Yo voy a casa",en:"I go home"},
+  {id:"l3-2",levelId:3,sourceIds:["tense:1"],kind:"sentence",es:"Voy a estudiar mañana",en:"I am going to study tomorrow"},
+  {id:"l3-3",levelId:3,sourceIds:["tense:2"],kind:"sentence",es:"Nosotros vamos a jugar",en:"We are going to play"},
+  {id:"l3-4",levelId:3,sourceIds:["tense:3"],kind:"sentence",es:"Ella va a leer",en:"She is going to read"}
+  ,{id:"l3-5",levelId:3,sourceIds:["tense:4"],kind:"sentence",es:"Vamos a comer juntos",en:"We are going to eat together"}
+  ,{id:"l3-6",levelId:3,sourceIds:["tense:5"],kind:"sentence",es:"Ellos van a correr",en:"They are going to run"}
+  ,{id:"l3-7",levelId:3,sourceIds:["tense:6"],kind:"sentence",es:"Tú vas a escribir",en:"You are going to write"}
+  ,{id:"l3-8",levelId:3,sourceIds:["tense:7"],kind:"sentence",es:"Voy a visitar mañana",en:"I am going to visit tomorrow"}
+  ,{id:"l3-9",levelId:3,sourceIds:["tense:8"],kind:"sentence",es:"Ella va a cocinar",en:"She is going to cook"}
+  ,{id:"l3-10",levelId:3,sourceIds:["tense:9"],kind:"sentence",es:"Vamos a aprender español",en:"We are going to learn Spanish"}
+];
+function speechNorm(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zñü\s]/g," ").replace(/\s+/g," ").trim();}
+function tokenDistance(a,b){const m=a.length,n=b.length,d=Array.from({length:m+1},(_,i)=>[i]);for(let j=1;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=a[i-1]===b[j-1]?d[i-1][j-1]:1+Math.min(d[i-1][j],d[i][j-1],d[i-1][j-1]);return d[m][n];}
+function speechMatches(prompt,heard){
+  const approved=[prompt.es,...(prompt.aliases||[])].map(speechNorm), got=speechNorm(heard);
+  if(prompt.kind==="word") return approved.includes(got);
+  return approved.some(target=>{const t=target.split(" "),g=got.split(" ").filter(Boolean),content=t.filter(x=>!SPEECH_FUNCTION_WORDS.has(x));let p=0;for(const x of g)if(x===content[p])p++;if(p!==content.length||Math.abs(t.length-g.length)>1)return false;const dist=tokenDistance(t,g),sim=1-dist/Math.max(t.length,g.length,1);if(sim<.85)return false;if(t.length===g.length)return dist===0;const longer=t.length>g.length?t:g,shorter=t.length>g.length?g:t;return longer.some((word,i)=>SPEECH_FUNCTION_WORDS.has(word)&&longer.slice(0,i).concat(longer.slice(i+1)).every((x,j)=>x===shorter[j]));});
+}
+function speechPromptsForCurrent(){
+  const pool=(cur.pool||[]).filter(Boolean), ids=new Set(pool.map(v=>v.id));
+  const words=pool.map(v=>({id:`l${LVID}-w${v.id}`,levelId:LVID,sourceIds:[v.id],kind:"word",es:LVID===0||LVID===4?v.es:v.inf,en:v.en,aliases:[]}));
+  let sentences=SPEECH_PROMPT_BANK.filter(p=>p.levelId===LVID && (LVID===3?p.sourceIds.includes(`tense:${cur.plan.quizIdx||0}`):p.sourceIds.every(id=>ids.has(id))));
+  const quiz=!!(cur.plan.bonus||cur.plan.pureQuiz||cur.plan.tense||cur.plan.houseType==="quiz"||cur.plan.game==="quiz");
+  const rotate=(a,n)=>a.length?a.slice(n%a.length).concat(a.slice(0,n%a.length)):[];
+  const seed=(LVID*97+cur.plan.d*13)%997;
+  const orderedWords=rotate(words,seed),orderedSentences=rotate(sentences,seed);
+  const desired=quiz?[orderedWords[0],orderedSentences[0],orderedSentences[1]]:[orderedWords[0],orderedWords[1],orderedSentences[0]];
+  const out=[];for(const p of desired.concat(orderedWords,orderedSentences)){if(p&&!out.some(x=>speechNorm(x.es)===speechNorm(p.es)))out.push(p);if(out.length===3)break;}return out;
 }
 
 function toast(msg){
@@ -3836,6 +3883,9 @@ function openDay(d){
     }
     stages.push({type:"redo", plan}); // replays questions Kabir got wrong on first try (incl. hint use)
   }
+  const nativeSpeech=!!(window.KABIR_NATIVE_CAPABILITIES&&window.KABIR_NATIVE_CAPABILITIES.speechPractice&&UX_FLAGS.speechPractice);
+  const speechEligible=nativeSpeech&&!plan.hw&&!lvState(LVID).completed[d];
+  if(speechEligible){const redoAt=stages.findIndex(x=>x.type==="redo");stages.splice(redoAt<0?stages.length:redoAt,0,{type:"speechpractice",plan});}
   stages.push({type:"bloom", plan});
   cur={plan, pool, allPool:learnedPool, newSet, oldSet:pool.filter(v=>!newSet.includes(v)), stages, idx:0, score:0, max:0, redoQueue:[], usedVerbIds:new Set(), hideQuestionImages:LVID===1 && !lvState(LVID).completed[d],
     hintUsedInLesson:false, houseSentenceCleanWin:0, houseListenCleanWin:0,
@@ -3889,7 +3939,7 @@ function runStage(){
   stopSpeech();
   stageBottom(null);
   const st=cur.stages[cur.idx];
-  const map={intro:renderIntro, wordbuild:renderScramble, listenspell:renderListenSpell, voiceverb:renderVoiceVerb, match:renderMatch, quiz:renderQuiz, scramble:renderScramble, memory:renderMemory, conj:renderConj, fillblank:renderFill, truefalse:renderTF, para_fill:renderParaFill, bonus_review:renderBonusReview, tense_quiz:renderTenseQuiz, house_lesson:renderHouseLesson, house_quiz:renderHouseQuiz, redo:renderRedo, bloom:renderBloom};
+  const map={intro:renderIntro, wordbuild:renderScramble, listenspell:renderListenSpell, speechpractice:renderSpeechPractice, match:renderMatch, quiz:renderQuiz, scramble:renderScramble, memory:renderMemory, conj:renderConj, fillblank:renderFill, truefalse:renderTF, para_fill:renderParaFill, bonus_review:renderBonusReview, tense_quiz:renderTenseQuiz, house_lesson:renderHouseLesson, house_quiz:renderHouseQuiz, redo:renderRedo, bloom:renderBloom};
   (map[st.type]||renderBloom)(st);
 }
 
@@ -4510,6 +4560,39 @@ function renderVoiceVerb(st){
     };
   }
   function adv(){ if(r<verbs.length-1){ r++; draw(); } else nextStage(); }
+  draw();
+}
+
+function renderSpeechPractice(){
+  const prompts=speechPromptsForCurrent(); if(!prompts.length){nextStage();return;}
+  let i=0,timer=0,actions=null;
+  function cleanup(){clearInterval(timer);timer=0;stopSpeech();window.KABIR_SPEECH_RECEIVE=null;}
+  function advance(){cleanup();if(i<prompts.length-1){i++;draw();}else nextStage();}
+  function draw(){
+    cleanup();const p=prompts[i];let attempts=0,accepted=false,seconds=0;
+    $("#stage").innerHTML=`<div class="speech-practice"><p class="lead">Listen & speak 🎙️</p><p class="sub">Prompt ${i+1} of ${prompts.length} · Audio is discarded after each try.</p><div class="speech-target"><div class="es">${escHTML(p.es)}</div><div class="en">${escHTML(p.en)}</div></div><div class="audio-controls"><button class="audio-control" id="spPlay">🔊 Play</button><button class="audio-control" id="spSlow">🐢 Slow</button></div><p class="sub">Tap the mic when ready. iPhone speech recognition turns your Spanish into temporary text${window.KABIR_NATIVE_CAPABILITIES.onDeviceRecognition?" on this device":" using Apple’s speech service when needed"}.</p><div class="speech-actions"><button class="speech-mic" id="spMic">🎙️ Speak</button><button class="speech-stop" id="spStop">■ Stop</button></div><div class="speech-status" id="spStatus">Ready when you are 🌱</div></div>`;
+    actions=stageBottom({label:"Continue",disabled:true,onClick:advance});
+    const status=$("#spStatus"),mic=$("#spMic");
+    function allowFallback(msg){status.innerHTML=msg+`<br><small>You can listen again, or continue after practicing.</small>`;actions.primary.textContent="I practiced it ✓";actions.primary.disabled=false;}
+    function startMic(){
+      if(attempts>=2){allowFallback("Nice practicing! 🌟");return;}
+      stopSpeech();attempts++;seconds=p.kind==="word"?6:10;status.innerHTML=`<span class="speech-count">Listening… ${seconds}s</span>`;mic.disabled=true;
+      timer=setInterval(()=>{seconds--;status.innerHTML=`<span class="speech-count">Listening… ${seconds}s</span>`;if(seconds<=0){clearInterval(timer);timer=0;try{window.KABIR_SPEECH_BRIDGE.stop();}catch(e){}mic.disabled=false;allowFallback("Time’s up — that’s okay!");}},1000);
+      try{window.KABIR_SPEECH_BRIDGE.start();}catch(e){mic.disabled=false;allowFallback("Speech practice isn’t available right now.");}
+    }
+    window.KABIR_SPEECH_RECEIVE=msg=>{
+      if(!msg||msg.sessionId!==window.KABIR_NATIVE_CAPABILITIES.speechSessionId)return;
+      if(msg.type==="listening")return;
+      if(msg.type==="unavailable"){clearInterval(timer);timer=0;mic.disabled=false;allowFallback("The mic or speech service isn’t available right now.");return;}
+      if(msg.type!=="result")return;
+      const alternatives=(msg.alternatives||[]).slice(0,5),heard=alternatives[0]||"";
+      status.innerHTML=`I heard: <b>${escHTML(heard||"nothing yet")}</b>`;
+      if(alternatives.some(x=>speechMatches(p,x))){clearInterval(timer);timer=0;mic.disabled=false;accepted=true;celebrateSmallWin(mic);status.innerHTML+=`<br><b style="color:var(--leaf-dark)">¡Muy bien! That matched.</b>`;actions.primary.textContent="Continue ✓";actions.primary.disabled=false;try{window.KABIR_SPEECH_BRIDGE.stop();}catch(e){}return;}
+      if(msg.final){clearInterval(timer);timer=0;mic.disabled=false;if(attempts<2)status.innerHTML+=`<br>Almost! Listen once more, then try again.`;else allowFallback(`I heard: <b>${escHTML(heard||"no speech")}</b>. Nice effort!`);}
+    };
+    $("#spPlay").onclick=()=>speak(p.es,.85);$("#spSlow").onclick=()=>speak(p.es,.58);mic.onclick=startMic;
+    $("#spStop").onclick=()=>{clearInterval(timer);timer=0;try{window.KABIR_SPEECH_BRIDGE.stop();}catch(e){}mic.disabled=false;allowFallback("Stopped. Good practice!");};
+  }
   draw();
 }
 

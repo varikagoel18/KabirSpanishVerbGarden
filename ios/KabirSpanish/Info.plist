@@ -22,8 +22,12 @@
     <string>1</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
-    <key>NSLocalNetworkUsageDescription</key>
-    <string>Sync your progress with the web version over Wi-Fi.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Sync your progress with the web version over Wi-Fi.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Let Kabir practice saying Spanish words. Audio is discarded after each try.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Turn Kabir's Spanish practice into text so the app can gently check the words.</string>
     <key>NSBonjourServices</key>
     <array>
         <string>_kabirspanish._tcp</string>

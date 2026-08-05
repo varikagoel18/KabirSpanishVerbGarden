@@ -1,9 +1,139 @@
 import SwiftUI
 import WebKit
+import Speech
+import AVFoundation
 
-final class WebViewStore: NSObject, ObservableObject {
+final class SpeechPracticeBridge: NSObject, WKScriptMessageHandler {
+    private weak var webView: WKWebView?
+    private let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "es-ES"))
+    private let audioEngine = AVAudioEngine()
+    private var request: SFSpeechAudioBufferRecognitionRequest?
+    private var task: SFSpeechRecognitionTask?
+    private var activeSessionID: String?
+    private var hasInputTap = false
+    private var priorAudioSession: (AVAudioSession.Category, AVAudioSession.Mode, AVAudioSession.CategoryOptions)?
+
+    override init() {
+        super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(audioInterrupted), name: AVAudioSession.interruptionNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(routeChanged), name: AVAudioSession.routeChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appBackgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
+    }
+
+    func attach(_ webView: WKWebView) { self.webView = webView }
+    var supportsOnDeviceRecognition: Bool { recognizer?.supportsOnDeviceRecognition == true }
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.frameInfo.isMainFrame,
+              message.webView?.url?.lastPathComponent == "learn-verb-activity.html",
+              let body = message.body as? [String: Any],
+              let action = body["action"] as? String,
+              let sessionID = body["sessionId"] as? String else { return }
+        if action == "stop" { stop(reason: "stopped", notify: false); return }
+        guard action == "start" else { return }
+        start(sessionID: sessionID)
+    }
+
+    private func start(sessionID: String) {
+        stop(reason: "replaced", notify: false)
+        activeSessionID = sessionID
+        requestPermissions { [weak self] allowed, reason in
+            DispatchQueue.main.async {
+                guard let self, self.activeSessionID == sessionID else { return }
+                guard allowed else { self.send(type: "unavailable", sessionID: sessionID, extra: ["reason": reason]); self.stop(reason: reason, notify: false); return }
+                self.beginCapture(sessionID: sessionID)
+            }
+        }
+    }
+
+    private func requestPermissions(completion: @escaping (Bool, String) -> Void) {
+        func requestMic(_ speechOK: Bool) {
+            guard speechOK else { completion(false, "speech-permission"); return }
+            let session = AVAudioSession.sharedInstance()
+            switch session.recordPermission {
+            case .granted: completion(true, "")
+            case .denied: completion(false, "microphone-permission")
+            case .undetermined: session.requestRecordPermission { completion($0, $0 ? "" : "microphone-permission") }
+            @unknown default: completion(false, "microphone-restricted")
+            }
+        }
+        switch SFSpeechRecognizer.authorizationStatus() {
+        case .authorized: requestMic(true)
+        case .denied: completion(false, "speech-permission")
+        case .restricted: completion(false, "speech-restricted")
+        case .notDetermined: SFSpeechRecognizer.requestAuthorization { requestMic($0 == .authorized) }
+        @unknown default: completion(false, "speech-restricted")
+        }
+    }
+
+    private func beginCapture(sessionID: String) {
+        guard let recognizer, recognizer.isAvailable else { send(type: "unavailable", sessionID: sessionID, extra: ["reason":"service-unavailable"]); stop(reason: "service-unavailable", notify: false); return }
+        let audioSession = AVAudioSession.sharedInstance()
+        priorAudioSession = (audioSession.category, audioSession.mode, audioSession.categoryOptions)
+        do {
+            try audioSession.setCategory(.record, mode: .measurement, options: [.duckOthers])
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+            let req = SFSpeechAudioBufferRecognitionRequest()
+            req.shouldReportPartialResults = true
+            if recognizer.supportsOnDeviceRecognition { req.requiresOnDeviceRecognition = true }
+            request = req
+            let input = audioEngine.inputNode
+            if hasInputTap { input.removeTap(onBus: 0); hasInputTap = false }
+            let format = input.outputFormat(forBus: 0)
+            input.installTap(onBus: 0, bufferSize: 1024, format: format) { buffer, _ in req.append(buffer) }
+            hasInputTap = true
+            audioEngine.prepare(); try audioEngine.start()
+            send(type: "listening", sessionID: sessionID, extra: ["onDevice":recognizer.supportsOnDeviceRecognition])
+            task = recognizer.recognitionTask(with: req) { [weak self] result, error in
+                guard let self, self.activeSessionID == sessionID else { return }
+                if let result {
+                    let alternatives = result.transcriptions.prefix(5).map(\.formattedString)
+                    self.send(type: "result", sessionID: sessionID, extra: ["alternatives":alternatives,"final":result.isFinal])
+                    if result.isFinal { self.stop(reason: "finished", notify: false) }
+                } else if error != nil {
+                    self.send(type: "unavailable", sessionID: sessionID, extra: ["reason":"recognition-error"])
+                    self.stop(reason: "recognition-error", notify: false)
+                }
+            }
+        } catch {
+            send(type: "unavailable", sessionID: sessionID, extra: ["reason":"audio-error"])
+            stop(reason: "audio-error", notify: false)
+        }
+    }
+
+    func stop(reason: String, notify: Bool) {
+        let sessionID = activeSessionID
+        if audioEngine.isRunning { audioEngine.stop() }
+        if hasInputTap { audioEngine.inputNode.removeTap(onBus: 0); hasInputTap = false }
+        request?.endAudio(); task?.cancel(); request=nil; task=nil
+        if let priorAudioSession {
+            let session=AVAudioSession.sharedInstance()
+            try? session.setCategory(priorAudioSession.0, mode: priorAudioSession.1, options: priorAudioSession.2)
+            try? session.setActive(false, options: .notifyOthersOnDeactivation)
+        }
+        priorAudioSession=nil; activeSessionID=nil
+        if notify, let sessionID { send(type: "unavailable", sessionID: sessionID, extra: ["reason":reason]) }
+    }
+
+    private func send(type: String, sessionID: String, extra: [String: Any]) {
+        guard let webView else { return }
+        var payload=extra; payload["type"]=type; payload["sessionId"]=sessionID
+        guard let data=try? JSONSerialization.data(withJSONObject: payload), let json=String(data:data,encoding:.utf8) else { return }
+        DispatchQueue.main.async { webView.evaluateJavaScript("window.KABIR_SPEECH_RECEIVE&&window.KABIR_SPEECH_RECEIVE(\(json))") }
+    }
+
+    @objc private func audioInterrupted() { stop(reason: "interrupted", notify: true) }
+    @objc private func routeChanged() { stop(reason: "route-changed", notify: true) }
+    @objc private func appBackgrounded() { stop(reason: "backgrounded", notify: true) }
+    deinit { NotificationCenter.default.removeObserver(self); stop(reason: "deallocated", notify: false) }
+}
+
+final class WebViewStore: NSObject, ObservableObject, WKNavigationDelegate {
     static let shared = WebViewStore()
     let webView: WKWebView
+    private let speechBridge: SpeechPracticeBridge
+    // Release gate: enable only after the physical-device 8/10 accept and 8/10 reject check passes.
+    private let speechPracticeEnabled = false
 
     private let mainHTMLName = "learn-verb-activity"
     private let siblingHTMLNames = [
@@ -45,6 +175,18 @@ final class WebViewStore: NSObject, ObservableObject {
         // Keep localStorage persistent across launches.
         config.websiteDataStore = .default()
 
+        let bridge = SpeechPracticeBridge()
+        speechBridge = bridge
+        let speechScript = """
+        if(decodeURIComponent(location.pathname).endsWith('/learn-verb-activity.html')){
+          const sid=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random());
+          window.KABIR_NATIVE_CAPABILITIES=Object.freeze({speechPractice:\(speechPracticeEnabled),speechSessionId:sid,onDeviceRecognition:\(bridge.supportsOnDeviceRecognition)});
+          window.KABIR_SPEECH_BRIDGE=Object.freeze({start:()=>webkit.messageHandlers.speechPractice.postMessage({action:'start',sessionId:sid}),stop:()=>webkit.messageHandlers.speechPractice.postMessage({action:'stop',sessionId:sid})});
+        }
+        """
+        config.userContentController.addUserScript(WKUserScript(source: speechScript, injectionTime: .atDocumentStart, forMainFrameOnly: true, in: .page))
+        config.userContentController.add(bridge, name: "speechPractice")
+
         webView = WKWebView(frame: .zero, configuration: config)
 
         // --- Mobile smoothness ---
@@ -59,8 +201,12 @@ final class WebViewStore: NSObject, ObservableObject {
         webView.scrollView.backgroundColor = .clear
 
         super.init()
+        bridge.attach(webView)
+        webView.navigationDelegate = self
         loadApp()
     }
+
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) { speechBridge.stop(reason: "navigation", notify: false) }
 
     /// Prefer a wifi-pushed HTML from Documents. Fall back to the bundled copy.
     func loadApp() {
