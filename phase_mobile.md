@@ -6,7 +6,7 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 
 ## Live Phase Status
 
-Last updated: 2026-08-05 18:13 IST
+Last updated: 2026-08-05 19:01 IST
 
 | Phase | Branch | Status | Commit / push | QA / notes |
 |---|---|---|---|---|
@@ -20,9 +20,10 @@ Last updated: 2026-08-05 18:13 IST
 | 4 - Button hierarchy | `codex/mobile-ux-phase-4-button-hierarchy` | Complete | Phase commit pushed; remote SHA verified | Responsive hierarchy/overflow QA, source invariants, syntax, parity, simulator and authorized physical-iPhone install/launch, exact progress fingerprint, portrait check, and `git diff --check` passed. See `phase_mobile_phase4_notes.md`. |
 | 5 - Level cards | `codex/mobile-ux-phase-5-level-card-polish` | Complete | Phase commit pushed; remote SHA verified | Mapping invariants, responsive mobile/desktop QA, syntax, parity, simulator build/install/launch, and `git diff --check` passed. See `phase_mobile_phase5_notes.md`. |
 | 6a - Audio audit | `codex/mobile-ux-phase-6a-audio-audit` | Complete | Phase audit commit pushed; remote SHA verified | TTS/SFX inventory complete; no media timeline exists; Phase 6b should proceed without scrub bars. See `phase_mobile_phase6a_notes.md`. |
-| 6b - Audio polish | `codex/mobile-ux-phase-6b-audio-polish` | Complete | Commit/push pending | Responsive browser QA, syntax, parity, simulator build/install/launch, signed in-place iPhone install, and exact progress fingerprint passed. Physical launch/audio audition was blocked because the iPhone was locked; retry in Phase 9. See `phase_mobile_phase6b_notes.md`. |
-| 7 - Celebration and trophies | Not created | Pending | - | - |
+| 6b - Audio polish | `codex/mobile-ux-phase-6b-audio-polish` | Complete | `f736ccd` pushed; remote SHA verified | Responsive browser QA, syntax, parity, simulator build/install/launch, signed in-place iPhone install, and exact progress fingerprint passed. Physical launch/audio audition was blocked because the iPhone was locked; retry in Phase 9. See `phase_mobile_phase6b_notes.md`. |
+| 7 - Celebration and trophies | `codex/mobile-ux-phase-7-celebration-trophies` | Complete | Commit/push pending | Focused state/lifecycle tests, reduced-motion review, responsive trophy QA, syntax, parity, simulator build/install/launch, and `git diff --check` passed. See `phase_mobile_phase7_notes.md`. |
 | 8 - Desktop and iPad | Not created | Pending | - | - |
+| 8b - Mobile Listen-and-Speak Practice | Not created | Pending | No branch/commit | Native iPhone app only; hidden on every web surface. Task title: `Phase 8b - Mobile Listen-and-Speak Practice`. |
 | 9 - Final cross-device QA | Not created | Pending | - | Includes the deferred desktop/iPad/iPhone visual baselines. |
 
 ## Phase Execution Protocol
@@ -308,7 +309,62 @@ Do not wire every renderer blindly into `stageBottom()`. Classify the renderer f
 - Confirm iPad layout does not feel like an over-stretched phone layout.
 - Confirm no *new* card-in-card visual nesting was introduced. Existing patterns (trophy grid inside category section inside modal) are grandfathered; the rule only blocks new nested wrappers that weren't there before this branch.
 - Confirm all visible text fits without overlap at narrow and wide widths.
-- Run `node --check`, `git diff --check`, and commit Phase 8 before Phase 9.
+- Run `node --check`, `git diff --check`, commit/push Phase 8, then create the separate `Phase 8b - Mobile Listen-and-Speak Practice` task before Phase 9.
+
+## Phase 8b - Mobile Listen-and-Speak Practice
+
+**Status:** Pending. After Phase 8 is implemented, tested, reviewed, committed, pushed, and remote-verified, create a separate task titled exactly `Phase 8b - Mobile Listen-and-Speak Practice`; implement, test, review/fix, commit, push, and remote-verify Phase 8b before creating Phase 9.
+
+### Purpose and availability
+
+- Add a short Listen & Speak stage to not-yet-completed lessons and quizzes. Kabir hears a Spanish model at normal or slow speed, then says a target word or a short curated sentence. Recognition succeeds only when a Spanish transcript matches the reviewed target.
+- This is installed-iOS-app-only functionality. Swift must inject an explicit capability marker such as `window.KABIR_NATIVE_CAPABILITIES.speechPractice`; stage composition must require that marker to be true.
+- Do not infer availability from viewport width, touch support, platform, or user-agent strings. With the capability absent/false, do not compose or show the stage at all. Desktop web at wide or narrow widths, mobile Safari/browser, Practice Tests, and Spanish HW remain unchanged and hidden unless explicitly brought into scope later.
+- Add a QA rescue override `speechPractice=0`. A false native capability or override disables the stage. No bridge/capability means hidden—not a fake web fallback stage.
+- Refactor/replace the existing unscored `voiceverb` stage instead of adding a duplicate. Remove the existing web `voiceverb` from stage composition.
+- Compose exactly one 8b stage per eligible not-yet-completed lesson or quiz, after its existing listening/main-question stages and before redo, bloom, and commit. Never insert it into completed-activity replay, Practice Test, Spanish HW, trophy, parent, surprise-quiz, or sync flows.
+
+### Native recognition and privacy
+
+- Define a small JS/native adapter. Prefer `SFSpeechRecognizer(locale: es-ES)` plus `AVAudioEngine` exposed through a `WKScriptMessageHandler`; browser `SpeechRecognition` is not a dependable WKWebView contract.
+- Inject the native capability at document start with `WKUserScript` in the page content world. The bridge must be unavailable on every web page by construction. `?speechPractice=0` is a QA-only query rescue; the installed-app emergency disable is the injected native capability set to false. Do not add localStorage/state flags or a network endpoint.
+- The `WKScriptMessageHandler` accepts messages only from the main frame while the loaded local filename is exactly `learn-verb-activity.html`; ignore sibling HTML and every other navigation. Generate a per-page session ID and discard late native callbacks after close, navigation, or reload when the ID no longer matches.
+- Prefer on-device recognition when `supportsOnDeviceRecognition` is true. Otherwise disclose and use Apple's speech service only under the same permission, availability, privacy, and non-blocking fallback rules.
+- Begin with a physical-device capability spike/gate. If native recognition cannot initialize reliably, leave the feature disabled and use the non-blocking practice fallback described below.
+- Add `NSMicrophoneUsageDescription` and `NSSpeechRecognitionUsageDescription`. Show kid/parent-friendly context first and request permission only after Kabir taps the mic, never at startup. Handle `notDetermined`, `authorized`, `denied`, and `restricted` independently for microphone and speech permissions.
+- Handle `AVAudioSession` interruption and route changes, and restore the prior audio-session category after every attempt. Native handler/capture cleanup must be idempotent and stop/remove recognition on navigation, close, background, interruption, and deallocation.
+- Never permanently store, sync, export, or show recordings/transcripts in the parent dashboard. Stop and discard audio immediately after each attempt. Document that Apple speech recognition may require network/service availability.
+
+### Prompt design and freshness
+
+- Maximum three prompts per activity. Lessons default to two words plus one short sentence; quizzes default to one word plus two short sentences when enough reviewed content exists. If a level lacks a valid sentence, substitute another distinct word rather than auto-generating weak grammar.
+- Use only the current activity's learned/focus pool. Levels 0/4 may use vocabulary words; Levels 1/2 use infinitives plus curated present-tense sentences; Level 3 uses curated tense-correct short sentences.
+- Sentence targets must be 3-8 words from an explicit reviewed prompt bank—never generic `Me gusta` fallbacks or ad-hoc concatenation.
+- The reviewed bank contract is equivalent to `{id, levelId, sourceIds, kind:'word'|'sentence', es, en, aliases?:[]}`. Every item needs a stable unique `id` and explicit `sourceIds`; aliases are reviewed Spanish alternatives only and are never generated automatically.
+- Assign prompts deterministically by level/day/prompt index. Never repeat a target within an activity. Word targets repeat only after every currently eligible learned target has been used in that level cycle; sentence targets repeat only after that level's reviewed sentence bank is exhausted. Never rewrite completed lessons or their stored completion/stars.
+- For sentence scope, every target vocabulary item/verb listed in `sourceIds` must be learned and in scope; common reviewed supporting/function words may appear without their own `sourceId`.
+- Add an audit that simulates every pending assignment and fails on duplicate targets before the relevant eligible word pool/sentence bank is exhausted, adjacent-activity duplicates, within-activity duplicates, unknown source IDs, out-of-scope target words, or invalid conjugations. It requires fair bounded rotation, not an unbounded unique bank.
+
+### Prompt interaction and matching
+
+- Each prompt shows the target/meaning, Play, Slow, a minimum-44pt mic, visible Listening/countdown state, an immediate Stop control, recognized transcript, success/fallback feedback, and a clear Continue action. Use a six-second timeout for a word and ten seconds for a sentence. No autoplay.
+- Starting the mic cancels TTS and must never start while TTS is speaking; starting Play/Slow cancels recognition. Closing, changing prompt/stage/screen, backgrounding, or locking cancels both.
+- Transcript matching is a practical pronunciation proxy, not phoneme/accent grading; never claim an acoustic pronunciation score. Compare up to five recognition alternatives after normalizing case, Unicode accents, punctuation, and whitespace.
+- For one word, require an exact normalized token match against approved targets/aliases. Never use substring matching (`ir` must not pass for `vivir`).
+- Define normalization/tokenization once and keep the approved Spanish function-word set in reviewed data. For a sentence, first require every content token in order, then require token-level Levenshtein similarity `1 - distance/maxTokenCount >= 0.85`; allow at most one missing/extra token, and only when that token is in the approved function-word set.
+- Add unit vectors for exact match, accents/punctuation, one allowed function-word difference, wrong word order, missing content word, and the `ir`/`vivir` false-positive guard.
+- Allow at most two mic attempts per prompt. The first mismatch offers model replay and retry. The second shows what was heard and enables Continue with gentle encouragement.
+- Service unavailable, permission denied/restricted, timeout, offline, interruption, or no-speech must retain Play/Slow and offer an unscored `I practiced it` continuation. The lesson must never dead-end.
+- `I practiced it` advances the prompt without marking it accepted.
+- The stage is formative and unscored. Recognition success may trigger a small-win celebration but cannot add/remove points, change star thresholds, mark a wrong question, alter unlocks, or change completion. Existing two-attempt answer logic elsewhere remains untouched.
+
+### Required QA and exit gate
+
+- Confirm desktop web at wide and 390px widths has no stage/mic; mobile Safari has no stage; the installed iPhone app has the stage.
+- Test a lesson and quiz in every level type, pending versus completed activity behavior, word/sentence acceptance and rejection (including the `ir`/`vivir` guard), accents/punctuation, both attempts, all permission states, timeout/no-speech/offline, TTS/recognition mutual cancellation, and screen/lock/background cancellation.
+- Confirm no autoplay, minimum-44pt targets, no overflow, reduced-motion behavior, no transcript/audio persistence, and deterministic no-repeat prompt-audit coverage.
+- Run JS syntax checks, Swift build, all web/iOS resource parity checks, signed in-place physical-iPhone installation, and exact before/after progress fingerprinting.
+- Physical-iPhone recognition must accept at least 8/10 clearly spoken reviewed prompts in a quiet room and reject at least 8/10 deliberately wrong prompts. If either threshold fails, do not ship pass/fail recognition: leave the activity disabled and document the blocker.
 
 ## Phase 9 - QA Checklist
 
@@ -318,6 +374,8 @@ Do not wire every renderer blindly into `stageBottom()`. Classify the renderer f
 - Validate installed iPhone app.
 - Validate with `prefers-reduced-motion: reduce` in Safari / iOS Settings > Accessibility > Motion > Reduce Motion.
 - Validate iPhone landscape orientation (currently allowed via Info.plist).
+- Normally rerun the implemented Phase 8b mobile-only visibility, permission-state, acceptance/rejection, cancellation, no-persistence, and physical-device quality-gate checks.
+- Contingency only: if Phase 8b was disabled because its physical-device exit gate failed, confirm the capability remains false, no speech stage is exposed, and the blocker is documented.
 - **Validate offline:** put the iPhone in airplane mode with the app open. Confirm: (a) lessons and progress continue to work (all state is local), (b) the Sync panel surfaces a clear "no Wi-Fi" or "iPhone unreachable" message within 6 s instead of hanging, (c) Google Fonts fallback to system fonts without layout collapse.
 - **Validate offline on desktop browser:** DevTools > Network > Offline, reload the page. App must continue to serve locally, never make an outgoing network request (check the Network tab shows 0 pending requests), and font fallback should render text with the browser's default sans-serif without breaking button/card widths.
 - Confirm:
@@ -351,11 +409,12 @@ Phases below map back to the sections above.
 9. Phase 6b - Audio control placement (only if audit reveals real audio to polish)
 10. Phase 7 - Trophy + celebration flow (including reduced-motion + surprise-quiz relocation)
 11. Phase 8 - Desktop + iPad refinement
-12. Phase 9 - Cross-device QA and adjust spacing
+12. Phase 8b - Mobile Listen-and-Speak Practice
+13. Phase 9 - Cross-device QA and adjust spacing
 
 ## Guardrails
 
-- Do not change scoring, stars, unlock rules, or progress storage unless explicitly requested. Two pre-authorized exceptions defined in this plan: (a) Phase 3-prereq adds `STATE.lastLevelId`; (b) Phase 7 relocates `maybeShowSurpriseQuiz()` and adds `STATE.surpriseQuiz.pendingCard`. Everything else is off-limits.
+- Do not change scoring, stars, unlock rules, or progress storage unless explicitly requested. Two pre-authorized exceptions defined in this plan: (a) Phase 3-prereq adds `STATE.lastLevelId`; (b) Phase 7 relocates `maybeShowSurpriseQuiz()` and adds `STATE.surpriseQuiz.pendingCard`. When Phase 8b is implemented, it may add only native capability/permission/ephemeral recognition plumbing and reviewed prompt-bank data; it is explicitly unscored and may not alter completion, stars, unlocks, or saved progress. Everything else is off-limits.
 - **Progress preservation is a release invariant for every phase.** Run browser QA on an isolated localhost origin or temporary profile; never reset, restore, overwrite, or sync into Kabir's real browser/iPhone state. Before any physical-iPhone install or real sync, record a read-only progress fingerprint containing each level's completed count, stars by day, and collected count plus the total trophy count. Update the app in place (never uninstall it or clear its data), then verify every value is unchanged or greater after launch. A decrease blocks the phase commit/push and requires restoring the saved backup before further work.
 - Keep all app-code `localStorage` access guarded (`try/catch` around every `getItem`/`setItem`). Console-only QA or emergency restore snippets are allowed but should be labeled as manual rescue steps.
 - Keep `ios/build/` ignored (prevents committing ~90 MB of Xcode-generated derived data).
@@ -442,6 +501,7 @@ Rough size limit per phase — a PR bigger than this signals scope creep and sho
 | 6b (Audio polish) | ~60 lines *if* real audio exists; else 0 | Skipped entirely if 6a shows nothing to polish |
 | 7 (Celebration) | ~60 lines | `prefersReducedMotion()` gate + surprise-quiz relocation + CSS media query |
 | 8 (Desktop/iPad refinement) | ~40 lines | Media-query tweaks only; no logic |
+| 8b (Mobile Listen-and-Speak) | ~180-300 lines HTML/JS + ~120-220 lines Swift/native bridge; 5-8 focused hours | Pending; physical-iPhone QA mandatory |
 | 9 (QA) | 0 code, doc-only | Checklist run, screenshots, sign-off |
 
-**Total budget:** ~510 lines across all coding phases (20 lines for the 3-prereq split-out + 30 for the Phase 2b overlay conversion). If Phase 6a's audit shows no audio worth polishing, subtract Phase 6b's ~60 → **~450 lines**. If cumulative diff exceeds 700 lines by Phase 7, stop and re-plan.
+**Original-phase budget:** ~510 lines through Phase 9, plus the separate pending Phase 8b budget above. If cumulative non-8b diff exceeds 700 lines by Phase 7, stop and re-plan.

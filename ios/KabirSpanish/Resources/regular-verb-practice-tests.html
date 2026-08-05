@@ -250,6 +250,7 @@ function ensureSurpriseState(s){
     q.completedCount=keys.length;
   }
   q.pending=!!q.pending;
+  q.pendingCard=!!q.pendingCard;
 }
 function recordGlobalCompletion(s, sourceKey){
   ensureSurpriseState(s);
@@ -257,8 +258,9 @@ function recordGlobalCompletion(s, sourceKey){
   if(q.completedKeys[sourceKey]) return false;
   q.completedKeys[sourceKey]=true;
   q.completedCount=(q.completedCount||0)+1;
-  q.pending=false;
-  return false;
+  const unlocked=(q.lastFinishedAt||"").slice(0,10)!==new Date().toISOString().slice(0,10) && q.completedCount%4===0;
+  if(unlocked){ q.pending=true; q.pendingCard=true; }
+  return unlocked;
 }
 function savePracticeProgress(testNum, stars, score, total){
   if(stars===0) return;

@@ -706,12 +706,15 @@
     background:linear-gradient(180deg,var(--berry) 0%,var(--berry-dark) 100%);
     color:#fff;font-size:15px;font-weight:900;box-shadow:0 4px 0 var(--berry-dark);white-space:nowrap;}
   .today-play:active{transform:translateY(2px);box-shadow:0 2px 0 var(--berry-dark);}
+  .event-card{display:flex;align-items:center;gap:12px;margin:12px 0 14px;padding:14px 16px;border-radius:20px;background:linear-gradient(135deg,#FFF0B8,#FFD7E1);border:2px solid #FFC64A;box-shadow:var(--shadow-sm);}
+  .event-card[hidden]{display:none;}.event-card .event-icon{font-size:34px}.event-card .event-copy{flex:1}.event-card h3{font-size:18px;color:var(--ink);margin:0}.event-card p{font-size:12.5px;font-weight:700;color:var(--ink-soft);margin:1px 0 0}.event-card .event-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.event-card button{min-height:44px;border-radius:12px;padding:8px 12px;font-weight:900}.event-start{background:var(--berry);color:#fff}.event-dismiss{background:rgba(255,255,255,.75);color:var(--ink)}
   @media(max-width:640px){
     .today-card{align-items:stretch;gap:12px;padding:16px;flex-wrap:wrap;}
     .today-icon{font-size:34px;}
     .today-copy{flex-basis:calc(100% - 50px);}
     .today-copy h2{font-size:19px;}
     .today-play{width:100%;}
+    .event-card{flex-wrap:wrap}.event-card .event-actions{width:100%}.event-card .event-actions button{flex:1}
   }
   .level-card{display:flex;align-items:center;gap:14px;text-align:left;width:100%;background:var(--card);
     border-radius:22px;padding:16px;box-shadow:var(--shadow);border:none;transition:transform .1s;cursor:pointer;}
@@ -747,6 +750,7 @@
   .back{background:none;color:var(--leaf-dark);font-weight:800;font-size:15px;padding:6px 2px;margin:2px 0 0;}
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.001s !important;transition-duration:.05s !important;}
+    .trv2-card::before,.confetti{animation:none!important;display:none!important;}
   }
 </style>
 </head>
@@ -802,6 +806,7 @@
       <h2 id="lvName">Level</h2>
       <span id="lvSpan"></span>
     </div>
+    <section class="event-card" id="eventCard" aria-live="polite" hidden></section>
     <div class="plot">
       <div class="grid" id="grid"></div>
       <div class="legend">
@@ -2465,6 +2470,7 @@ function ensureSurpriseState(s){
     q.completedCount=keys.length;
   }
   q.pending=!!q.pending;
+  q.pendingCard=!!q.pendingCard;
 }
 
 function recordGlobalCompletion(sourceKey){
@@ -2473,10 +2479,10 @@ function recordGlobalCompletion(sourceKey){
   if(q.completedKeys[sourceKey]) return false;
   q.completedKeys[sourceKey]=true;
   q.completedCount=(q.completedCount||0)+1;
-  // 🎁 Surprise quiz pop-up disabled — was triggering after every 4 completions.
-  // Bonus Review days on the lesson grid (🌳) handle review practice instead.
-  q.pending=false;
-  return false;
+  const alreadyFinishedToday=(q.lastFinishedAt||"").slice(0,10)===todayKey();
+  const unlocked=!alreadyFinishedToday && q.completedCount%4===0;
+  if(unlocked){ q.pending=true; q.pendingCard=true; }
+  return unlocked;
 }
 
 /* Record a verb practice attempt — drives spaced repetition. firstTryNoHint = true
@@ -3014,6 +3020,7 @@ function showNextTrophyPopup(){
 /* ---------- Deferred trophy celebration (fires from bloom "Back to lessons") ---------- */
 /* Sparkle/star confetti — different from flower/butterfly confetti used for lesson bloom */
 function pixieConfetti(n){
+  if(prefersReducedMotion()) return;
   const ems=["✨","💫","⭐","🌟","💎","🎇","🎆","🌠"];
   const count = n||30;
   for(let i=0;i<count;i++){
@@ -3028,6 +3035,7 @@ function pixieConfetti(n){
   }
 }
 function trophyMegaBurst(){
+  if(prefersReducedMotion()){ try{ SFX.right(); }catch(e){} return; }
   confetti(70);
   pixieConfetti(60);
   setTimeout(()=>pixieConfetti(40), 420);
@@ -3325,14 +3333,19 @@ function starsForScore(score, max){
    ============================================================ */
 const $ = s => document.querySelector(s);
 const UX_FLAGS = (()=>{
-  let stickyBar=true, todayCard=true;
+  let stickyBar=true, todayCard=true, surpriseEventCard=true;
   try{
     const params=new URLSearchParams(location.search);
     stickyBar=params.get("stickyBar")!=="0";
     todayCard=params.get("todayCard")!=="0";
+    surpriseEventCard=params.get("surpriseEventCard")!=="0";
   }catch(e){}
-  return {stickyBar,todayCard};
+  return {stickyBar,todayCard,surpriseEventCard};
 })();
+
+function prefersReducedMotion(){
+  try{ return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }catch(e){ return false; }
+}
 
 function stageBottom(config){
   const bar=$("#stageBottom"), inner=$("#stageBottomInner");
@@ -3431,6 +3444,7 @@ function toast(msg){
   clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),1700);
 }
 function confetti(count=26){
+  if(prefersReducedMotion()) return;
   const ems=["🌸","🌼","⭐","🌻","🎉","💚","🦋"];
   for(let i=0;i<count;i++){
     const c=document.createElement("div"); c.className="confetti"; c.textContent=ems[i%ems.length];
@@ -3709,6 +3723,7 @@ function openLevel(id){
   $("#lvName").textContent=LV.name;
   $("#lvSpan").textContent=LV.blurb;
   renderDash();
+  renderEventCard();
   window.scrollTo(0,0);
 }
 function backToLevels(){
@@ -5907,7 +5922,7 @@ function commitDay(stars){
   }
   closeDay();
   renderDash();
-  maybeShowSurpriseQuiz();
+  if(UX_FLAGS.surpriseEventCard) renderEventCard(); else maybeShowSurpriseQuiz();
   if(d===totalLessons()){ setTimeout(()=>{ confetti(); toast(`¡Felicidades! You finished ${LV.name}! 🎉`); },200); }
 }
 
@@ -5998,22 +6013,26 @@ function allCollectedVerbs(){
   return rows.filter(r=>{ const key=r.lv.id+"|"+r.v.id; if(seen.has(key)) return false; seen.add(key); return true; });
 }
 
-const SURPRISE_QUIZ_ENABLED = false;
+function renderEventCard(){
+  const card=$("#eventCard"); if(!card) return;
+  ensureExtraState();
+  const q=STATE.surpriseQuiz;
+  const show=UX_FLAGS.surpriseEventCard && q.pending && q.pendingCard;
+  card.hidden=!show;
+  if(!show){ card.innerHTML=""; return; }
+  card.innerHTML=`<div class="event-icon">🎁</div><div class="event-copy"><h3>Surprise quiz unlocked!</h3><p>A quick match-up with words you already know.</p></div><div class="event-actions"><button class="event-dismiss" id="eventDismiss">Not now</button><button class="event-start" id="eventStart">Play quiz ▶</button></div>`;
+  $("#eventStart").onclick=()=>{ q.pendingCard=false; card.hidden=true; Store.save(); maybeShowSurpriseQuiz(); };
+  $("#eventDismiss").onclick=()=>{ q.pending=false; q.pendingCard=false; card.hidden=true; Store.save(); };
+}
+
 function maybeShowSurpriseQuiz(){
   ensureExtraState();
-  if(!SURPRISE_QUIZ_ENABLED){
-    // 🎁 Surprise quiz pop-up disabled — keeps state clean if anything left it pending.
-    if(STATE.surpriseQuiz && STATE.surpriseQuiz.pending){
-      STATE.surpriseQuiz.pending=false;
-      Store.save();
-    }
-    return;
-  }
   if(!STATE.surpriseQuiz.pending) return;
   if($("#overlay").classList.contains("show")) return;
   const learned=allCollectedVerbs();
   if(!learned.length){
     STATE.surpriseQuiz.pending=false;
+    STATE.surpriseQuiz.pendingCard=false;
     Store.save();
     return;
   }
@@ -6038,7 +6057,9 @@ function renderSurpriseQuiz(learnedRows){
 
   function finish(){
     STATE.surpriseQuiz.pending=false;
+    STATE.surpriseQuiz.pendingCard=false;
     STATE.surpriseQuiz.lastFinishedAt=new Date().toISOString();
+    const newly=checkTrophies();
     Store.save();
     $("#stage").innerHTML=`
       <div class="bloom bonus-bloom">
@@ -6049,7 +6070,7 @@ function renderSurpriseQuiz(learnedRows){
         <button class="btn btn-primary big" id="surpriseDone">Back to learning 🌿</button>
       </div>`;
     confetti(40);
-    $("#surpriseDone").onclick=()=>{ closeDay(); renderLevels(); };
+    $("#surpriseDone").onclick=()=>{ closeDay(); renderLevels(); if(newly.length) queueTrophyPopups(newly); };
   }
 
   function drawRound(){
@@ -6784,7 +6805,7 @@ function runVersionedMigrations(){
   renderLevels();
   setTimeout(()=>{
     // Revival coupon takes priority — wilted saplings offer first.
-    if(!maybeShowRevivalCoupon()) maybeShowSurpriseQuiz();
+    if(!maybeShowRevivalCoupon() && !UX_FLAGS.surpriseEventCard) maybeShowSurpriseQuiz();
   }, 350);
 })();
 </script>
