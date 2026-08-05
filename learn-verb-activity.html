@@ -679,6 +679,13 @@
     padding:18px 20px;margin:0 0 18px;text-align:center;box-shadow:var(--shadow-sm);}
   .picker-hello h3{margin:0 0 6px;color:var(--berry-dark);font-size:22px;}
   .picker-hello p{margin:0;font-weight:700;color:var(--ink);font-size:14px;}
+  /* Bucket 2 · "You are here" pulse on the next-up level card */
+  @keyframes hereGlow{0%,100%{box-shadow:0 4px 14px rgba(46,167,60,.18)}50%{box-shadow:0 6px 22px rgba(46,167,60,.55)}}
+  .level-card.is-next{animation:hereGlow 2.2s ease-in-out infinite;border-color:var(--leaf);}
+  .level-card.is-next::after{content:"👉 next";position:absolute;top:8px;right:10px;background:var(--leaf);color:#fff;
+    font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;letter-spacing:.5px;}
+  .level-card{position:relative;}
+  @media (prefers-reduced-motion: reduce){.level-card.is-next{animation:none;}}
   .blank{display:inline-block;min-width:58px;padding:0 10px;margin:0 3px;border-bottom:3px solid var(--berry);
     color:var(--berry-dark);font-family:'Baloo 2';font-weight:800;}
   .blank.done{border-bottom-color:var(--leaf);color:var(--leaf-dark);background:#E6F6EA;border-radius:6px;}
@@ -3818,6 +3825,14 @@ function renderLevels(){
       wrap.appendChild(hello);
     }
   }catch(e){}
+  // Determine which level card gets the "you are here" pulse — first level with lessons left.
+  let _nextLevelId=null;
+  for(const lv of LEVELS){
+    const st=STATE.levels[lv.id];
+    const total=planFor(lv).length;
+    const done=st?Object.values(st.completed).filter(Boolean).length:0;
+    if(done<total){ _nextLevelId=lv.id; break; }
+  }
   LEVELS.forEach(lv=>{
     const st=STATE.levels[lv.id];
     const total=planFor(lv).length;
@@ -3825,7 +3840,7 @@ function renderLevels(){
     const stars=st?Object.values(st.stars||{}).reduce((a,b)=>a+b,0):0;
     const pct=Math.round(done/total*100);
     const cta = done===0?"Start ▶":(done>=total?"Done ✓":"Continue ▶");
-    const card=document.createElement("button"); card.className="level-card";
+    const card=document.createElement("button"); card.className="level-card"+(lv.id===_nextLevelId?" is-next":"");
     card.innerHTML=`
       <div class="lc-badge">${lv.id}</div>
       <div class="lc-body">
@@ -6051,6 +6066,7 @@ function renderBloom(st){
   // Global thresholds: <25% not done (0★), 25-50% 1★, 50-75% 2★, 75+% 3★.
   let stars=starsForScore(cur.score, cur.max);
   cur.earnedStars=stars;
+  cur._onBloom=true;
   const isBonus=!!cur.plan.bonus;
   // Warm, never-discouraging messages — even 1 star feels good (#4)
   const _ln=learnerName();
@@ -6087,8 +6103,31 @@ function renderBloom(st){
     // Sequential celebration for each newly-earned trophy, then finish commitDay
     showTrophyChain(trophies.slice(), ()=>commitDay(stars));
   }
+  // Bucket 2 · offer one-tap jump to the next lesson in the same level.
+  let nextD=null;
+  try{
+    const lvObj=LEVELS.find(l=>l.id===LVID);
+    const plan=planFor(lvObj)||[];
+    const stNow=lvState(LVID);
+    const cand=plan.find(p=>p.d>d && !stNow.completed[p.d]);
+    if(cand) nextD=cand.d;
+  }catch(e){}
+  function nextLesson(){
+    if(nextD==null){ finishLesson(); return; }
+    const jump=()=>{ closeDay(); openDay(nextD); };
+    if(stars===0){ jump(); return; }
+    const trophies=(cur && cur.newlyEarnedTrophies) || [];
+    if(!trophies.length){ commitDay(stars, jump); return; }
+    if(cur) cur.newlyEarnedTrophies=[];
+    showTrophyChain(trophies.slice(), ()=>commitDay(stars, jump));
+  }
   if(stars===0){
     stageBottom({label:"🔁 Retry",onClick:retryLesson,secondary:{label:"Back to lessons",onClick:finishLesson}});
+  } else if(nextD!=null){
+    stageBottom({
+      label:"Next lesson ▶",onClick:nextLesson,
+      secondary:{label:"Back to lessons 🌿",onClick:finishLesson}
+    });
   } else {
     stageBottom({
       label:"Back to lessons 🌿",onClick:finishLesson,
@@ -6174,7 +6213,7 @@ function saveDayProgress(stars){
   Store.save();
 }
 
-function commitDay(stars){
+function commitDay(stars, onDone){
   endSession();
   // Lesson finished cleanly → wipe the mid-lesson resume checkpoint so the
   // Today card / next open lands on the picker instead of resuming this day.
@@ -6210,13 +6249,22 @@ function commitDay(stars){
   renderDash();
   if(UX_FLAGS.surpriseEventCard) renderEventCard(); else maybeShowSurpriseQuiz();
   if(d===totalLessons()){ setTimeout(()=>{ confetti(); toast(`¡Felicidades! You finished ${LV.name}! 🎉`); },200); }
+  if(typeof onDone==="function"){ try{ onDone(); }catch(e){} }
 }
 
 /* ============================================================
    Wire up
    ============================================================ */
-$("#closeBtn").onclick=closeDay;
-$("#overlay").onclick=(e)=>{ if(e.target.id==="overlay") closeDay(); };
+function requestCloseDay(){
+  // Bucket 2 · confirm mid-lesson so a stray tap doesn't lose progress.
+  // Skip the confirm on the bloom screen (already finished) and when no lesson is running.
+  const inLesson = !!(cur && cur.plan && !cur._onBloom);
+  if(!inLesson){ closeDay(); return; }
+  const ok = window.confirm("Save progress and exit this lesson?");
+  if(ok) closeDay();
+}
+$("#closeBtn").onclick=requestCloseDay;
+$("#overlay").onclick=(e)=>{ if(e.target.id==="overlay") requestCloseDay(); };
 $("#backBtn").onclick=backToLevels;
 
 /* Learned-verbs popup — header tiles show regular vs irregular progress separately. */
