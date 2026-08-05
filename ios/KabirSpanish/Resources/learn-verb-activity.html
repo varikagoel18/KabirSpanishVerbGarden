@@ -9,7 +9,7 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#2E7E50">
-<title>Kabir's Verb Garden · Spanish Verbs</title>
+<title>Jardín español · Spanish Verbs</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
@@ -669,6 +669,16 @@
   .l0para{background:#FFF7E2;border-radius:14px;padding:14px 16px;border:2px dashed var(--sun);}
   .l0paraFilled{color:var(--leaf-dark);font-weight:800;background:#E6F6EA;padding:0 6px;border-radius:6px;}
   .l0paraPend{opacity:.5;letter-spacing:1px;}
+  /* Phase 4A · first-launch name prompt */
+  .name-onb{padding:8px 4px 16px;text-align:center;}
+  .name-onb-lead{font-size:16px;line-height:1.5;color:var(--ink);margin:6px 0 20px;font-weight:600;}
+  .name-onb #nameOnbIn{max-width:340px;margin:0 auto;text-align:center;font-size:20px;font-weight:800;}
+  .name-onb .l0actions{margin-top:20px;}
+  /* Fresh-install picker greeting */
+  .picker-hello{background:linear-gradient(160deg,#FFF9E6,#FFEECB);border:2px dashed #E4A700;border-radius:20px;
+    padding:18px 20px;margin:0 0 18px;text-align:center;box-shadow:var(--shadow-sm);}
+  .picker-hello h3{margin:0 0 6px;color:var(--berry-dark);font-size:22px;}
+  .picker-hello p{margin:0;font-weight:700;color:var(--ink);font-size:14px;}
   .blank{display:inline-block;min-width:58px;padding:0 10px;margin:0 3px;border-bottom:3px solid var(--berry);
     color:var(--berry-dark);font-family:'Baloo 2';font-weight:800;}
   .blank.done{border-bottom-color:var(--leaf);color:var(--leaf-dark);background:#E6F6EA;border-radius:6px;}
@@ -776,7 +786,7 @@
     <div class="brand">
       <div class="logo">📚</div>
       <div>
-        <h1 id="brandName">Kabir's Verb Garden</h1>
+        <h1 id="brandName">Jardín español</h1>
         <p>Spanish verbs, level by level 🌞</p>
       </div>
     </div>
@@ -835,7 +845,7 @@
   </div>
 
   <div class="footer-note">
-    Made with 💚 for Kabir. Progress saves automatically when a lesson is finished.<br>
+    Made with 💚 for kids learning Spanish. Progress saves automatically when a lesson is finished.<br>
     <button id="backupBtn">Backup code</button> · <button id="restoreBtn">Restore</button> · <button id="resetBtn">Reset all</button>
   </div>
 </div>
@@ -2423,6 +2433,15 @@ function ensureExtraState(){
   STATE.dailyLevelActivity = STATE.dailyLevelActivity || {}; // {YYYY-MM-DD: {levelId: {count, sources}}}
   STATE.dailyCrossLevelRevived = STATE.dailyCrossLevelRevived || {}; // {YYYY-MM-DD: true}
   if(!Object.prototype.hasOwnProperty.call(STATE,"lastLevelId")) STATE.lastLevelId=null;
+  // Phase 4A · minimum-friction personalization (local-only)
+  STATE.profile = STATE.profile || {version:1, childName:"", createdAt:"", updatedAt:""};
+  if(!STATE.deviceId){
+    try{ STATE.deviceId = (crypto && crypto.randomUUID) ? crypto.randomUUID()
+      : "dev-"+Math.random().toString(36).slice(2,10)+"-"+Date.now().toString(36); }
+    catch(e){ STATE.deviceId = "dev-"+Math.random().toString(36).slice(2,10)+"-"+Date.now().toString(36); }
+  }
+  STATE.onboarding = STATE.onboarding || {seen:false, completedAt:""};
+  STATE.adoption   = STATE.adoption   || {firstLaunchAt:"", totalLaunches:0, lastLaunchAt:""};
   STATE.revive        = STATE.revive        || {couponSerial:0, active:null, history:[], saplingsSpent:0};
   if(typeof STATE.revive.saplingsSpent!=="number") STATE.revive.saplingsSpent=0;
   if(STATE.lastDate===todayKey() && !STATE.levelDailyDone[1] && !STATE.level1AliveRepairDone){
@@ -3309,6 +3328,50 @@ function maybeShowRevivalCoupon(){
   return true;
 }
 
+/* Phase 4A · one-question name prompt shown once on first launch.
+   Skippable. Fallback name is "amigo" (works in EN + ES, gender-neutral). */
+function showNameOnboarding(){
+  ensureExtraState();
+  $("#dvEmoji").textContent = "🌱";
+  $("#dvTitle").textContent = "¡Hola!";
+  $("#dvSub").textContent   = "What should I call you?";
+  $("#steps").innerHTML = "";
+  const stage = $("#stage");
+  stage.innerHTML = `
+    <div class="name-onb">
+      <p class="name-onb-lead">Let's start! Type your first name or nickname — or tap Skip and I'll just call you <b>amigo</b>.</p>
+      <input id="nameOnbIn" class="l0input" type="text"
+             autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false"
+             maxlength="40" placeholder="e.g. Kabir"/>
+      <div id="nameOnbFeed" class="l0feed"></div>
+      <div class="l0actions" style="justify-content:center">
+        <button class="btn ghost sm" id="nameOnbSkip" type="button">Skip</button>
+        <button class="btn leaf" id="nameOnbGo" type="button">¡Vamos! ▶</button>
+      </div>
+    </div>`;
+  $("#overlay").classList.add("show","lesson-active");
+  $("#overlay").classList.remove("sticky-action-enabled");
+  document.body.style.overflow = "hidden";
+  const inp = $("#nameOnbIn"), go = $("#nameOnbGo"), skip = $("#nameOnbSkip"), feed = $("#nameOnbFeed");
+  setTimeout(()=>{ try{ inp.focus(); }catch(e){} }, 60);
+  function finish(name){
+    if(name) setChildName(name);
+    markOnboardingSeen();
+    $("#overlay").classList.remove("show","lesson-active");
+    document.body.style.overflow = "";
+    // Refresh the picker so any name-personalized copy shows immediately.
+    try{ renderLevels(); }catch(e){}
+    toast(name ? `¡Hola, ${name}! 🌱` : "¡Hola, amigo! 🌱");
+  }
+  go.onclick = ()=>{
+    const raw = (inp.value||"").trim().slice(0,40);
+    if(!raw){ inp.focus(); feed.textContent = "Type a name, or tap Skip."; feed.style.color = "var(--berry)"; return; }
+    finish(raw);
+  };
+  skip.onclick = ()=> finish("");
+  inp.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); go.click(); }});
+}
+
 /* Session-minutes tracking (parent dashboard) */
 let _sessionStart=null;
 function startSession(){ _sessionStart=Date.now(); }
@@ -3348,16 +3411,54 @@ function starsForScore(score, max){
    ============================================================ */
 const $ = s => document.querySelector(s);
 const UX_FLAGS = (()=>{
-  let stickyBar=true, todayCard=true, surpriseEventCard=true, speechPractice=true;
+  let stickyBar=true, todayCard=true, surpriseEventCard=true, speechPractice=true, nameOnboarding=true;
   try{
     const params=new URLSearchParams(location.search);
     stickyBar=params.get("stickyBar")!=="0";
     todayCard=params.get("todayCard")!=="0";
     surpriseEventCard=params.get("surpriseEventCard")!=="0";
     speechPractice=params.get("speechPractice")!=="0";
+    nameOnboarding=params.get("nameOnboarding")!=="0";
   }catch(e){}
-  return {stickyBar,todayCard,surpriseEventCard,speechPractice};
+  return {stickyBar,todayCard,surpriseEventCard,speechPractice,nameOnboarding};
 })();
+
+/* Phase 4A · minimum-friction personalization helpers.
+   All local-only. See phase_4a_profile.md. */
+function setChildName(name){
+  ensureExtraState();
+  const clean = String(name||"").trim().slice(0,40);
+  const now = new Date().toISOString();
+  STATE.profile = Object.assign({}, STATE.profile||{version:1}, {
+    childName: clean,
+    updatedAt: now
+  });
+  if(!STATE.profile.createdAt) STATE.profile.createdAt = now;
+  try{ Store.save(); }catch(e){}
+}
+function learnerName(){
+  try{
+    const n = STATE && STATE.profile && STATE.profile.childName;
+    return (n && String(n).trim()) || "amigo";
+  }catch(e){ return "amigo"; }
+}
+function markOnboardingSeen(){
+  ensureExtraState();
+  STATE.onboarding = Object.assign({}, STATE.onboarding||{}, {
+    seen: true,
+    completedAt: new Date().toISOString()
+  });
+  try{ Store.save(); }catch(e){}
+}
+function tickAdoptionOnLaunch(){
+  ensureExtraState();
+  const now = new Date().toISOString();
+  const a = STATE.adoption = STATE.adoption || {firstLaunchAt:"", totalLaunches:0, lastLaunchAt:""};
+  if(!a.firstLaunchAt) a.firstLaunchAt = now;
+  a.totalLaunches = (a.totalLaunches|0) + 1;
+  a.lastLaunchAt = now;
+  try{ Store.save(); }catch(e){}
+}
 
 function prefersReducedMotion(){
   try{ return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }catch(e){ return false; }
@@ -3704,6 +3805,19 @@ function renderLevels(){
   refreshStats();
   renderTodayCard();
   const wrap=$("#levels"); wrap.innerHTML="";
+  // Fresh-install greeting: shown only until any lesson has been completed anywhere
+  try{
+    const anyDone = LEVELS.some(lv=>{
+      const st=STATE.levels[lv.id]; return st && Object.values(st.completed||{}).some(Boolean);
+    });
+    if(!anyDone){
+      const hello=document.createElement("div");
+      hello.className="picker-hello";
+      const nm=learnerName();
+      hello.innerHTML=`<h3>¡Hola, ${escHTML(nm)}! 🌱</h3><p>Tap Level 0 to plant your first word.</p>`;
+      wrap.appendChild(hello);
+    }
+  }catch(e){}
   LEVELS.forEach(lv=>{
     const st=STATE.levels[lv.id];
     const total=planFor(lv).length;
@@ -3739,7 +3853,7 @@ function renderLevels(){
   practice.innerHTML=`<div class="lc-badge">${practiceFullyDone?"✅":(practiceUnlocked?"2":"🔒")}</div>
     <div class="lc-body">
       <h3>Practice Test · Regular Verbs${practiceFullyDone?" 🏆":""}</h3>
-      <p>${practiceFullyDone ? "All 10 tests done! ¡Felicidades, Kabir! 🎉" : (practiceUnlocked ? "10 tests for the 41 regular verbs" : `Unlocks after all 41 Level 1 verbs are covered (${verbsCovered}/41)`)}</p>
+      <p>${practiceFullyDone ? ("All 10 tests done! ¡Felicidades, "+learnerName()+"! 🎉") : (practiceUnlocked ? "10 tests for the 41 regular verbs" : `Unlocks after all 41 Level 1 verbs are covered (${verbsCovered}/41)`)}</p>
       <div class="lc-bar"><i style="width:${practicePct}%"></i></div>
       <div class="lc-meta">${practiceDone}/10 tests · ${practiceStars}⭐ · 250 questions</div>
     </div>
@@ -3760,7 +3874,7 @@ function renderLevels(){
   hwCard.innerHTML=`<div class="lc-badge">${hwFullyDone?"✅":"📒"}</div>
     <div class="lc-body">
       <h3>Spanish Class HW${hwFullyDone?" 🏆":""}</h3>
-      <p>${hwFullyDone ? "All homework done! ¡Felicidades, Kabir! 🎉" : "Type-the-answer quizzes from your teacher"}</p>
+      <p>${hwFullyDone ? ("All homework done! ¡Felicidades, "+learnerName()+"! 🎉") : "Type-the-answer quizzes from your teacher"}</p>
       <div class="lc-bar"><i style="width:${hwPct}%"></i></div>
       <div class="lc-meta">${hwDone} HW done · ${hwStars}⭐</div>
     </div>
@@ -3833,6 +3947,31 @@ function renderDash(){
    ============================================================ */
 let cur = null; // {plan, pool, newSet, stages, idx, score}
 
+/* ============================================================
+   Mid-lesson resume — persists {levelId, day, stageIdx, questionIdx}
+   so a locked phone / closed tab / crash can pick up exactly where
+   Kabir left off. Cleared on lesson completion.
+   Runs identically in the browser and inside the iOS WebView (single
+   HTML), and the iOS `ProgressPersistenceBridge` mirrors STATE.resume
+   like any other STATE field.
+   ============================================================ */
+function saveResume(patch){
+  try{
+    ensureExtraState();
+    const cur0 = STATE.resume || {};
+    STATE.resume = Object.assign({}, cur0, patch, {savedAt: new Date().toISOString()});
+    Store.save();
+  }catch(e){}
+}
+function clearResume(){
+  try{
+    if(STATE && STATE.resume){ delete STATE.resume; Store.save(); }
+  }catch(e){}
+}
+function readResume(){
+  try{ return (STATE && STATE.resume) || null; }catch(e){ return null; }
+}
+
 function openDay(d){
   startSession();
   const plan = planFor(LV).find(p=>p.d===d);
@@ -3897,6 +4036,20 @@ function openDay(d){
     hintUsedInLesson:false, houseSentenceCleanWin:0, houseListenCleanWin:0,
     _combo:0, _maxCombo:0,
     };
+  // Mid-lesson resume: if a checkpoint matches this level+day, jump to that
+  // stage and hand the intra-stage question index to the renderer via _startAt.
+  const rp = readResume();
+  let resumedFromQ = 0;
+  if(rp && String(rp.levelId)===String(LVID) && String(rp.day)===String(d)
+     && Number.isInteger(rp.stageIdx) && rp.stageIdx >= 0 && rp.stageIdx < stages.length){
+    cur.idx = rp.stageIdx;
+    cur._startAt = Math.max(0, rp.questionIdx|0);
+    resumedFromQ = cur._startAt;
+    if(cur._startAt > 0){ try{ toast(`Resumed from question ${cur._startAt+1} 🌿`); }catch(_){} }
+  } else {
+    // Fresh open — record the initial checkpoint.
+    saveResume({levelId:LVID, day:d, stageIdx:0, questionIdx:0});
+  }
   $("#dvEmoji").textContent=plan.em;
   $("#dvTitle").textContent="Lesson "+d;
   $("#dvSub").textContent=plan.title;
@@ -3937,9 +4090,20 @@ function setSubStage(idx, total){
   renderSteps();
 }
 function nextStage(){
-  if(cur){ cur.subPhase = 0; cur.subPhases = 0; }
+  if(cur){ cur.subPhase = 0; cur.subPhases = 0; cur._startAt = 0; }
   cur.idx++;
+  // Persist checkpoint on every stage advance so a lock/close mid-lesson
+  // resumes on the correct stage. Cleared entirely on bloom via commitDay().
+  if(cur && cur.plan){
+    saveResume({levelId:LVID, day:cur.plan.d, stageIdx:cur.idx, questionIdx:0});
+  }
   if(cur.idx>=cur.stages.length){ finishDay(); } else { renderSteps(); runStage(); }
+}
+/* Called by intra-stage renderers on each question advance so a mid-question
+   interruption resumes on that exact question. */
+function saveResumeQuestion(i){
+  if(!cur || !cur.plan) return;
+  saveResume({levelId:LVID, day:cur.plan.d, stageIdx:cur.idx, questionIdx:i|0});
 }
 function runStage(){
   stopSpeech();
@@ -4111,10 +4275,16 @@ function renderQuiz(st){
   const finale = st.plan.finale;
   const total = finale?8:lateN(6);
   const qs = pickFocus(Math.min(total,cur.pool.length));
-  let i=0, done=false;
+  // Mid-lesson resume: honor a saved question index for this stage
+  let i = 0, done = false;
+  if(cur && typeof cur._startAt === "number" && cur._startAt > 0 && cur._startAt < qs.length){
+    i = cur._startAt;
+  }
+  if(cur) cur._startAt = 0;
   const stage=$("#stage");
   const lead = st.irregularExtraQuiz ? "Irregular verb quiz ⚡" : "Pick the right word ✨";
   function draw(){
+    saveResumeQuestion(i);
     const v=qs[i];
     const askEs = Math.random()<0.5; // sometimes ask Spanish->English
     const correct = askEs? v.en : v.es;
@@ -4269,8 +4439,11 @@ function renderConj(st){
   const qs=[]; const chosen=pickFreshFrom(verbs, Math.min(lateN(6),verbs.length));
   chosen.forEach(v=>qs.push({v, p:prons[Math.floor(Math.random()*prons.length)]}));
   let i=0, done=false;
+  if(cur && typeof cur._startAt === "number" && cur._startAt > 0 && cur._startAt < qs.length){ i = cur._startAt; }
+  if(cur) cur._startAt = 0;
   const stage=$("#stage");
   function draw(){
+    saveResumeQuestion(i);
     const {v,p}=qs[i];
     const correct=conjugate(v,p);
     const wrongPron=prons.filter(x=>x!==p);
@@ -4320,9 +4493,12 @@ function renderConj(st){
 function renderFill(st){
   const items=pickFocus(lateN(5));
   let i=0, done=false;
+  if(cur && typeof cur._startAt === "number" && cur._startAt > 0 && cur._startAt < items.length){ i = cur._startAt; }
+  if(cur) cur._startAt = 0;
   const stage=$("#stage");
   const useMCQ = LVID===2;   // Irregular verbs → MCQ options; others → typed input.
   function draw(){
+    saveResumeQuestion(i);
     const v=items[i], data=fillFor(v);
     const correct = data.infMode ? v.inf : conjugate(v, data.p);
     const sentence=data.es.replace("___",`<span class="blank">?</span>`);
@@ -4413,8 +4589,11 @@ function renderFill(st){
 function renderTF(st){
   const items=pickFocus(lateN(6));
   let i=0, done=false;
+  if(cur && typeof cur._startAt === "number" && cur._startAt > 0 && cur._startAt < items.length){ i = cur._startAt; }
+  if(cur) cur._startAt = 0;
   const stage=$("#stage");
   function draw(){
+    saveResumeQuestion(i);
     const v=items[i];
     const isTrue=Math.random()<0.5;
     let shownEn=v.en;
@@ -4990,8 +5169,11 @@ function renderHWQuiz(st){
   if(!quiz){ nextStage(); return; }
   const items = quiz.items;
   let i = 0;
+  if(cur && typeof cur._startAt === "number" && cur._startAt > 0 && cur._startAt < items.length){ i = cur._startAt; }
+  if(cur) cur._startAt = 0;
   const stage = $("#stage");
   function draw(){
+    saveResumeQuestion(i);
     const it = items[i];
     const opts = shuffle([it.correct, ...it.opts.filter(o=>o!==it.correct)]).slice(0,4);
     if(!opts.includes(it.correct)) opts[0]=it.correct;
@@ -5045,6 +5227,8 @@ function renderTenseQuiz(st){
   let phase = "items"; // "items" -> "paragraphs" -> done
   let i = 0;           // sentence index
   let paraIdx = 0;     // paragraph index
+  if(cur && typeof cur._startAt === "number" && cur._startAt > 0 && cur._startAt < items.length){ i = cur._startAt; }
+  if(cur) cur._startAt = 0;
   const stage = $("#stage");
   const HAS_PARA = paragraphs.length>0;
   setSubStage(0, HAS_PARA?2:1);
@@ -5057,6 +5241,7 @@ function renderTenseQuiz(st){
 
   /* ---------- Sentence phase ---------- */
   function drawItem(){
+    saveResumeQuestion(i);
     const it = items[i];
     const opts = shuffle([it.correct, ...it.opts.filter(o=>o!==it.correct)]).slice(0,4);
     if(!opts.includes(it.correct)) opts[0]=it.correct;
@@ -5868,11 +6053,12 @@ function renderBloom(st){
   cur.earnedStars=stars;
   const isBonus=!!cur.plan.bonus;
   // Warm, never-discouraging messages — even 1 star feels good (#4)
+  const _ln=learnerName();
   const msgs={
-    3:["¡Increíble, Kabir! You're a star! 🌟","Perfect! You grew a strong plant! 💚","Wow! Three stars! ¡Súper! 🌻"],
-    2:["¡Muy bien! Almost perfect! 🌱","Great job! So close to three stars! 🌼","Nice work, Kabir! Keep growing! 🌿"],
+    3:["¡Increíble, "+_ln+"! You're a star! 🌟","Perfect! You grew a strong plant! 💚","Wow! Three stars! ¡Súper! 🌻"],
+    2:["¡Muy bien! Almost perfect! 🌱","Great job! So close to three stars! 🌼","Nice work, "+_ln+"! Keep growing! 🌿"],
     1:["Good try! Every word helps you grow! 🌱","You did it! Practice makes perfect! 💪","Well done for finishing! Try again for more stars! 🌟"],
-    0:["Let's try again — you've got this! 💪","Practice a little more and try once more! 🌱","Don't give up, Kabir — you'll grow with practice! 🌟"]
+    0:["Let's try again — you've got this! 💪","Practice a little more and try once more! 🌱","Don't give up, "+_ln+" — you'll grow with practice! 🌟"]
   };
   const headline=isBonus
     ? (stars===3? "🌳 You grew a TREE! 🌳" : "Bonus complete! 🌳")
@@ -5990,6 +6176,9 @@ function saveDayProgress(stars){
 
 function commitDay(stars){
   endSession();
+  // Lesson finished cleanly → wipe the mid-lesson resume checkpoint so the
+  // Today card / next open lands on the picker instead of resuming this day.
+  clearResume();
   saveDayProgress(stars);
   // If a revival coupon is active, mark this level's chapter complete.
   try{
@@ -6271,7 +6460,7 @@ function renderParents(){
     const preview=items.slice(-4).reverse().map(m=>`
       <small>${escHTML(m.source||"Practice")}: ${escHTML(m.prompt)} → ${escHTML(m.correct)}${m.given?` (answered ${escHTML(m.given)})`:""}</small>`).join("");
     return `<div class="mini-row"><span>${d}<small>${items.length} wrong first attempt${items.length===1?"":"s"}</small>${preview}</span></div>`;
-  }).join("") : `<div class="mini-row"><span>No wrong-question history yet<small>When Kabir misses a question, it will appear here by day.</small></span></div>`;
+  }).join("") : `<div class="mini-row"><span>No wrong-question history yet<small>When a question is missed, it will appear here by day.</small></span></div>`;
   const patternMap={};
   Object.values(missesByDay).flat().forEach(m=>{
     const key=m.verbId?`verb-${m.verbId}`:`${m.prompt}|${m.correct}`;
@@ -6897,10 +7086,17 @@ function runVersionedMigrations(){
   const repaired=repairCollectedFromCompleted();
   const migrated=runVersionedMigrations();
   const newly=checkTrophies(true);
+  tickAdoptionOnLaunch();
   if(repaired || migrated || newly.length) await Store.save();
   applyGardenSettings();
   renderLevels();
   setTimeout(()=>{
+    // Name prompt takes highest priority on very first launch — kid names themself
+    // before anything else runs (coupons, surprise quiz, etc.).
+    if(UX_FLAGS.nameOnboarding && (!STATE.onboarding || !STATE.onboarding.seen)){
+      showNameOnboarding();
+      return;
+    }
     // Revival coupon takes priority — wilted saplings offer first.
     if(!maybeShowRevivalCoupon() && !UX_FLAGS.surpriseEventCard) maybeShowSurpriseQuiz();
   }, 350);

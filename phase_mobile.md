@@ -505,3 +505,399 @@ Rough size limit per phase — a PR bigger than this signals scope creep and sho
 | 9 (QA) | 0 code, doc-only | Checklist run, screenshots, sign-off |
 
 **Original-phase budget:** ~510 lines through Phase 9, plus the separate pending Phase 8b budget above. If cumulative non-8b diff exceeds 700 lines by Phase 7, stop and re-plan.
+
+---
+
+# Technical Appendix
+
+Working reference for implementing the phases above. All line numbers are approximate — grep for the symbol names before editing.
+
+## Appendix A · File & directory map
+
+```
+project verbs/
+├── learn-verb-activity.html          ← main app (all HTML/CSS/JS, ~7 000 lines)
+├── regular-verb-practice-tests.html  ← sibling page, opens via window.location.href
+├── spanish-class-hw.html             ← sibling page, opens via window.location.href
+├── ios/
+│   ├── KabirSpanish.xcodeproj/       ← hand-crafted pbxproj (see A.1)
+│   ├── KabirSpanish/
+│   │   ├── KabirSpanishApp.swift     ← @main SwiftUI entry, starts SyncServer
+│   │   ├── ContentView.swift         ← root SwiftUI View wrapping WebView
+│   │   ├── WebView.swift             ← WKWebView store + JS bridges:
+│   │   │                                  · SpeechPracticeBridge (mic)
+│   │   │                                  · ProgressPersistenceBridge
+│   │   │                                  · syncMergeIncoming / setState
+│   │   ├── SyncServer.swift          ← LAN HTTP server (port 8181)
+│   │   ├── Info.plist                ← Bonjour, mic, local-network usage strings
+│   │   ├── Assets.xcassets/          ← app icon (1024) + accent color
+│   │   └── Resources/
+│   │       ├── learn-verb-activity.html          ← must mirror root
+│   │       ├── regular-verb-practice-tests.html  ← must mirror root
+│   │       └── spanish-class-hw.html             ← must mirror root
+│   └── build/                        ← xcodebuild derived data (gitignored)
+├── phase_mobile.md                   ← this doc
+├── phase_4a_profile.md               ← name-only onboarding spec
+├── plan_launch.md                    ← App Store launch order
+├── plan_improvement1.md              ← consolidated improvement roadmap
+├── appstore_plan.md                  ← original gap analysis
+└── scratchpad/                       ← QA seed states, one-off scripts (gitignored)
+```
+
+### A.1 · pbxproj notes
+
+`KabirSpanish.xcodeproj/project.pbxproj` was hand-crafted with predictable 24-char hex IDs (`AA000000000000000000A0` etc.) — a full ID reference table lives inside the file's comments. If you add a new Swift source or resource, follow the existing pattern:
+
+- Copy an existing `PBXBuildFile` line, bump the last hex digit.
+- Add matching `PBXFileReference`.
+- Add to the correct `PBXGroup` children list.
+- Add to `PBXResourcesBuildPhase` (for HTML/asset) or `PBXSourcesBuildPhase` (for `.swift`).
+
+## Appendix B · Key function reference
+
+### B.1 · Core lifecycle (in `learn-verb-activity.html`)
+
+| Function | Purpose | Called from |
+|---|---|---|
+| `openDay(d)` | Builds `cur` for day `d`, pushes stages, starts first stage. | Level grid tap, Today card, resume flow |
+| `closeDay()` | Tears down overlay, nulls `cur`, stops speech. | Close button, back button, browser navigation |
+| `commitDay(stars)` | Persists day completion, updates trophies/streak/session, clears resume checkpoint. | `renderBloom` "Back to lessons" |
+| `runStage()` | Dispatches current stage via the `map` object to its renderer. | `openDay`, `nextStage`, `finishDay` |
+| `nextStage()` | Increments `cur.idx`, resets sub-phase, calls `runStage()` or `finishDay()`. Persists stage-level resume. | End of every renderer |
+| `renderSteps()` | Redraws the top progress pips. Expands current stage into sub-pips if `cur.subPhases > 0`. | On stage advance |
+| `saveResume(patch)` / `saveResumeQuestion(i)` / `clearResume()` | Mid-lesson resume checkpoint. | Renderers on question advance, `nextStage`, `commitDay` |
+| `stageBottom(config)` | Sticky-bottom action helper. `config = {label, onClick, disabled, secondary}` or `null` to hide. | Renderers that own a footer CTA |
+| `speak(text, rate?)` / `stopSpeech()` | Cross-platform TTS. iOS uses Web Speech API through WKWebView. | Any correct-answer feedback |
+| `celebrateSmallWin(target)` | Sound + mini-confetti + combo tick. | Correct-answer branches |
+| `secondWrongAdvance(state, onAdvance)` | 2-attempt rule; after 2nd wrong, calls `onAdvance()`. | Wrong-answer branches |
+
+### B.2 · State access helpers
+
+| Helper | Wraps | Notes |
+|---|---|---|
+| `syncStoreGet(key)` | `localStorage.getItem` | Returns `null` on any throw (private browsing, blocked storage). |
+| `syncStoreSet(key, value, opts?)` | `localStorage.setItem` | Returns `false` on throw; `opts.quiet` suppresses the toast. |
+| `Store.save()` | `syncStoreSet` under the hood | Persists entire `STATE`. Always guarded. |
+| `ensureExtraState()` | Adds missing STATE fields | Called at boot + before feature reads. Add new fields here. |
+| `lvState(id)` | Returns `STATE.levels[id]` (creating if missing) | Never write to `STATE.levels[id]` without going through this. |
+
+### B.3 · Swift bridges (in `ios/KabirSpanish/WebView.swift`)
+
+| Class | Message handler name | What it does |
+|---|---|---|
+| `SpeechPracticeBridge` | `speechPractice` | mic capture + SFSpeechRecognizer; posts result via `window.KABIR_SPEECH_RECEIVE()`. |
+| `ProgressPersistenceBridge` | `progress` | Mirrors `STATE` from JS to native Documents so a `file://` origin change on OTA update doesn't wipe progress. |
+| `syncMergeIncoming` (JS) | — | Called by Swift `setState()` — merges an incoming state blob into current localStorage before overwriting. |
+
+`SyncServer` (`ios/KabirSpanish/SyncServer.swift`) exposes 4 HTTP endpoints:
+
+| Method | Path | Body | Purpose |
+|---|---|---|---|
+| `GET` | `/ping` | — | Discovery & health check. |
+| `GET` | `/state` | — | Returns current localStorage JSON. |
+| `POST` | `/state` | full state JSON | Merged into local via `syncMergeIncoming`. |
+| `POST` | `/html` | full HTML source | OTA update — writes to Documents, reloads WebView. |
+| `POST` | `/html/reset` | — | Deletes the OTA-pushed HTML, reverts to bundled. |
+
+## Appendix C · DOM & CSS reference
+
+### C.1 · Overlay skeleton
+
+```html
+<div id="overlay" class="overlay">                    <!-- backdrop -->
+  <div class="sheet">                                 <!-- rounded panel (desktop) / edge-to-edge (mobile) -->
+    <div class="sheet-top">                           <!-- green header with title, sub, close -->
+      <span id="dvEmoji"></span>
+      <div>
+        <h3 id="dvTitle"></h3>
+        <p id="dvSub"></p>
+      </div>
+      <button class="close">×</button>
+    </div>
+    <div id="steps" class="steps"></div>              <!-- top progress pips -->
+    <div id="stage" class="stage"></div>              <!-- renderer output; renderers replace innerHTML -->
+    <div id="stageBottom" class="stage-bottom">       <!-- sticky action bar (Phase 2) -->
+      <div id="stageBottomInner"></div>
+    </div>
+  </div>
+</div>
+```
+
+Key: `#stage` and `#stageBottom` are **siblings** inside `.sheet`. Renderers may rewrite `#stage.innerHTML` freely; the sticky bar survives because it lives outside.
+
+### C.2 · Level card structure
+
+```html
+<button class="level-card" onclick="openLevel(id)">
+  <div class="lc-badge"><!-- level number or lock/complete icon --></div>
+  <div class="lc-body">
+    <h3><!-- level name --></h3>
+    <p><!-- blurb --></p>
+    <div class="lc-bar"><i style="width:37%"></i></div>
+    <div class="lc-meta"><!-- 12/70 lessons · 45⭐ --></div>
+  </div>
+  <div class="lc-cta"><!-- Start / Continue / Locked --></div>
+</button>
+```
+
+### C.3 · Level day tile
+
+```html
+<button class="cell done">                            <!-- + " today" | " locked" | " drought" | " bonus" -->
+  <span class="daynum">3</span>
+  <span class="icon">🌸</span>                         <!-- sapling | flower | tree | lock | drought -->
+  <span class="mini-stars">⭐⭐⭐</span>
+</button>
+```
+
+Tree/sapling logic lives in `renderDash` — the `isQuizDay` predicate reads:
+```js
+p.bonus || (p.house && p.houseType==="quiz") || p.fiestaQuiz
+  || p.pureQuiz || p.tense || p.finale || p.game==="quiz"
+```
+
+### C.4 · CSS custom-property palette
+
+Defined in `:root { ... }` near the top of the stylesheet:
+- `--leaf`, `--leaf-dark` — greens (header, primary levels).
+- `--berry`, `--berry-dark` — pinks (CTAs).
+- `--sun` — yellow accents.
+- `--ink`, `--ink-soft` — text colors.
+- `--cream` — background.
+
+Use these; don't hardcode hex values in new CSS.
+
+## Appendix D · STATE schema reference
+
+Persisted in `localStorage.learn_verb_activity_v2` (JSON). Same shape mirrored by iOS `ProgressPersistenceBridge`.
+
+```js
+STATE = {
+  // Levels — indexed by numeric id
+  levels: {
+    0: { completed:{}, stars:{}, collected:[], basics:{noHint3Star:false} },
+    1: { completed:{}, stars:{}, collected:[] },
+    2: { completed:{}, stars:{}, collected:[] },
+    3: { completed:{}, stars:{}, collected:[] },
+    4: { completed:{}, stars:{}, collected:[], house:{sentenceCleanWin:0, listenCleanWin:0, noHint3Star:false, quizDaysDone:{}, lessonsDone:{}, quiz3Star:0} }
+  },
+
+  // Trophies — key = trophy id, value = { earnedAt }
+  trophies: { "conj-master": {earnedAt:"2024-…"}, ... },
+
+  // Verb-level spaced-repetition stats
+  verbStats: { "1": {attempts:12, correct:11}, ... },
+
+  // Global counters
+  streak: 7,
+  lastDate: "2024-11-15",
+  sessionMinutes: { "2024-11-15": 8, ... },
+  missHistory: { "2024-11-15": [{prompt, correct, given, verbId, source}], ... },
+
+  // Practice + HW mini-states
+  practiceRegular: { completed:{}, stars:{} },
+  spanishHW: { completed:{}, stars:{}, scores:{}, totalPerQuiz:{} },
+  spanishHWMeta: { totalQuizzes: N },
+  surpriseQuiz: { lastFinishedAt:"…", pendingCard:false },
+
+  // Level-daily-done tracking (drought detection)
+  levelDailyDone: { "0":"2024-11-15", "1":"2024-11-14", ... },
+  dailyLevelActivity: { "2024-11-15": {"0":{count:2, sources:{…}}} },
+  dailyCrossLevelRevived: { "2024-11-15": true },
+
+  // Revive coupon
+  revive: { couponSerial:0, active:null, history:[], saplingsSpent:0 },
+
+  // Mid-lesson resume (cleared on commitDay)
+  resume: { levelId:1, day:5, stageIdx:2, questionIdx:3, savedAt:"…" },
+
+  // Migration marker
+  _fiestaMigratedV1: true,
+
+  // Phase 4A additions (planned, not yet shipped)
+  profile:   { version:1, childName:"", createdAt:"", updatedAt:"" },
+  deviceId:  "…UUID…",
+  onboarding:{ seen:true, completedAt:"…" },
+  adoption:  { firstLaunchAt:"…", totalLaunches:0, lastLaunchAt:"…" }
+}
+```
+
+**Golden rule:** never write a STATE key directly from a renderer. Use `saveDayProgress`, `updateProfile`, `saveResume`, `Store.save()`, etc.
+
+## Appendix E · How to add a new renderer safely
+
+Template for a new stage type — mirrors the existing renderer contract.
+
+```js
+function renderMyThing(st) {
+  const items = /* build question list */;
+  let i = 0, done = false;
+
+  // Mid-lesson resume — honor the checkpoint if set
+  if (cur && typeof cur._startAt === "number" && cur._startAt > 0 && cur._startAt < items.length) {
+    i = cur._startAt;
+  }
+  if (cur) cur._startAt = 0;
+
+  const stage = $("#stage");
+
+  function draw() {
+    saveResumeQuestion(i);                             // persist checkpoint before rendering
+    const it = items[i];
+    let missed = false;
+    const wrongState = { wrongAttempts: 0 };
+    cur.max++;
+
+    stage.innerHTML = `
+      <p class="lead">…</p>
+      <div class="qcount">Question ${i + 1} of ${items.length}</div>
+      <div class="q">…</div>
+      <div class="opts" id="opts"></div>`;
+
+    // Optional sticky-bottom action
+    stageBottom({
+      label: "Check ➜",
+      onClick: () => { /* validate */ }
+    });
+
+    // Wire answer options — use the standard right/wrong pattern:
+    // Right: done=true; b.classList.add("ok"); celebrateSmallWin(b); recordVerbAttempt(...); cur.score++; setTimeout(adv, 650);
+    // Wrong: missed=true; b.classList.add("no"); if (secondWrongAdvance(wrongState, adv)) done=true;
+  }
+
+  function adv() {
+    if (i < items.length - 1) { i++; draw(); }
+    else nextStage();
+  }
+
+  draw();
+}
+```
+
+Then register in `runStage`'s `map` (~line 3948):
+
+```js
+const map = { …, myThing: renderMyThing };
+```
+
+Push it onto `stages` from `openDay`:
+
+```js
+stages.push({ type: "myThing", plan });
+```
+
+## Appendix F · Common commands
+
+Run from repo root.
+
+### Validate JS parses
+```bash
+python3 -c "
+import re
+open('/tmp/lva.js','w').write('\n'.join(re.findall(r'<script>(.*?)</script>',
+  open('learn-verb-activity.html').read(), re.DOTALL)))
+" && node --check /tmp/lva.js && echo OK
+```
+
+### Verify all 3 bundled HTMLs match root
+```bash
+for f in learn-verb-activity.html regular-verb-practice-tests.html spanish-class-hw.html; do
+  diff -q "$f" "ios/KabirSpanish/Resources/$f" && echo "$f: in sync"
+done
+```
+
+### Copy web files into iOS bundle
+```bash
+for f in learn-verb-activity.html regular-verb-practice-tests.html spanish-class-hw.html; do
+  cp "$f" "ios/KabirSpanish/Resources/$f"
+done
+```
+
+### Build for iOS Simulator
+```bash
+cd ios && xcodebuild -project KabirSpanish.xcodeproj -scheme KabirSpanish \
+  -destination 'generic/platform=iOS Simulator' -configuration Debug \
+  -derivedDataPath build \
+  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+```
+
+### Build + install to paired iPhone (requires user consent)
+```bash
+cd ios && xcodebuild -project KabirSpanish.xcodeproj -scheme KabirSpanish \
+  -destination 'generic/platform=iOS' -configuration Debug \
+  -derivedDataPath build -allowProvisioningUpdates build
+
+xcrun devicectl device install app \
+  --device 8FB8DED9-E57F-505F-9800-AC1E3DE86A55 \
+  ios/build/Build/Products/Debug-iphoneos/KabirSpanish.app
+```
+
+### OTA-push HTML to a running iPhone build (dev builds only)
+```bash
+curl --max-time 15 -X POST -H "Content-Type: text/html; charset=utf-8" \
+  --data-binary "@learn-verb-activity.html" \
+  http://<iphone-ip>:8181/html
+```
+
+### Ping the iPhone's sync server
+```bash
+curl -s --max-time 5 http://<iphone-ip>:8181/ping
+```
+
+### Restore a QA seed state (browser console)
+```js
+localStorage.setItem("learn_verb_activity_v2", <paste JSON>);
+location.reload();
+```
+
+### Emergency restore from backup (browser console)
+```js
+localStorage.setItem("learn_verb_activity_v2",
+  localStorage.getItem("learn_verb_activity_v2_backup"));
+location.reload();
+```
+
+## Appendix G · Per-phase file-touch map
+
+Concrete files each phase edits. Use this as a code-review guide — if a phase's PR touches something outside its column, that's scope creep.
+
+| Phase | HTML (root) | iOS Swift | iOS resources | Other |
+|---|---|---|---|---|
+| 1 - Audit | none | none | verify sync | audit notes |
+| 2 - Sticky action | CSS + `stageBottom()` helper + ~5 renderer footer wiring | none | mirror HTML | — |
+| 2b - Full-screen overlay | media-query CSS only | none | mirror HTML | — |
+| 3-prereq - `lastLevelId` | `openLevel`, `ensureExtraState` | none | mirror HTML | — |
+| 3 - Today card | new `pickTodayCard()` + `renderTodayCard()` | none | mirror HTML | — |
+| 4 - Buttons | shared `.btn-primary/.btn-secondary/.btn-utility` classes | none | mirror HTML | — |
+| 5 - Level cards | CSS only | none | mirror HTML | — |
+| 6a - Audio audit | none | none | none | inventory doc |
+| 6b - Audio polish | audio helpers + control UI | possibly `WebView.swift` audio session config | mirror HTML | — |
+| 7 - Trophy + celebration | `prefersReducedMotion()`, event card, surprise-quiz relocation | none | mirror HTML | — |
+| 8 - Desktop + iPad | media-query CSS only | none | mirror HTML | — |
+| 8b - Listen-and-Speak | speech UI + `KABIR_SPEECH_BRIDGE` glue | `SpeechPracticeBridge` in WebView.swift | mirror HTML | Info.plist mic permission |
+| 9 - QA | none | none | verify all mirror | screenshots |
+
+## Appendix H · Debugging quickies
+
+- **Web app blank after edit** → `node --check` the extracted JS; probably a syntax error.
+- **iOS app blank after install** → check `WebViewStore.loadApp()` fell back to bundle (Documents copy missing / corrupt).
+- **Progress vanished after OTA** → `ProgressPersistenceBridge` should restore from native store; if it doesn't, the `file://` origin didn't change (shouldn't happen but has). Grep console for `[Progress] restore`.
+- **Trophies not firing** → set `console.log` in `checkTrophies` inside the `TROPHIES.forEach` — snapshot fields may be `undefined`.
+- **Sync hangs** → the browser sync fetches have a 6-8s `fetchTO`. If it hangs longer than that, the timeout wrapper didn't wrap something new — grep for raw `fetch(` in the sync path.
+- **CSS not applying on iPhone** → check `hard-refresh` was actually a reinstall or OTA push, not just a Cmd+R in Safari on Mac (which won't reach the iPhone).
+- **App icon shows old design** → Xcode caches; delete the app from the device, reinstall.
+
+## Appendix I · Version pin table
+
+Cache-friendly references so a stranger can reproduce the build.
+
+| Tool | Known-good version |
+|---|---|
+| macOS | 14.0+ (Sonoma) |
+| Xcode | 15.0+ (need iOS 17+ SDK for `NWListener`) |
+| Swift | 5.9+ (bundled with Xcode 15) |
+| Node.js (for `node --check`) | any 18+ (script uses no APIs newer than ES2022) |
+| Python (for JS extraction snippet) | 3.9+ (standard library only) |
+| iOS deployment target | iOS 15.0 (see `Info.plist`) |
+| iPhone tested | iPhone 15 Pro (iOS 17+) |
+| Wi-Fi sync port | 8181 (change in `SyncServer.swift` `let port` if it collides) |
