@@ -128,10 +128,44 @@ final class SpeechPracticeBridge: NSObject, WKScriptMessageHandler {
     deinit { NotificationCenter.default.removeObserver(self); stop(reason: "deallocated", notify: false) }
 }
 
+/// Keeps progress independent of WKWebView's opaque `file://` storage origin.
+/// A cold `loadFileURL` can receive a new origin after an app/HTML update, so
+/// localStorage alone is not a safe source of truth for installed iOS builds.
+final class ProgressPersistenceBridge: NSObject, WKScriptMessageHandler {
+    static let stateKey = "learn_verb_activity_v2"
+    static let fileName = "learn_verb_activity_v2.json"
+
+    static var stateURL: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent(fileName)
+    }
+
+    static func savedState() -> String? {
+        guard let data = try? Data(contentsOf: stateURL),
+              let object = try? JSONSerialization.jsonObject(with: data),
+              let dictionary = object as? [String: Any],
+              dictionary["levels"] is [String: Any] else { return nil }
+        return String(data: data, encoding: .utf8)
+    }
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.frameInfo.isMainFrame,
+              message.webView?.url?.lastPathComponent == "learn-verb-activity.html",
+              let raw = message.body as? String,
+              let data = raw.data(using: .utf8),
+              data.count < 4_000_000,
+              let object = try? JSONSerialization.jsonObject(with: data),
+              let dictionary = object as? [String: Any],
+              dictionary["levels"] is [String: Any] else { return }
+        try? data.write(to: Self.stateURL, options: .atomic)
+    }
+}
+
 final class WebViewStore: NSObject, ObservableObject, WKNavigationDelegate {
     static let shared = WebViewStore()
     let webView: WKWebView
     private let speechBridge: SpeechPracticeBridge
+    private let progressBridge: ProgressPersistenceBridge
     // Release gate: enable only after the physical-device 8/10 accept and 8/10 reject check passes.
     private let speechPracticeEnabled = false
 
@@ -177,6 +211,30 @@ final class WebViewStore: NSObject, ObservableObject, WKNavigationDelegate {
 
         let bridge = SpeechPracticeBridge()
         speechBridge = bridge
+        let progress = ProgressPersistenceBridge()
+        progressBridge = progress
+        let savedProgress = ProgressPersistenceBridge.savedState()
+        let savedProgressB64 = savedProgress.map { Data($0.utf8).base64EncodedString() } ?? ""
+        let progressScript = """
+        if(decodeURIComponent(location.pathname).endsWith('/learn-verb-activity.html')){
+          const key='\(ProgressPersistenceBridge.stateKey)';
+          try{
+            if(!localStorage.getItem(key)&&'\(savedProgressB64)'){
+              const bytes=Uint8Array.from(atob('\(savedProgressB64)'),c=>c.charCodeAt(0));
+              localStorage.setItem(key,new TextDecoder().decode(bytes));
+            }
+            const nativeSetItem=Storage.prototype.setItem;
+            Storage.prototype.setItem=function(k,v){
+              nativeSetItem.call(this,k,v);
+              if(this===localStorage&&k===key){
+                try{webkit.messageHandlers.progressPersistence.postMessage(String(v));}catch(e){}
+              }
+            };
+          }catch(e){}
+        }
+        """
+        config.userContentController.addUserScript(WKUserScript(source: progressScript, injectionTime: .atDocumentStart, forMainFrameOnly: true, in: .page))
+        config.userContentController.add(progress, name: "progressPersistence")
         let speechScript = """
         if(decodeURIComponent(location.pathname).endsWith('/learn-verb-activity.html')){
           const sid=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random());

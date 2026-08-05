@@ -26,3 +26,7 @@ The native Listen & Speak implementation remains capability-disabled because the
 ## Result
 
 Automated, responsive, parity, build, simulator, signing, in-place install, orientation, and progress-preservation checks pass. The only Phase 9 app-code adjustment is the narrow shared Skip-footer presentation fix; skip behavior, scoring, attempts, and progress logic are unchanged. Phase 9 closes with the explicitly documented physical-interaction residual above.
+
+## Post-phase progress-continuity correction
+
+A later cold-launch check exposed that `WKWebView.loadFileURL` can assign a new opaque `file://` storage origin after an installed-app/OTA HTML update. The original progress was recovered exactly from the mandatory pre-install backup. Native iOS now keeps an atomic Documents copy of `learn_verb_activity_v2`, seeds a newly assigned origin at document start before app initialization, and mirrors subsequent state writes back to that native file. This changes no progress values or merge/scoring rules; it makes the existing state survive origin rotation. Recovery/cold-relaunch QA requires the canonical fingerprint `c9d9a8ae6bcd61fecd00c555797dbb5ee34ccf7a8e31f81a51a235b7961e9a75`, completed `3/50/19/10/6`, collected `8/41/36/0/12`, and `61` trophies.
