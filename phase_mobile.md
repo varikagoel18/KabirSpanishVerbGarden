@@ -4,6 +4,16 @@ Branch: `codex/web-mobile-ux-flow-plan`
 
 Goal: improve interaction flow, button placement, and visual hierarchy for both the browser version and the installed iPhone app without changing lesson/scoring/progress logic unless explicitly planned.
 
+## Phase Execution Protocol
+
+- Create a dedicated branch for every phase from the latest user-approved phase commit. Use `codex/mobile-ux-phase-<number>-<short-name>`; sub-phases such as `3-prereq`, `2b`, `6a`, and `6b` get separate branches and approvals because they have separate commits in the implementation order.
+- Work on one phase only. Do not begin, branch for, or mix in the next phase while the current phase is under implementation or review.
+- For the current phase: implement its scoped changes, run its specific exit checks, review the diff with fresh eyes, fix every in-scope finding, and repeat review/testing until a full pass finds no new in-scope issue.
+- Run pre-commit QA, create one `Phase N: ...` commit, push the phase branch, verify the pushed SHA, and run the phase's smoke QA against that committed tree.
+- Report changed files, checks, residual risks, the exact `git revert <phaseCommit>` command, and the pushed branch in the working log. Then create the next phase branch from that verified commit and continue automatically.
+- Do not merge a phase branch into the plan branch or `main` unless the user explicitly requests the merge.
+- If a required exit check is blocked by the available tooling, use the safest available substitute, document the residual check for Phase 9, and continue when the user has explicitly instructed uninterrupted phase progression.
+
 ## Phase 1 - Audit Current Flow
 
 - Map the main user paths:
@@ -31,7 +41,8 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 - Produce a short audit note listing the top 5 web issues and top 5 iPhone issues before coding.
 - Capture screenshots for desktop, iPad-width, and iPhone-width baseline states.
 - Confirm `git status` is clean before Phase 2 begins.
-- Confirm no app files changed during audit unless the user explicitly approves a doc-only update.
+- Confirm no app HTML, CSS, JavaScript, Swift, or plist files changed during audit. Audit notes and baseline images are the only permitted Phase 1 file changes.
+- Confirm iPhone sibling-page navigation works from both startup modes: bundled main HTML and a Documents-directory OTA main HTML. If the OTA path cannot resolve Practice Tests and Spanish HW, treat it as a blocking existing bug and fix it in a separately approved prerequisite phase before Phase 2.
 
 ## Phase 2 - Mobile-First Lesson Shell
 
@@ -373,12 +384,12 @@ Do not run phase QA against Kabir's real progress without first making a backup.
 3. **Play the next available QA lesson** through to bloom. During the lesson:
    - Enter one wrong answer, one hint, one right answer.
    - Verify the two-attempt rule fires on the second wrong.
-   - Verify the sticky primary action stays visible when text input is focused.
+   - Starting with Phase 2, verify the sticky primary action stays visible when text input is focused. Before Phase 2, record the current scrolling-action behavior as the baseline instead.
 4. **Trigger a trophy if the QA state is set up for one.** Verify the trophy chain shows once and animates cleanly, or is subdued under `prefers-reduced-motion`.
 5. **Open Trophies** — scan for layout jump; verify progress bars fill smoothly.
 6. **Open Sync panel** — verify the panel renders and no `SecurityError`, `QuotaExceededError`, `TypeError`, or `ReferenceError` appears in the browser console. Do not require iPhone ping in per-phase local QA. **Close the panel** before continuing so the header isn't occluded by the overlay in the next step.
 7. **Collapse the header** with `+/-`; confirm the level list scrolls without jitter.
-8. **Close the browser tab.** Reopen — confirm the level picker renders with all prior progress intact, the Today card points at the same recommendation as before, and no console errors appear.
+8. **Close the browser tab.** Reopen — confirm the level picker renders with all prior progress intact and no console errors appear. Starting with Phase 3, also confirm the Today card points at the same recommendation as before.
 
 ### Device / release script
 
