@@ -98,7 +98,7 @@
   button.stat.stat-btn:active{transform:scale(.96);}
   .header-actions{display:flex;gap:8px;margin-top:12px;position:relative;z-index:1;flex-wrap:wrap;}
   .mini-action{background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.3);
-    border-radius:14px;padding:9px 12px;font-size:12.5px;font-weight:900;backdrop-filter:blur(2px);text-decoration:none;display:inline-flex;align-items:center;}
+    border-radius:14px;padding:7px 12px;min-height:34px;font-size:12.5px;font-weight:900;backdrop-filter:blur(2px);text-decoration:none;display:inline-flex;align-items:center;}
   .mini-action:active{transform:scale(.96);}
   /* Collapsible header — mobile only (narrow screens or the iOS WKWebView) */
   .header-toggle{display:none;}
@@ -128,6 +128,7 @@
     }
     header.collapsed .brand p{display:none;}
     header.collapsed .brand h1{font-size:20px;}
+    .mini-action{min-height:36px;}
   }
   /* Verbs-learned popup */
   .vlist{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-height:60vh;overflow-y:auto;padding:4px;}
@@ -513,16 +514,18 @@
 
   /* ---------- Buttons ---------- */
   .btn{
-    background:var(--berry);color:#fff;font-weight:800;font-size:17px;
-    border-radius:16px;padding:14px 22px;box-shadow:0 5px 0 var(--berry-dark);
+    background:linear-gradient(180deg,var(--berry) 0%,var(--berry-dark) 100%);color:#fff;font-weight:800;font-size:17px;
+    border-radius:16px;padding:12px 22px;min-height:48px;min-width:140px;box-shadow:0 5px 0 #C83E61;
     transition:transform .08s, box-shadow .08s;
   }
   .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--berry-dark);}
+  .btn-primary{background:linear-gradient(180deg,var(--berry) 0%,var(--berry-dark) 100%);color:#fff;}
+  .btn-secondary{background:transparent;color:var(--ink);border:1.5px solid rgba(60,45,20,.16);box-shadow:none;}
   .btn.leaf{background:var(--leaf);box-shadow:0 5px 0 var(--leaf-dark);}
   .btn.sun{background:var(--sun-deep);box-shadow:0 5px 0 #d97f00;color:#5b3a00;}
   .btn.ghost{background:#fff;color:var(--ink);box-shadow:0 4px 0 #e3d4c0, inset 0 0 0 2px #efe2d2;}
   .btn.big{width:100%;font-size:19px;padding:16px;}
-  .btn.sm{font-size:14px;padding:9px 14px;border-radius:12px;box-shadow:0 4px 0 var(--berry-dark);}
+  .btn.sm{font-size:14px;padding:9px 14px;min-height:44px;min-width:0;border-radius:12px;}
 
   /* ---------- Modal / day view ---------- */
   .overlay{position:fixed;inset:0;background:rgba(67,51,42,.55);backdrop-filter:blur(3px);
@@ -681,6 +684,7 @@
 
   .footer-note{text-align:center;color:var(--ink-soft);font-size:12px;font-weight:700;margin-top:26px;line-height:1.6;}
   .footer-note button{background:none;color:var(--berry-dark);font-weight:800;text-decoration:underline;font-size:12px;padding:0;}
+  .footer-note #resetBtn{color:#C2333A;}
 
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
     padding:11px 18px;border-radius:30px;font-weight:800;font-size:14px;box-shadow:var(--shadow);z-index:80;opacity:0;transition:opacity .3s, transform .3s;pointer-events:none;}
@@ -695,7 +699,8 @@
   .today-copy{flex:1;min-width:0;}
   .today-copy h2{font-size:22px;color:var(--ink);}
   .today-copy p{margin:5px 0 0;color:var(--ink-soft);font-size:13px;font-weight:800;}
-  .today-play{flex:0 0 auto;min-height:48px;padding:12px 20px;border-radius:16px;background:var(--berry);
+  .today-play{flex:0 0 auto;min-height:48px;min-width:140px;padding:12px 20px;border-radius:16px;
+    background:linear-gradient(180deg,var(--berry) 0%,var(--berry-dark) 100%);
     color:#fff;font-size:15px;font-weight:900;box-shadow:0 4px 0 var(--berry-dark);white-space:nowrap;}
   .today-play:active{transform:translateY(2px);box-shadow:0 2px 0 var(--berry-dark);}
   @media(max-width:640px){
@@ -716,8 +721,9 @@
   .lc-bar{height:10px;border-radius:8px;background:#EFE3D2;overflow:hidden;}
   .lc-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--leaf),var(--sun));border-radius:8px;}
   .lc-meta{margin-top:6px;font-size:12px;font-weight:800;color:var(--leaf-dark);}
-  .lc-cta{flex:0 0 auto;align-self:center;background:var(--berry);color:#fff;font-weight:800;font-size:14px;
-    padding:10px 14px;border-radius:14px;box-shadow:0 4px 0 var(--berry-dark);white-space:nowrap;}
+  .lc-cta{flex:0 0 auto;align-self:center;display:flex;align-items:center;justify-content:center;
+    min-height:48px;min-width:140px;background:linear-gradient(180deg,var(--berry) 0%,var(--berry-dark) 100%);
+    color:#fff;font-weight:800;font-size:14px;padding:10px 14px;border-radius:14px;box-shadow:0 4px 0 #C83E61;white-space:nowrap;}
   .level-card.soon{opacity:.75;cursor:default;}
   .level-card.soon .lc-badge{background:linear-gradient(135deg,#c9b69c,#a98e6d);}
   /* Completed level card — green tint, gold trim */
@@ -2980,7 +2986,7 @@ function showNextTrophyPopup(){
       <h2 class="tp-name">${t.name}</h2>
       <p class="tp-desc">${t.desc}</p>
       <p class="tp-reason">You earned this by: <b>${t.desc.toLowerCase()}</b>.</p>
-      <button class="btn leaf big" id="tpCont">Continue 🌿</button>
+      <button class="btn btn-primary big" id="tpCont">Continue 🌿</button>
     </div>`;
   $("#overlay").classList.add("show");
   document.body.style.overflow="hidden";
@@ -3059,7 +3065,7 @@ function showTrophyCelebration(trophy, onDone){
       <h2 class="tc-title">Trophy earned! 🏆</h2>
       <h3 class="tc-name">${trophy.name}</h3>
       <p class="tc-desc">${trophy.desc}</p>
-      <button class="btn leaf big" id="tcCont">Continue ✨</button>
+      <button class="btn btn-primary big" id="tcCont">Continue ✨</button>
     </div>`;
   trophyMegaBurst();
   setTimeout(()=>pixieConfetti(30), 1000);
@@ -3236,8 +3242,8 @@ function showRevivalCoupon(){
         </div>
         ${walletHTML}
         <div class="coupon-actions">
-          <button class="btn leaf big" id="rcGo" ${canAfford?"":"disabled"}>${canAfford?`Spend ${cost} 🌱 &amp; revive ✨`:`Not enough saplings`}</button>
-          <button class="btn ghost sm" id="rcLater">Maybe later</button>
+          <button class="btn btn-primary big" id="rcGo" ${canAfford?"":"disabled"}>${canAfford?`Spend ${cost} 🌱 &amp; revive ✨`:`Not enough saplings`}</button>
+          <button class="btn btn-secondary" id="rcLater">Maybe later</button>
         </div>
         <p class="coupon-fine">One-time offer · fixed 5-sapling cost · saplings stay withered until you redeem</p>
       </div>
@@ -3325,12 +3331,12 @@ function stageBottom(config){
   let secondary=null;
   if(config.secondary){
     secondary=document.createElement("button");
-    secondary.type="button"; secondary.className="btn ghost stage-secondary";
+    secondary.type="button"; secondary.className="btn btn-secondary stage-secondary";
     secondary.textContent=config.secondary.label; secondary.disabled=!!config.secondary.disabled;
     secondary.onclick=config.secondary.onClick; inner.appendChild(secondary);
   }
   const primary=document.createElement("button");
-  primary.type="button"; primary.className="btn leaf stage-primary";
+  primary.type="button"; primary.className="btn btn-primary stage-primary";
   primary.textContent=config.label; primary.disabled=!!config.disabled;
   primary.onclick=config.onClick; inner.appendChild(primary);
   updateStageBottomForKeyboard();
@@ -3613,7 +3619,7 @@ function renderLevels(){
     const done=st?Object.values(st.completed).filter(Boolean).length:0;
     const stars=st?Object.values(st.stars||{}).reduce((a,b)=>a+b,0):0;
     const pct=Math.round(done/total*100);
-    const cta = done===0?"Start ▶":(done>=total?"Review ✓":"Continue ▶");
+    const cta = done===0?"Start ▶":(done>=total?"Done ✓":"Continue ▶");
     const card=document.createElement("button"); card.className="level-card";
     card.innerHTML=`
       <div class="lc-badge">${lv.id}</div>
@@ -3636,7 +3642,7 @@ function renderLevels(){
   const verbsCovered = (level1State.collected||[]).length;
   const practiceUnlocked = level1 && verbsCovered >= level1.verbs.length;
   const practiceFullyDone = practiceUnlocked && practiceDone>=10;
-  const practiceCta = !practiceUnlocked ? "Locked 🔒" : (practiceDone===0 ? "Start ▶" : (practiceFullyDone ? "✅ Completed" : "Continue ▶"));
+  const practiceCta = !practiceUnlocked ? "Locked 🔒" : (practiceDone===0 ? "Start ▶" : (practiceFullyDone ? "Done ✓" : "Continue ▶"));
   const practice=document.createElement(practiceUnlocked?"button":"div");
   practice.className="level-card"+(practiceUnlocked?"":" locked soon")+(practiceFullyDone?" level-done":"");
   practice.innerHTML=`<div class="lc-badge">${practiceFullyDone?"✅":(practiceUnlocked?"2":"🔒")}</div>
@@ -3657,7 +3663,7 @@ function renderLevels(){
   const hwTotal = (STATE.spanishHWMeta && STATE.spanishHWMeta.totalQuizzes) || Math.max(hwDone, 2); // best-effort if list not loaded
   const hwPct = hwTotal ? Math.round(hwDone/hwTotal*100) : 0;
   const hwFullyDone = hwTotal>0 && hwDone>=hwTotal;
-  const hwCta = hwDone===0 ? "Start ▶" : (hwFullyDone ? "✅ Completed" : "Continue ▶");
+  const hwCta = hwDone===0 ? "Start ▶" : (hwFullyDone ? "Done ✓" : "Continue ▶");
   const hwCard=document.createElement("button");
   hwCard.className="level-card"+(hwFullyDone?" level-done":"");
   hwCard.innerHTML=`<div class="lc-badge">${hwFullyDone?"✅":"📒"}</div>
@@ -5764,7 +5770,7 @@ function renderBloom(st){
     showTrophyChain(trophies.slice(), ()=>commitDay(stars));
   }
   if(stars===0){
-    stageBottom({label:"🔁 Try again",onClick:retryLesson,secondary:{label:"Back to lessons",onClick:finishLesson}});
+    stageBottom({label:"🔁 Retry",onClick:retryLesson,secondary:{label:"Back to lessons",onClick:finishLesson}});
   } else {
     stageBottom({
       label:"Back to lessons 🌿",onClick:finishLesson,
@@ -6020,7 +6026,7 @@ function renderSurpriseQuiz(learnedRows){
         <h2>Surprise quiz complete!</h2>
         <div class="starline">⭐⭐⭐</div>
         <p>You matched ${totalMatched} learned verb${totalMatched===1?"":"s"} from regular and irregular practice.</p>
-        <button class="btn leaf big" id="surpriseDone">Back to learning 🌿</button>
+        <button class="btn btn-primary big" id="surpriseDone">Back to learning 🌿</button>
       </div>`;
     confetti(40);
     $("#surpriseDone").onclick=()=>{ closeDay(); renderLevels(); };
@@ -6393,8 +6399,8 @@ function showSyncPanel(){
       <input id="syncUrlIn" type="url" placeholder="http://192.168.1.10:8181" value="${savedUrl.replace(/"/g,"&quot;")}"
         class="l0input" style="font-family:monospace"/>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <button class="btn ghost sm" id="syncPingBtn" type="button">📡 Test connection</button>
-        <button class="btn leaf" id="syncNowBtn" type="button">🔄 Sync progress</button>
+        <button class="btn btn-secondary" id="syncPingBtn" type="button">📡 Test connection</button>
+        <button class="btn btn-primary" id="syncNowBtn" type="button">🔄 Sync progress</button>
       </div>
       <div id="syncStatus" style="min-height:60px;padding:10px;border-radius:10px;background:#F5F5F5;font-size:13px;line-height:1.5"></div>
       <div style="font-size:11px;color:var(--ink-soft);text-align:center;margin-top:-4px">
@@ -6407,7 +6413,7 @@ function showSyncPanel(){
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
         <button class="btn sun sm" id="syncPushHtmlBtn" type="button">📱 Update iPhone app</button>
-        <button class="btn ghost sm" id="syncResetHtmlBtn" type="button">↩︎ Revert to shipped</button>
+        <button class="btn btn-secondary" id="syncResetHtmlBtn" type="button">↩︎ Revert to shipped</button>
       </div>
     </div>`);
   const status = $("#syncStatus");

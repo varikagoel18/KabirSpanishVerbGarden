@@ -6,7 +6,7 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 
 ## Live Phase Status
 
-Last updated: 2026-08-05 16:24 IST
+Last updated: 2026-08-05 16:58 IST
 
 | Phase | Branch | Status | Commit / push | QA / notes |
 |---|---|---|---|---|
@@ -17,7 +17,7 @@ Last updated: 2026-08-05 16:24 IST
 | 3-prereq - `lastLevelId` | `codex/mobile-ux-phase-3-prereq-last-level-id` | Complete | `f1a213f` pushed; remote SHA verified | Focused migration/persistence tests, all-script syntax, three-resource parity, and `git diff --check` passed; no scoring/content/progress fields changed. |
 | 3 - Today card | `codex/mobile-ux-phase-3-today-card` | Complete | `154dfd8` pushed; remote SHA verified | Rule-focused tests, responsive browser QA, all-script syntax, web/iOS/built-resource parity, simulator build/install/launch, portrait check, and `git diff --check` passed. See `phase_mobile_phase3_notes.md`. |
 | 2b - Full-screen overlay | `codex/mobile-ux-phase-2b-full-screen-overlay` | Complete | Phase commit pushed; remote SHA verified | Phone/desktop/non-lesson/rescue responsive QA, syntax, parity, simulator build/install/launch, portrait check, and `git diff --check` passed. See `phase_mobile_phase2b_notes.md`. |
-| 4 - Button hierarchy | Not created | Pending | - | - |
+| 4 - Button hierarchy | `codex/mobile-ux-phase-4-button-hierarchy` | Complete | Phase commit pushed; remote SHA verified | Responsive hierarchy/overflow QA, source invariants, syntax, parity, simulator and authorized physical-iPhone install/launch, exact progress fingerprint, portrait check, and `git diff --check` passed. See `phase_mobile_phase4_notes.md`. |
 | 5 - Level cards | Not created | Pending | - | - |
 | 6a - Audio audit | Not created | Pending | - | - |
 | 6b - Audio polish | Not created | Pending | - | Runs only if 6a confirms useful audio surfaces. |
