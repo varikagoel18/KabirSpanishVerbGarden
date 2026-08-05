@@ -465,6 +465,12 @@
   .section-title{display:flex;align-items:baseline;gap:10px;margin:24px 4px 12px;}
   .section-title h2{font-size:21px;font-weight:800;color:var(--leaf-dark);}
   .section-title span{font-size:13px;font-weight:700;color:var(--ink-soft);}
+  @media(max-width:640px){
+    .level-detail-title{display:flex;flex-direction:column;align-items:flex-start;gap:5px;}
+    .level-detail-title h2,.level-detail-title span{display:block;width:100%;}
+    .level-detail-title h2{line-height:1.1;}
+    .level-detail-title span{line-height:1.4;}
+  }
 
   .plot{
     background:linear-gradient(180deg,#caa173 0%, #b98c5c 100%);
@@ -811,7 +817,7 @@
   <!-- LEVEL DETAIL -->
   <div id="viewLevel" style="display:none">
     <button class="back" id="backBtn">← All levels</button>
-    <div class="section-title">
+    <div class="section-title level-detail-title">
       <h2 id="lvName">Level</h2>
       <span id="lvSpan"></span>
     </div>
