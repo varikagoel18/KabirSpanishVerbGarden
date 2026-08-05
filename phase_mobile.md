@@ -6,7 +6,7 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 
 ## Live Phase Status
 
-Last updated: 2026-08-05 19:01 IST
+Last updated: 2026-08-05 19:18 IST
 
 | Phase | Branch | Status | Commit / push | QA / notes |
 |---|---|---|---|---|
@@ -21,8 +21,8 @@ Last updated: 2026-08-05 19:01 IST
 | 5 - Level cards | `codex/mobile-ux-phase-5-level-card-polish` | Complete | Phase commit pushed; remote SHA verified | Mapping invariants, responsive mobile/desktop QA, syntax, parity, simulator build/install/launch, and `git diff --check` passed. See `phase_mobile_phase5_notes.md`. |
 | 6a - Audio audit | `codex/mobile-ux-phase-6a-audio-audit` | Complete | Phase audit commit pushed; remote SHA verified | TTS/SFX inventory complete; no media timeline exists; Phase 6b should proceed without scrub bars. See `phase_mobile_phase6a_notes.md`. |
 | 6b - Audio polish | `codex/mobile-ux-phase-6b-audio-polish` | Complete | `f736ccd` pushed; remote SHA verified | Responsive browser QA, syntax, parity, simulator build/install/launch, signed in-place iPhone install, and exact progress fingerprint passed. Physical launch/audio audition was blocked because the iPhone was locked; retry in Phase 9. See `phase_mobile_phase6b_notes.md`. |
-| 7 - Celebration and trophies | `codex/mobile-ux-phase-7-celebration-trophies` | Complete | Commit/push pending | Focused state/lifecycle tests, reduced-motion review, responsive trophy QA, syntax, parity, simulator build/install/launch, and `git diff --check` passed. See `phase_mobile_phase7_notes.md`. |
-| 8 - Desktop and iPad | Not created | Pending | - | - |
+| 7 - Celebration and trophies | `codex/mobile-ux-phase-7-celebration-trophies` | Complete | `ed40386` pushed; remote SHA verified | Focused state/lifecycle tests, reduced-motion review, responsive trophy QA, syntax, parity, simulator build/install/launch, and `git diff --check` passed. See `phase_mobile_phase7_notes.md`. |
+| 8 - Desktop and iPad | `codex/mobile-ux-phase-8-desktop-ipad` | Complete | Commit/push pending | Desktop, iPad-portrait, and iPhone-portrait responsive QA, syntax, parity, simulator build/install/launch, and `git diff --check` passed. See `phase_mobile_phase8_notes.md`. |
 | 8b - Mobile Listen-and-Speak Practice | Not created | Pending | No branch/commit | Native iPhone app only; hidden on every web surface. Task title: `Phase 8b - Mobile Listen-and-Speak Practice`. |
 | 9 - Final cross-device QA | Not created | Pending | - | Includes the deferred desktop/iPad/iPhone visual baselines. |
 
@@ -292,7 +292,7 @@ Do not wire every renderer blindly into `stageBottom()`. Classify the renderer f
 - Confirm surprise quiz completion still records progress/trophies correctly.
 - Run `node --check`, `git diff --check`, and commit Phase 7 before Phase 8.
 
-## Phase 8 - Desktop + iPad Refinement
+## Phase 8 - Desktop + iPad Portrait Refinement
 
 - Preserve the richer dashboard feeling on larger screens.
 - Keep stats visible where space allows.
@@ -304,7 +304,7 @@ Do not wire every renderer blindly into `stageBottom()`. Classify the renderer f
 
 **Phase QA / exit check:**
 
-- Compare desktop, iPad landscape, iPad portrait, iPhone portrait, and iPhone landscape.
+- Compare desktop, iPad portrait, and iPhone portrait. Landscape is not required for iPad or iPhone by user direction; preserve the portrait-only iOS setting.
 - Confirm desktop still shows rich stats and level context.
 - Confirm iPad layout does not feel like an over-stretched phone layout.
 - Confirm no *new* card-in-card visual nesting was introduced. Existing patterns (trophy grid inside category section inside modal) are grandfathered; the rule only blocks new nested wrappers that weren't there before this branch.
@@ -369,7 +369,7 @@ Do not wire every renderer blindly into `stageBottom()`. Classify the renderer f
 ## Phase 9 - QA Checklist
 
 - Validate desktop browser flow.
-- Validate iPad-width browser flow.
+- Validate iPad-portrait-width browser flow; iPad/iPhone landscape are out of scope by user direction.
 - Validate iPhone-width browser flow.
 - Validate installed iPhone app.
 - Validate with `prefers-reduced-motion: reduce` in Safari / iOS Settings > Accessibility > Motion > Reduce Motion.

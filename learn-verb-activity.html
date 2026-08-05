@@ -716,6 +716,14 @@
     .today-play{width:100%;}
     .event-card{flex-wrap:wrap}.event-card .event-actions{width:100%}.event-card .event-actions button{flex:1}
   }
+  @media(min-width:900px){
+    .wrap{max-width:1040px;padding-left:24px;padding-right:24px;}
+    .levels{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;}
+    .level-card{height:100%;}
+    .today-card{margin-top:22px;}
+    .plot{padding:24px;}
+    .grid{grid-template-columns:repeat(8,1fr);gap:11px;}
+  }
   .level-card{display:flex;align-items:center;gap:14px;text-align:left;width:100%;background:var(--card);
     border-radius:22px;padding:16px;box-shadow:var(--shadow);border:none;transition:transform .1s;cursor:pointer;}
   .level-card:active{transform:scale(.99);}
