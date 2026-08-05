@@ -593,6 +593,9 @@
   .speak{background:var(--sky);color:#fff;border-radius:50%;width:46px;height:46px;font-size:22px;box-shadow:0 4px 0 var(--sky-deep);}
   .bigspeak{background:var(--sky);color:#fff;border-radius:50%;width:88px;height:88px;font-size:42px;box-shadow:0 6px 0 var(--sky-deep);margin:6px auto 4px;display:block;}
   .bigspeak:active{transform:translateY(4px);box-shadow:0 2px 0 var(--sky-deep);}
+  .audio-controls{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:6px auto 8px;}
+  .audio-control{min-width:96px;min-height:48px;border-radius:14px;background:var(--sky);color:#fff;font-weight:800;font-size:16px;box-shadow:0 4px 0 var(--sky-deep);}
+  .audio-control:active{transform:translateY(3px);box-shadow:0 1px 0 var(--sky-deep);}
   .ear{font-size:54px;text-align:center;}
   .listen-hint{text-align:center;font-weight:800;color:var(--sky-deep);margin:4px 0 12px;}
   .mic{background:var(--berry);color:#fff;border-radius:50%;width:96px;height:96px;font-size:46px;
@@ -3381,11 +3384,14 @@ const sample = (arr,n) => shuffle(arr).slice(0,n);
 const todayKey = () => new Date().toISOString().slice(0,10);
 const escHTML = s => String(s||"").replace(/[&<>"']/g, ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
 
-function speak(text){
+function stopSpeech(){
+  try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+}
+function speak(text, rate=.85){
   try{
     if(!window.speechSynthesis) return;
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = "es-ES"; u.rate = .85;
+    u.lang = "es-ES"; u.rate = rate;
     const vs = speechSynthesis.getVoices();
     const es = vs.find(v=>/es/i.test(v.lang));
     if(es) u.voice = es;
@@ -3393,6 +3399,7 @@ function speak(text){
   }catch(e){}
 }
 if(window.speechSynthesis){ speechSynthesis.onvoiceschanged = ()=>{}; }
+document.addEventListener("visibilitychange",()=>{ if(document.hidden) stopSpeech(); });
 
 /* Cute sound effects via Web Audio (no asset files needed) */
 const SFX = (()=>{
@@ -3693,6 +3700,7 @@ function renderLevels(){
   wrap.appendChild(soon);
 }
 function openLevel(id){
+  stopSpeech();
   LV=LEVELS.find(l=>l.id===id); LVID=id; lvState(id);
   STATE.lastLevelId=id;
   Store.save();
@@ -3704,6 +3712,7 @@ function openLevel(id){
   window.scrollTo(0,0);
 }
 function backToLevels(){
+  stopSpeech();
   $("#viewLevel").style.display="none";
   $("#viewLevels").style.display="";
   renderLevels();
@@ -3819,6 +3828,7 @@ function openDay(d){
   runStage();
 }
 function closeDay(){
+  stopSpeech();
   endSession(); stageBottom(null);
   $("#overlay").classList.remove("show","lesson-active","sticky-action-enabled");
   document.body.style.overflow=""; cur=null;
@@ -3853,6 +3863,7 @@ function nextStage(){
   if(cur.idx>=cur.stages.length){ finishDay(); } else { renderSteps(); runStage(); }
 }
 function runStage(){
+  stopSpeech();
   stageBottom(null);
   const st=cur.stages[cur.idx];
   const map={intro:renderIntro, wordbuild:renderScramble, listenspell:renderListenSpell, voiceverb:renderVoiceVerb, match:renderMatch, quiz:renderQuiz, scramble:renderScramble, memory:renderMemory, conj:renderConj, fillblank:renderFill, truefalse:renderTF, para_fill:renderParaFill, bonus_review:renderBonusReview, tense_quiz:renderTenseQuiz, house_lesson:renderHouseLesson, house_quiz:renderHouseQuiz, redo:renderRedo, bloom:renderBloom};
@@ -4077,6 +4088,7 @@ function renderScramble(st){
   cur.max += rounds;
   const stage=$("#stage");
   function draw(){
+    stopSpeech();
     const v=verbs[r];
     const letters=v.inf.split("");
     let scrambled=shuffle(letters);
@@ -4378,6 +4390,7 @@ function renderListenSpell(st){
   cur.max += verbs.length;
   const stage=$("#stage");
   function draw(){
+    stopSpeech();
     const v=verbs[r];
     const letters=v.inf.split("");
     let scrambled=shuffle(letters);
@@ -4388,7 +4401,7 @@ function renderListenSpell(st){
       <p class="lead">Listen and spell 🎧</p>
       <p class="sub">Word ${r+1} of ${verbs.length} — tap 🔊 to hear it, then spell what you hear.</p>
       <div class="ear">🎧</div>
-      <button class="bigspeak" id="bs">🔊</button>
+      <div class="audio-controls"><button class="audio-control" id="bs">🔊 Play</button><button class="audio-control" id="bsSlow">🐢 Slow</button></div>
       <div class="listen-hint" id="lh">Tap to hear the word again</div>
       <div class="slots" id="slots"></div>
       <div class="tiles" id="tiles"></div>
@@ -4417,9 +4430,9 @@ function renderListenSpell(st){
       }
     }
     $("#bs").onclick=()=>{ speak(v.inf); };
+    $("#bsSlow").onclick=()=>{ speak(v.inf,.58); };
     $("#undo").onclick=()=>{ built.pop(); drawSlots(); drawTiles(); };
     drawSlots(); drawTiles();
-    setTimeout(()=>speak(v.inf),250); // auto-play once
   }
   draw();
 }
@@ -4432,6 +4445,7 @@ function renderVoiceVerb(st){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   function norm(s){ return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z]/g,""); }
   function draw(){
+    stopSpeech();
     const v=verbs[r];
     stage.innerHTML=`
       <p class="lead">Say it out loud! 🎤</p>
@@ -4440,7 +4454,7 @@ function renderVoiceVerb(st){
         <div style="font-size:46px">${v.em}</div>
         <div class="say-word">${v.inf}</div>
         <div class="say-en">${v.en}</div>
-        <button class="speak" id="hear" style="margin:10px auto 0">🔊</button>
+        <div class="audio-controls"><button class="audio-control" id="hear">🔊 Play</button><button class="audio-control" id="hearSlow">🐢 Slow</button></div>
       </div>
       <div style="text-align:center;margin-top:12px;">
         <button class="mic" id="mic" style="width:64px;height:64px;font-size:30px;margin:4px auto">🎤</button>
@@ -4448,8 +4462,8 @@ function renderVoiceVerb(st){
       </div>`;
     const heard=$("#heard"), mic=$("#mic");
     $("#hear").onclick=()=>speak(v.inf);
+    $("#hearSlow").onclick=()=>speak(v.inf,.58);
     const actions=stageBottom({label:"✅ I said it!",onClick:()=>{ celebrateSmallWin(actions.primary); adv(); }});
-    setTimeout(()=>speak(v.inf),250);
     // Mic is fully optional and NEVER fails — always encouraging, always lets Kabir move on (#1)
     mic.onclick=()=>{
       if(!SR){ heard.textContent="Great speaking! 🌟"; celebrateSmallWin(mic); return; }
@@ -5347,6 +5361,7 @@ function renderHouseLesson(st){
     const verbs=wordbuildVerbs; let r=0;
     cur.max += verbs.length;
     function draw(){
+      stopSpeech();
       const v=verbs[r];
       // Strip the article ("la ", "el ", "las ") for the puzzle
       const raw = v.es.replace(/^(la|el|las|los)\s+/,"");
@@ -5452,6 +5467,7 @@ function renderHouseLesson(st){
     let r=0;
     cur.max += verbs.length;
     function draw(){
+      stopSpeech();
       const v=verbs[r];
       const raw = v.es.replace(/^(la|el|las|los)\s+/,"");
       const letters=raw.split("");
@@ -5463,7 +5479,7 @@ function renderHouseLesson(st){
         <p class="lead">Listen and spell 🎧</p>
         <p class="sub">Word ${r+1} of ${verbs.length} — tap 🔊 to hear it.</p>
         <div class="ear">🎧</div>
-        <button class="bigspeak" id="bs">🔊</button>
+        <div class="audio-controls"><button class="audio-control" id="bs">🔊 Play</button><button class="audio-control" id="bsSlow">🐢 Slow</button></div>
         <div class="listen-hint" id="lh">Tap to hear the word again</div>
         <div class="slots" id="slots"></div>
         <div class="tiles" id="tiles"></div>
@@ -5488,9 +5504,9 @@ function renderHouseLesson(st){
         }
       }
       $("#bs").onclick=()=>speak(v.es);
+      $("#bsSlow").onclick=()=>speak(v.es,.58);
       $("#undo").onclick=()=>{ built.pop(); drawSlots(); drawTiles(); };
       drawSlots(); drawTiles();
-      setTimeout(()=>speak(v.es), 250);
     }
     draw();
   }
@@ -5647,6 +5663,7 @@ function renderHouseQuiz(st){
     wrap.appendChild(colL); wrap.appendChild(colR);
   }
   function draw(){
+    stopSpeech();
     const q = questions[i];
     let missed=false, pushed=false, done=false;
     const wrongState={wrongAttempts:0};
@@ -5657,12 +5674,12 @@ function renderHouseQuiz(st){
       <div class="q">
         <div class="em">${q.em}</div>
         <div class="ask">${q.ask}</div>
-        ${q.kind==="listen"?`<button class="bigspeak" id="hqSpeak" style="margin:6px auto">🔊</button>`:""}
+        ${q.kind==="listen"?`<div class="audio-controls"><button class="audio-control" id="hqSpeak">🔊 Play</button><button class="audio-control" id="hqSlow">🐢 Slow</button></div>`:""}
         <div style="margin-top:10px"><button class="hint-btn" id="hqHintBtn" type="button">💡 Need a hint?</button></div>
         <div class="hint-text" id="hqHintText" hidden>${q.hint}</div>
       </div>
       <div class="opts" id="opts"></div>`;
-    if(q.kind==="listen"){ $("#hqSpeak").onclick=()=>speak(q.speak); setTimeout(()=>speak(q.speak), 250); }
+    if(q.kind==="listen"){ $("#hqSpeak").onclick=()=>speak(q.speak); $("#hqSlow").onclick=()=>speak(q.speak,.58); }
     const hb=$("#hqHintBtn"); if(hb) hb.onclick=()=>{ missed=true; cur.hintUsedInLesson=true; const t=$("#hqHintText"); if(t){t.hidden=false;} hb.style.display="none"; setTimeout(()=>{ if(t) t.hidden=true; hb.style.display=""; },1500); };
     const o=$("#opts");
     q.opts.forEach(txt=>{
