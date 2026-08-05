@@ -732,6 +732,15 @@
   .level-card.level-done .lc-body h3{color:var(--leaf-dark);}
   .level-card.level-done .lc-cta{background:var(--leaf);box-shadow:0 4px 0 var(--leaf-dark);}
   .level-card.level-done .lc-bar i{background:linear-gradient(90deg,var(--leaf),var(--sun));}
+  @media(max-width:640px){
+    .levels{gap:10px;}
+    .level-card{gap:10px;padding:12px;border-radius:18px;}
+    .level-card .lc-badge{width:46px;height:46px;border-radius:14px;font-size:22px;}
+    .level-card .lc-body h3{font-size:16px;line-height:1.05;}
+    .level-card .lc-body p{display:none;}
+    .lc-bar{height:7px;margin-top:7px;}
+    .lc-meta{margin-top:4px;font-size:11px;line-height:1.2;}
+  }
   .back{background:none;color:var(--leaf-dark);font-weight:800;font-size:15px;padding:6px 2px;margin:2px 0 0;}
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.001s !important;transition-duration:.05s !important;}
@@ -3714,20 +3723,14 @@ function renderDash(){
     const locked = p.d>nd;
     const drought = dry && done;
     const isHouseQuiz   = p.house && p.houseType==="quiz";
-    const isHouseLesson = p.house && !isHouseQuiz;
     const isFiestaQuiz  = p.fiesta && p.fiestaQuiz;
-    const isFiestaLearn = p.fiesta && !isFiestaQuiz;
-    // Universal rule: quiz-flavored days get 🌳; learning days get 🌱/flower.
-    // Learning = Basics worksheets, house lessons, fiesta learn days, or explicit learning games.
-    const isLearningDay = isHouseLesson || isFiestaLearn || p.game==="match" || p.game==="memory" || p.game==="conj";
-    const isQuizDay = !isLearningDay && (
-      p.bonus || isHouseQuiz || isFiestaQuiz || p.tense || p.pureQuiz || p.finale || p.game==="quiz"
-    );
+    // Universal rule: quiz-flavored days get 🌳; unavailable days always show 🔒.
+    const isQuizDay = !!(p.bonus || isHouseQuiz || isFiestaQuiz || p.pureQuiz || p.tense || p.finale || p.game==="quiz");
     const cell=document.createElement(locked?"div":"button");
     cell.className="cell"+(done?" done":"")+(drought?" drought":"")+(isNext?" today":"")+(locked?" locked":"")+(isQuizDay?" bonus":"");
-    const icon = isQuizDay
-      ? "🌳"
-      : (done ? (drought?"🥀":flowerFor(p.d)) : (isNext? "🌱" : (locked? "🔒" : "🌱")));
+    const icon = locked
+      ? "🔒"
+      : (isQuizDay ? "🌳" : (done ? (drought?"🥀":flowerFor(p.d)) : "🌱"));
     const stars = st.stars[p.d]||0;
     cell.innerHTML = `<span class="daynum">${p.d}</span><span class="icon">${icon}</span>`+
       (done && stars? `<span class="mini-stars">${"⭐".repeat(stars)}</span>`:"");
