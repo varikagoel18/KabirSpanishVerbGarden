@@ -24,7 +24,7 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
   - Hidden below the fold
   - Repeated in confusing places
   - Smaller than the 44x44pt tap-target minimum for a child to tap reliably
-- Confirm the installed iPhone app uses the same bundled HTML behavior as the web app (byte-identical `learn-verb-activity.html`, `regular-verb-practice-tests.html`, `spanish-class-hw.html`).
+- Confirm the bundled iOS web resources are byte-identical to the web files (`learn-verb-activity.html`, `regular-verb-practice-tests.html`, `spanish-class-hw.html`). Only validate the installed iPhone app in Phase 1 if the user has explicitly asked for device QA.
 
 **Phase QA / exit check:**
 
@@ -52,10 +52,26 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 
 **Implementation details (decide before coding):**
 
-- **Safe area:** use `padding-bottom: calc(12px + env(safe-area-inset-bottom))` on the sticky bar so it clears the iPhone home indicator; also set `bottom: env(safe-area-inset-bottom)` when positioned fixed.
-- **Height math:** switch overlay/stage from `100vh` to `100dvh` so the sticky bar sits above the visible viewport rather than under Safari's URL chrome / iOS keyboard.
-- **DOM location:** the sticky bar is a **sibling of `.stage` inside the overlay panel**, not injected into the stage HTML. This way `renderStage()` can rewrite `.stage.innerHTML` without wiping the bar. Renderers push their primary action's `{label, onClick, disabled}` into a shared `stageBottom({...})` helper.
+- **Safe area:** default to **`bottom: 0` + `padding-bottom: calc(12px + env(safe-area-inset-bottom))`** — one offset, applied on the same element. Never combine `bottom: env(safe-area-inset-bottom)` *and* a safe-area padding on the same element or the footer floats too high.
+- **Height math:** use a fallback pair: `height: 100vh; height: 100dvh;` so modern mobile browsers get the dynamic viewport while older browsers still render.
+- **DOM location:** the sticky bar is a **sibling of `#stage` inside the overlay panel**, not injected into the stage HTML. This way `runStage()` (in the code) can rewrite `$("#stage").innerHTML` without wiping the bar. Renderers push their primary action's `{label, onClick, disabled}` into a shared `stageBottom({...})` helper.
 - **Keyboard handling:** on iOS the on-screen keyboard shifts the viewport; use `visualViewport` events to reposition the sticky bar when a text input is focused so it stays visible above the keyboard. Fall back to `window.innerHeight` polling on `focus`/`blur` when `window.visualViewport` is undefined (older Safari).
+- **Landscape iPhone:** in short landscape (height < 500px), the sticky bar collapses its vertical padding to `6px + env(safe-area-inset-bottom)`, and the primary button shrinks its font-size by ~2px so answers stay above the fold. Never hide the sticky bar in landscape — it's the only visible primary action.
+- **Reduce Transparency:** iOS "Settings > Accessibility > Display & Text Size > Reduce Transparency" disables `backdrop-filter`. The sticky bar and utility buttons must remain readable without blur — use a solid fallback color (`--leaf-dark` at 92% alpha) when `@media (prefers-reduced-transparency: reduce)` matches.
+- **Dark Mode:** the app uses fixed light-cream backgrounds. Do not automatically flip to dark on iOS system dark mode; if we ever add dark support it should be an opt-in toggle in Parents. For now, force `color-scheme: light` in the root CSS so iOS doesn't invert form controls.
+
+**Renderer matrix before implementation:**
+
+| Renderer / activity | Footer handling |
+|---|---|
+| `intro`, `wordbuild`, `listenspell`, `voiceverb` | Footer owns the primary `Next` / `Continue` action. |
+| `fillblank`, `para_fill`, `basics_section` (Level 0 sections A/B/C/D/G/H typed inputs) | Footer owns `Check` / `Next`; must respond to keyboard visibility. |
+| `quiz`, `truefalse`, `conj`, `tense_quiz`, `house_quiz` | Answer options **are** the primary interaction. Footer is either absent or hosts only secondary/utility controls (`Skip`, `💡 Hint`, question counter). Never place a primary CTA that duplicates the answer tap. |
+| `match`, `memory` | No primary footer CTA during play; completion can briefly show `Continue`. |
+| `redo` | Footer follows the underlying replayed question type. |
+| `bloom` | Footer owns `Back to lessons` / `Next activity`. |
+
+Do not wire every renderer blindly into `stageBottom()`. Classify the renderer first so answer-choice games do not get duplicate primary controls.
 
 **Phase QA / exit check:**
 
@@ -72,9 +88,9 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 - Add a clear "Today" path at the top of the home screen.
 - The first visible action should answer: "What should Kabir do now?"
 - Suggested top card:
-  - `Today: Level X - Lesson/Quiz Y`
-  - Short label for the subject
-  - One strong `Play Now` button
+  - **Title:** `Today: Level X - <plan[d].title>` (e.g. *"Level 4 - Habitaciones 1"*, *"Level 1 - Big finish"*, *"Level 0 - Colores · Quiz 1"*) — always use the plan entry's `title` so it works for lessons, quizzes, bonus tiles, and finales without special-casing.
+  - **Subtitle:** the current level's `.blurb` (e.g. *"Rooms, house parts, furniture & objects"*) — read from `LEVELS.find(...)`.
+  - **Action:** one strong `Play Now` button that calls `openDay(d)` on the picked day.
 - Keep the full level list below as secondary navigation.
 - On iPhone, the existing collapse toggle (`+`/`-`) continues to hide the stats grid. This plan does **not** add a separate `Stats` button; it uses the toggle that already ships.
 - On desktop/iPad, keep richer stats visible because there is room to scan.
@@ -86,7 +102,7 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 1. If the user has an active revival coupon showing, defer to that flow.
 2. Otherwise pick the **next incomplete day in the level the user most recently opened** (`STATE.lastLevelId`).
 3. If that level is fully done, fall back to the level with the fewest completed lessons that still has an unlocked day.
-4. Never surface a locked day; if only bonus/finale days remain, surface those.
+4. Never surface a locked day. If the only remaining unlocked days are bonus/finale tiles, surface one of them — they're valid Today candidates (they're unlocked, just quiz-flavored).
 5. If no candidate exists (fresh install), point at Level 0 Day 1.
 
 **Phase QA / exit check:**
@@ -95,8 +111,9 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 - Test after opening each level: Today card follows `STATE.lastLevelId`.
 - Test a fully completed level: Today card falls back to an unlocked incomplete level.
 - Test locked future days: Today card never opens a locked tile.
+- Test near-completion: on a level where only bonus/finale days remain unfinished, Today card surfaces one of those (rule #4) instead of falling back to a different level.
+- Test migration: restore a pre-`STATE.lastLevelId` backup (from before this branch) and confirm `ensureExtraState` writes `null` for the missing key without crashing, and Today card falls to rule #5 (Level 0 Day 1).
 - Test revival coupon state: coupon flow remains higher priority than Today card.
-- Confirm backup/restore still preserves enough state for Today card behavior.
 - Run `node --check`, `git diff --check`, and commit Phase 3 before starting Phase 4.
 
 ## Phase 4 - Button Hierarchy
@@ -116,14 +133,16 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
   - `background: rgba(255,255,255,.2); border: 1.5px solid rgba(255,255,255,.3); color: #fff;`
   - Height ~34px on desktop / 36px on mobile.
   - Never grow to primary-button size, and never appear inside a lesson activity's content area.
-- **Danger / destructive button** (Reset, Discard) — pink outline, white fill; only used inside confirm dialogs.
+- **Danger / destructive button** (Reset, Discard) — **must not** reuse the primary CTA pink. Use a distinct red-orange band or a bordered warning style (`border: 2px solid #C2333A; color: #C2333A; background: #fff;`) so users can't confuse it with the everyday primary action. Only used inside confirm dialogs.
 - Status buttons should have distinct labels:
   - `Start`
   - `Continue`
   - `Retry`
   - `Locked`
   - `Done`
+- **`Skip`** (Level 0 typed sections, timer expiry) is always a **secondary** button — ghost style, sits next to the primary `Check` action, never overtakes it visually.
 - Avoid putting critical actions only in the header on mobile.
+- **Inline controls** (`🔊` speaker, `💡 hint` inside a question, per-blank feedback icons): neither utility nor secondary — they're question-scoped inline controls. Style with the existing per-renderer conventions, keep tap target >= 44pt, do not force them into the primary/secondary color palette.
 
 **Phase QA / exit check:**
 
@@ -139,7 +158,7 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 - Keep lesson and quiz tile meanings consistent (match the code identifiers so grep works):
   - 🌱 **Sapling** = lesson day that's next up or in-progress
   - 🌸 **Flower** = lesson day that's completed (`flowerFor(p.d)` — pattern already in `renderDash`)
-  - 🌳 **Tree** = quiz / bonus tile (`p.bonus || p.fiestaQuiz || p.pureQuiz || p.tense || p.game==="quiz"`); trees stay trees even after completion
+  - 🌳 **Tree** = quiz / bonus tile (`p.bonus || (p.house && p.houseType==="quiz") || p.fiestaQuiz || p.pureQuiz || p.tense || p.finale || p.game==="quiz"`); trees stay trees even after completion
   - 🥀 **`drought` state** (className in code) = day is completed but the level hasn't been played today
   - 🔒 **Lock** = unavailable
 - Make level cards tighter on mobile:
@@ -155,9 +174,9 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 **Phase QA / exit check:**
 
 - Verify completed, locked, next, lesson, quiz, and drought tile states in each level type.
-- Confirm sapling/tree icon mapping stays consistent across Levels 0-4, Practice Tests, and HW links where applicable.
+- Confirm sapling/tree/flower/drought/lock icon mapping stays consistent across Levels 0-4 grids. Practice Tests and Spanish HW are separate sibling pages with their own visual language — verify their level-picker *cards* still render correctly, but do not force the sapling/tree convention onto their internal grids.
 - Confirm Level 1 and Level 2 daily revive/drought behavior is not changed by visual cleanup.
-- Confirm Level 3 tense activities do not show dead plants if that exception still applies.
+- Confirm Level 3 tense activities render as trees (per Phase 5's tree condition `p.tense` → 🌳) and do not accidentally get a drought overlay applied — Level 3 has no drought behavior today, and the cleanup must not introduce one.
 - Compare desktop and mobile screenshots to ensure mobile got tighter without removing desktop information.
 - Run `node --check`, `git diff --check`, and commit Phase 5 before Phase 6.
 
@@ -167,7 +186,7 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 
 ### 6a - Audio audit (do first)
 
-- Grep every call site of `speak()` and any `<audio>` element.
+- Grep every call site of `speak()`, `SFX.*()` (`SFX.right`, `SFX.wrong`, `SFX.pop`, `sayOops`), any `<audio>` element, any `new Audio(...)`, and any `AudioContext` / `webkitAudioContext` use.
 - Confirm what audio actually plays today (verb TTS, celebration SFX) and what is aspirational.
 - Decide per screen whether audio needs adding at all.
 - Output: a written inventory before any UI is built.
@@ -192,6 +211,7 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
   - Closing the lesson
   - Switching screens
   - Starting a different audio clip
+  - The tab backgrounds or the phone screen locks (listen on `document.visibilitychange` and call `speechSynthesis.cancel()` when `document.hidden`)
 - Keep audio controls large enough for mobile taps (44x44pt min).
 
 **6b QA / exit check:**
@@ -199,8 +219,9 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 - Verify Play and Slow work for TTS-backed prompts.
 - Verify no scrub bar appears for TTS-only screens.
 - Verify audio stops on next question, previous/close, screen change, and new audio start.
-- Verify iPhone silent mode / autoplay limitations do not break the flow; controls should require a user tap when needed.
-- Verify audio controls do not duplicate confusingly on short screens.
+- Silent-mode test: flip the iPhone's ringer/silent switch to silent, launch a lesson, tap `🔊`. Document actual behavior (Web Speech API historically ignores the ringer switch, but any future non-TTS `<audio>` will be muted). Flow must never crash or hang on either outcome.
+- Autoplay test: reload mid-lesson — audio must never play until the user taps a control (WKWebView blocks unattended autoplay).
+- Verify audio controls do not duplicate on short screens: at viewport height < 500 px (landscape iPhone), only one audio control cluster is visible at a time (either the near-question one *or* the sticky-bar one, not both).
 - Run `node --check`, `git diff --check`, and commit Phase 6 before Phase 7.
 
 ## Phase 7 - Celebration + Trophy Flow
@@ -213,11 +234,13 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
   - Surprise quiz unlocked
   - Meaningful small win
 - **Respect `prefers-reduced-motion`:** when the user has requested reduced motion, drop confetti/pixie dust and replace with a static badge or a single fade-in. Applies to `confetti()`, `pixieConfetti()`, `trophyMegaBurst()`, and the `.trv2-card::before` idle shimmer.
-- **Code hook:** at load, evaluate `const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;` and short-circuit each animation function when true. Also add `@media (prefers-reduced-motion: reduce) { .trv2-card::before, .confetti { animation: none !important; } }` in the stylesheet so CSS-only animations don't need a JS gate.
-- **Surprise quiz relocation is a logic change, not visual polish.** Today `maybeShowSurpriseQuiz()` fires at startup as an overlay. Moving it to a "post-completion event card" changes when/where it runs, so:
-  - Track it under the plan's *"logic changes required"* section.
-  - Keep the storage guard against re-triggering.
-  - Add before/after QA that the surprise trophy still fires.
+- **Code hook:** add a guarded helper like `prefersReducedMotion()` that checks `window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches` at call time, then short-circuit each animation function when true. Also add `@media (prefers-reduced-motion: reduce) { .trv2-card::before, .confetti { animation: none !important; } }` in the stylesheet so CSS-only animations don't need a JS gate. Prefer a helper over a one-time constant so changes to the system setting are respected after reload.
+- **Surprise quiz relocation is a logic change, not visual polish.** Today `maybeShowSurpriseQuiz()` fires at startup as an overlay. Moving it to a "post-completion event card" means:
+  - **When:** fires exactly once after `commitDay(stars)` completes and the trophy chain (if any) has finished — before `renderDash` re-renders the level grid.
+  - **Where:** appears as a dismissible event card injected above the level grid — new element `#eventCard` prepended to `#viewLevel` before `#grid` — not as a full-screen overlay. `renderDash` skips it; a dedicated **new function `renderEventCard()`** (doesn't exist yet — create in Phase 7) owns its lifecycle.
+  - **Guard:** introduces a new flag `STATE.surpriseQuiz.pendingCard = true` (pre-authorized under Guardrails); cleared on tap or dismiss. Never re-triggers within the same session or same day. The pre-existing `STATE.surpriseQuiz.lastFinishedAt` remains authoritative for trophy tracking.
+  - Track it under the plan's *"logic changes required"* section (see Phase 9 QA line).
+  - Add before/after QA that the surprise trophy still fires and that `commitDay` still runs its normal side-effects (star save, trophy check, streak update).
 - On trophy page:
   - Keep distinct icons/badges
   - Show earned vs locked clearly
@@ -230,7 +253,7 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 - Test multiple newly earned trophies and confirm the queue advances cleanly.
 - Test `prefers-reduced-motion: reduce`: no heavy confetti/pixie burst should run.
 - Test trophy page opening on mobile and desktop; cards must not jump or overflow.
-- Test surprise quiz trigger before and after any relocation; it must not retrigger repeatedly.
+- Test surprise quiz twice: once with `?surpriseEventCard=1` (new event-card path) and once with `?surpriseEventCard=0` (rescue back to the legacy startup overlay). Both paths must fire once, not retrigger within the same session/day, and record the same trophy state.
 - Confirm surprise quiz completion still records progress/trophies correctly.
 - Run `node --check`, `git diff --check`, and commit Phase 7 before Phase 8.
 
@@ -249,7 +272,7 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 - Compare desktop, iPad landscape, iPad portrait, iPhone portrait, and iPhone landscape.
 - Confirm desktop still shows rich stats and level context.
 - Confirm iPad layout does not feel like an over-stretched phone layout.
-- Confirm no card-in-card visual nesting was introduced.
+- Confirm no *new* card-in-card visual nesting was introduced. Existing patterns (trophy grid inside category section inside modal) are grandfathered; the rule only blocks new nested wrappers that weren't there before this branch.
 - Confirm all visible text fits without overlap at narrow and wide widths.
 - Run `node --check`, `git diff --check`, and commit Phase 8 before Phase 9.
 
@@ -261,18 +284,23 @@ Goal: improve interaction flow, button placement, and visual hierarchy for both 
 - Validate installed iPhone app.
 - Validate with `prefers-reduced-motion: reduce` in Safari / iOS Settings > Accessibility > Motion > Reduce Motion.
 - Validate iPhone landscape orientation (currently allowed via Info.plist).
+- **Validate offline:** put the iPhone in airplane mode with the app open. Confirm: (a) lessons and progress continue to work (all state is local), (b) the Sync panel surfaces a clear "no Wi-Fi" or "iPhone unreachable" message within 6 s instead of hanging, (c) Google Fonts fallback to system fonts without layout collapse.
+- **Validate offline on desktop browser:** DevTools > Network > Offline, reload the page. App must continue to serve locally, never make an outgoing network request (check the Network tab shows 0 pending requests), and font fallback should render text with the browser's default sans-serif without breaking button/card widths.
 - Confirm:
   - No progress data loss
   - No scoring rule changes
   - No lesson unlock regressions
-  - No repeated unexpected generic fills in Vocab Fiesta
-  - Practice Test and Spanish HW links still open in iOS app
+  - **Regression guard:** no repeated generic "Me gusta ___" fills leak into Vocab Fiesta lessons (this was a shipped bug earlier — Level 0 must continue to skip `fillblank`/`truefalse`/`para_fill` since it has no per-verb fill sentences).
+  - Practice Test and Spanish HW cards, when tapped in the installed iOS app, navigate to the sibling HTML file inside the bundle (`regular-verb-practice-tests.html`, `spanish-class-hw.html`) without a "file not found" page — verified visually on device.
   - Audio stops on screen/question changes
   - Sticky mobile controls do not cover answer options and clear the home indicator via `env(safe-area-inset-bottom)`
   - Sticky bar stays above the on-screen keyboard when a text input is focused
   - Text fits inside buttons/cards
-  - Main web HTML and bundled iOS HTML remain synchronized (`diff -q` on the two `learn-verb-activity.html` copies must return no output)
-  - **Sync round-trip (measurable):** before sync, snapshot each side's `STATE.levels[N].completed` count, `STATE.levels[N].stars[d]` per day, and `Object.keys(STATE.trophies).length`. After running `Sync now` on the browser, both sides must satisfy: `count_completed >= max(browserBefore, phoneBefore)`, `stars[d] >= max(browserBefore[d], phoneBefore[d])` for every day, and `trophyCount >= max(browserBefore, phoneBefore)`. Then run sync a second time — nothing should change. **Fail if any counter decreases.**
+  - Main web HTML and bundled iOS HTML remain synchronized for all bundled web resources:
+    - `diff -q learn-verb-activity.html ios/KabirSpanish/Resources/learn-verb-activity.html`
+    - `diff -q regular-verb-practice-tests.html ios/KabirSpanish/Resources/regular-verb-practice-tests.html`
+    - `diff -q spanish-class-hw.html ios/KabirSpanish/Resources/spanish-class-hw.html`
+  - **Sync round-trip (measurable):** before sync, snapshot each side's `STATE.levels[N].completed` count, `STATE.levels[N].stars[d]` per day, `Object.keys(STATE.trophies).length`, and per-level collected count `STATE.levels[N].collected.length`. After running `Sync now` on the browser, both sides must satisfy: `count_completed >= max(browserBefore, phoneBefore)`, `stars[d] >= max(browserBefore[d], phoneBefore[d])` for every day, `trophyCount >= max(browserBefore, phoneBefore)`, and `collected.length >= max(browserBefore, phoneBefore)` for every level. Then run sync a second time — nothing should change. **Fail if any counter decreases.**
 
 ## Implementation Order
 
@@ -280,55 +308,85 @@ Phases below map back to the sections above.
 
 1. Phase 1 - Audit
 2. Phase 2 - Sticky mobile bottom action structure
-3. Phase 3 - "Today / Play Now" home path
-4. Phase 2 (part 2) - Convert iPhone lesson overlay behavior toward full-screen
-5. Phase 4 - Button hierarchy (colors, sizes, buckets) — must land before Phase 5
-6. Phase 5 - Level card cleanup (uses Phase 4's color decisions)
-7. Phase 6a - Audio audit
-8. Phase 6b - Audio control placement (only if audit reveals real audio to polish)
-9. Phase 7 - Trophy + celebration flow (including reduced-motion + surprise-quiz relocation)
-10. Phase 8 - Desktop + iPad refinement
-11. Phase 9 - Cross-device QA and adjust spacing
+3. **Phase 3 prerequisite:** persist `STATE.lastLevelId` in `openLevel(id)` + migrate missing key in `ensureExtraState`. Land in its own tiny commit so the Today card in the next step has data to read.
+4. Phase 3 - "Today / Play Now" home path
+5. Phase 2b - Convert iPhone lesson overlay from modal sheet to full-screen shell (the sticky-bar structure from step 2 stays; this step swaps the overlay's `max-width` + rounded panel styling for edge-to-edge on iPhone widths only)
+6. Phase 4 - Button hierarchy (colors, sizes, buckets) — must land before Phase 5
+7. Phase 5 - Level card cleanup (uses Phase 4's color decisions)
+8. Phase 6a - Audio audit
+9. Phase 6b - Audio control placement (only if audit reveals real audio to polish)
+10. Phase 7 - Trophy + celebration flow (including reduced-motion + surprise-quiz relocation)
+11. Phase 8 - Desktop + iPad refinement
+12. Phase 9 - Cross-device QA and adjust spacing
 
 ## Guardrails
 
-- Do not change scoring, stars, unlock rules, or progress storage unless explicitly requested.
-- Keep all `localStorage` access guarded (`try/catch` around every `getItem`/`setItem`).
-- Keep `ios/build/` ignored.
-- Keep the bundled iOS HTML copy in sync with `learn-verb-activity.html` (verified in Phase 9 QA).
+- Do not change scoring, stars, unlock rules, or progress storage unless explicitly requested. Two pre-authorized exceptions defined in this plan: (a) Phase 3-prereq adds `STATE.lastLevelId`; (b) Phase 7 relocates `maybeShowSurpriseQuiz()` and adds `STATE.surpriseQuiz.pendingCard`. Everything else is off-limits.
+- Keep all app-code `localStorage` access guarded (`try/catch` around every `getItem`/`setItem`). Console-only QA or emergency restore snippets are allowed but should be labeled as manual rescue steps.
+- Keep `ios/build/` ignored (prevents committing ~90 MB of Xcode-generated derived data).
+- Keep all bundled iOS web resources in sync with their web originals: `learn-verb-activity.html`, `regular-verb-practice-tests.html`, and `spanish-class-hw.html` (verified in Phase 9 QA).
 - Prefer CSS/media-query/layout changes before restructuring logic.
 - If logic has to move, keep it narrowly scoped and test the affected flow immediately.
 - **No new network requests beyond the existing font links.** The app currently loads Baloo 2 / Nunito from `fonts.googleapis.com`; those are grandfathered in. Do not add any additional CDNs, telemetry pings, analytics, or fetches. Bundle any new fonts/images/audio locally.
 - **All tap targets minimum 44x44pt.**
-- **Never install / rebuild the iPhone app during implementation** unless the user explicitly asks; ship changes to disk, verify with `node --check` and the iOS Simulator, then wait for a `push to iPhone` instruction.
+- **iOS device policy:** building for and driving the **iOS Simulator** is allowed anytime — it runs locally, doesn't touch any physical device, and is the fastest layout QA loop. **Physical-iPhone install** (via `xcrun devicectl`, Xcode Run, or the browser's OTA HTML push) always requires explicit user consent in the current turn — no automatic reinstalls, no OTA pushes without an explicit *"push to iPhone"* / *"update the app"* / *"install"* instruction.
 
 ## Rollback Plan
 
-Every phase must be reversible in under 30 seconds so a bad merge can't strand Kabir mid-lesson.
+Target: each phase locally reversible in under 30 seconds (single-commit revert) so a bad merge can't strand Kabir mid-lesson. Multi-phase chain reverts (see isolation caveat below) may take longer, and device rollback (reinstall or OTA reset) longer still — target still applies to the git operation itself, not the device round-trip.
 
-- **Per-phase git commit:** each phase lands in one commit with a `Phase N: ...` prefix. Never mix two phases in one commit — a bad Phase 4 button color must be revertable without losing Phase 2's sticky bar.
-- **Feature flags for behavior-changing phases:** wrap Phase 2 (sticky bar), Phase 3 (Today card), and Phase 7 (surprise-quiz relocation) behind boolean toggles stored in `STATE.uxFlags = {phase2:true, phase3:true, phase7:true}` (default on). Expose a hidden "UX flags" section in the Parents panel that flips them off for quick rescue.
+**Isolation caveat:** later phases sometimes depend on earlier phases' structure — e.g. Phase 3's Today card assumes Phase 2's sticky-bar footer exists in the stage DOM, and Phase 5's level cards read Phase 4's button classes. When that's the case, rolling back a single phase in isolation may leave the app in a half-migrated state. Rule: if a mid-chain phase must be reverted, revert **the whole chain forward from that phase** in a single commit and re-apply later phases on top.
+
+- **Per-phase git commit:** each phase lands in one commit with a `Phase N: ...` prefix (e.g. `Phase 2: sticky bottom action`, `Phase 3-prereq: persist STATE.lastLevelId`, `Phase 3: Today card`). Never mix two phases in one commit — a bad Phase 4 button color must be revertable without losing Phase 2's sticky bar.
+- **Feature flags for behavior-changing phases:** start with code-level constants or URL/debug flags only, e.g. `const UX_FLAGS = {stickyBar:true, todayCard:true, surpriseEventCard:true}`. URL rescue must use the **same key names** — `?stickyBar=0`, `?todayCard=0`, `?surpriseEventCard=0` — parsed once at boot from `new URLSearchParams(location.search)`; any parse failure defaults to `true` (flag stays enabled). URL rescue in the iOS app requires reaching the WebView with a query string, which `loadFileURL` doesn't support directly — for iOS-only rescue add a hard-coded `SyncServer` endpoint (e.g. `POST /flags` writing to localStorage) **only if a real iOS-only breakage happens**; do not create the endpoint speculatively. Do not add persistent `STATE.uxFlags` or hidden Parents-panel controls unless the user explicitly asks for persistent toggles.
 - **HTML backup on iPhone:** the existing `syncMergeIncoming` already snapshots to `learn_verb_activity_v2_backup` — do not remove that. If a pushed HTML breaks localStorage, users can restore via the browser console:
   `localStorage.setItem("learn_verb_activity_v2", localStorage.getItem("learn_verb_activity_v2_backup")); location.reload();`
 - **Bundled HTML on iPhone:** the app's `WebViewStore.resetToBundledHTML()` reverts an OTA push. Keep that button reachable (via the browser sync panel's *"↩︎ Revert to shipped"*).
-- **Git revert one-liner:** for each phase, the doc must include the exact revert command it would take. E.g. `git revert <phaseCommit>` plus a rebuild + reinstall step.
+- **Git revert one-liner:** every phase PR description must include its own revert command in the form `git revert <phaseCommit>`. Add rebuild/reinstall notes only for release/device rollback phases. (This plan does not pre-list per-phase SHAs — they only exist after the commit lands.)
 
 ## Test Session Script
 
-Run this canonical script at the end of every phase before merging. Should take ~5 minutes.
+Run the local script at the end of every phase before merging. Run the device script only before release, before iPhone install, or when the user explicitly asks for device QA.
 
-1. **Open a fresh browser tab** at `learn-verb-activity.html`; expect the level picker to render with the header collapsed by default (mobile-width) or fully expanded (desktop-width).
+### Repeatable QA state
+
+Do not run phase QA against Kabir's real progress without first making a backup.
+
+1. Use the app footer's `Backup code`, or copy `localStorage.getItem("learn_verb_activity_v2")` into a scratch note.
+2. Use a temporary browser profile or restore a known QA backup before testing.
+3. If a phase requires Day 1 / new trophy behavior, use the QA state, not live progress.
+4. Restore the original backup after the test session if the regular browser profile was used.
+
+**One-time QA seed setup** (do this once, reuse across phases):
+
+1. Open a fresh browser profile at `learn-verb-activity.html`.
+2. Play through Level 0 Day 1, Level 1 Day 1, Level 4 Day 1 (or an equivalent minimum spread).
+3. Earn at least one trophy so the trophy-chain path can be exercised.
+4. In DevTools console: `copy(localStorage.getItem("learn_verb_activity_v2"))`.
+5. Save the clipboard contents to `scratchpad/qa_seed_state.json` in the repo (the `scratchpad/` folder is git-ignored per the repo's `.gitignore`; if it isn't yet, add `scratchpad/` before running this step).
+6. To restore before any phase QA: `localStorage.setItem("learn_verb_activity_v2", <paste JSON>); location.reload();`.
+
+### Required local script
+
+1. **Restore the QA seed** (per the *Repeatable QA state* block above), then **open a fresh browser tab** at `learn-verb-activity.html`; expect the level picker to render with the header collapsed by default (mobile-width) or fully expanded (desktop-width).
 2. **Open Level 1** — the level card should highlight the current next day.
-3. **Play Level 1 Day 1** through to bloom. During the lesson:
+3. **Play the next available QA lesson** through to bloom. During the lesson:
    - Enter one wrong answer, one hint, one right answer.
    - Verify the two-attempt rule fires on the second wrong.
    - Verify the sticky primary action stays visible when text input is focused.
-4. **Trigger a trophy** by finishing to 3 stars if possible. Verify the trophy chain shows once and animates cleanly (or is subdued under `prefers-reduced-motion`).
+4. **Trigger a trophy if the QA state is set up for one.** Verify the trophy chain shows once and animates cleanly, or is subdued under `prefers-reduced-motion`.
 5. **Open Trophies** — scan for layout jump; verify progress bars fill smoothly.
-6. **Open Sync panel** — Test connection to the iPhone; confirm ping succeeds within 6s.
-7. **Run Sync progress** — confirm both sides reload with merged state and the round-trip counter assertion (Phase 9) passes.
-8. **Collapse the header** with `+/-`; confirm the level list scrolls without jitter.
-9. **Close the browser tab.** Reopen — confirm the app resumes at the same level with progress intact and no console errors.
+6. **Open Sync panel** — verify the panel renders and no `SecurityError`, `QuotaExceededError`, `TypeError`, or `ReferenceError` appears in the browser console. Do not require iPhone ping in per-phase local QA. **Close the panel** before continuing so the header isn't occluded by the overlay in the next step.
+7. **Collapse the header** with `+/-`; confirm the level list scrolls without jitter.
+8. **Close the browser tab.** Reopen — confirm the level picker renders with all prior progress intact, the Today card points at the same recommendation as before, and no console errors appear.
+
+### Device / release script
+
+1. Build and install on iPhone only when the user asks or before release sign-off.
+2. Confirm Practice Tests and Spanish Class HW open from the installed app.
+3. Test connection to the iPhone from the web Sync panel; confirm ping succeeds within 6s.
+4. Run Sync progress and confirm both sides reload with merged state and the round-trip counter assertion from Phase 9 passes.
+5. If an OTA HTML override is active, use `Revert to shipped` before validating the bundled install.
 
 Any failure = rollback the current phase and file an issue before continuing.
 
@@ -338,15 +396,17 @@ Rough size limit per phase — a PR bigger than this signals scope creep and sho
 
 | Phase | Est. LOC added/changed | Notes |
 |---|---|---|
-| 1 (Audit) | 0 code, doc-only | Screenshots + notes, no `learn-verb-activity.html` diff |
-| 2 (Sticky shell) | ~120 lines | HTML wrapper + CSS + `stageBottom()` helper + wiring in ~5 renderers |
-| 3 (Today card) | ~80 lines | `pickTodayCard()` function + rendering + `STATE.lastLevelId` persistence |
+| 1 (Audit) | 0 code, doc-only | Screenshots + notes, no app HTML/Swift diffs |
+| 2 (Sticky shell) | ~120 lines | HTML wrapper + CSS + `stageBottom()` helper + priority renderer wiring; matrix decides which renderers get footer actions |
+| 2b (Full-screen overlay) | ~30 lines | Media-query CSS + edge-to-edge iPhone-only override; no JS logic |
+| 3-prereq (`STATE.lastLevelId`) | ~20 lines | Persist in `openLevel(id)`, migrate in `ensureExtraState`; own commit |
+| 3 (Today card) | ~80 lines | `pickTodayCard()` function + rendering + Today-card UI |
 | 4 (Buttons) | ~60 lines | Mostly CSS replacements + one shared `.btn-primary`, `.btn-secondary`, `.btn-utility` cleanup |
 | 5 (Level cards) | ~40 lines | CSS-only for icons, spacing, status text |
 | 6a (Audio audit) | 0 code, doc-only | Grep output pasted into an "Audio inventory" section |
 | 6b (Audio polish) | ~60 lines *if* real audio exists; else 0 | Skipped entirely if 6a shows nothing to polish |
-| 7 (Celebration) | ~60 lines | `REDUCED_MOTION` gate + surprise-quiz relocation + CSS media query |
+| 7 (Celebration) | ~60 lines | `prefersReducedMotion()` gate + surprise-quiz relocation + CSS media query |
 | 8 (Desktop/iPad refinement) | ~40 lines | Media-query tweaks only; no logic |
 | 9 (QA) | 0 code, doc-only | Checklist run, screenshots, sign-off |
 
-**Total budget:** ~460 lines across all coding phases. If cumulative diff exceeds 700 lines by Phase 7, stop and re-plan.
+**Total budget:** ~510 lines across all coding phases (20 lines for the 3-prereq split-out + 30 for the Phase 2b overlay conversion). If Phase 6a's audit shows no audio worth polishing, subtract Phase 6b's ~60 → **~450 lines**. If cumulative diff exceeds 700 lines by Phase 7, stop and re-plan.
