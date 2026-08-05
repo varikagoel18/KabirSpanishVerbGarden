@@ -780,7 +780,10 @@
     .level-card .lc-body p{display:none;}
     .lc-bar{height:7px;margin-top:7px;}
     .lc-meta{margin-top:4px;font-size:11px;line-height:1.2;}
+    .lc-cta{min-height:38px;min-width:96px;padding:8px 10px;font-size:12.5px;border-radius:11px;box-shadow:0 3px 0 #C83E61;}
+    .level-card.no-badge{padding-left:14px;}
   }
+  .level-card.no-badge .lc-badge{display:none;}
   .back{background:none;color:var(--leaf-dark);font-weight:800;font-size:15px;padding:6px 2px;margin:2px 0 0;}
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.001s !important;transition-duration:.05s !important;}
@@ -3842,11 +3845,11 @@ function renderLevels(){
     const stars=st?Object.values(st.stars||{}).reduce((a,b)=>a+b,0):0;
     const pct=Math.round(done/total*100);
     const cta = done===0?"Start ▶":(done>=total?"Done ✓":"Continue ▶");
-    const card=document.createElement("button"); card.className="level-card"+(lv.id===_nextLevelId?" is-next":"");
+    const card=document.createElement("button"); card.className="level-card no-badge"+(lv.id===_nextLevelId?" is-next":"");
+    const displayName = (lv.name||"").replace(/^\s*Level\s*\d+\s*[·:\-]?\s*/i, "");
     card.innerHTML=`
-      <div class="lc-badge">${lv.id}</div>
       <div class="lc-body">
-        <h3>${lv.name}</h3>
+        <h3>${displayName}</h3>
         <p>${lv.blurb} · ${lv.hw ? planFor(lv).length+" HW quizzes" : (lv.tense ? planFor(lv).length+" tense activities" : (lv.house ? planFor(lv).length+" lessons · "+lv.verbs.length+" words" : lv.verbs.length+" verbs"))}</p>
         <div class="lc-bar"><i style="width:${pct}%"></i></div>
         <div class="lc-meta">${done}/${total} lessons · ${stars}⭐</div>
