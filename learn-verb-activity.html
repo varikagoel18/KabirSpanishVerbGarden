@@ -3443,6 +3443,7 @@ function showNameOnboarding(){
     markOnboardingSeen();
     $("#overlay").classList.remove("show","lesson-active");
     document.body.style.overflow = "";
+    try{ clearOverlayCloser(); }catch(e){}
     // Refresh the picker so any name-personalized copy shows immediately.
     try{ renderLevels(); }catch(e){}
     toast(name ? `¡Hola, ${name}! 🌱` : "¡Hola, amigo! 🌱");
@@ -4070,6 +4071,7 @@ function readResume(){
 
 function openDay(d){
   startSession();
+  try{ clearOverlayCloser(); }catch(_){}
   const plan = planFor(LV).find(p=>p.d===d);
   const learnedPool = learnedUpTo(d).map(byId).filter(Boolean);
   const newSet = (plan.newV||[]).map(byId).filter(Boolean);
@@ -4160,6 +4162,8 @@ function closeDay(){
   endSession(); stageBottom(null);
   $("#overlay").classList.remove("show","lesson-active","sticky-action-enabled");
   document.body.style.overflow=""; cur=null;
+  // Any per-popup dismissal handler is scoped to the overlay that just closed.
+  try{ clearOverlayCloser(); }catch(_){}
 }
 
 function renderSteps(){
