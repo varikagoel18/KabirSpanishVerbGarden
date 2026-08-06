@@ -838,7 +838,7 @@
 
   <!-- LEVEL DETAIL -->
   <div id="viewLevel" style="display:none">
-    <button class="back" id="backBtn">← All levels</button>
+    <button class="back" id="backBtn">🏠 Home</button>
     <div class="section-title level-detail-title">
       <h2 id="lvName">Level</h2>
       <span id="lvSpan"></span>
@@ -3056,11 +3056,14 @@ function showNextTrophyPopup(){
   document.body.style.overflow="hidden";
   trophyMegaBurst();
   try{ speak("New trophy!"); }catch(e){}
-  $("#tpCont").onclick=()=>{
+  const dismiss=()=>{
+    clearOverlayCloser();
     $("#overlay").classList.remove("show");
     document.body.style.overflow="";
     setTimeout(showNextTrophyPopup, 250);
   };
+  $("#tpCont").onclick=dismiss;
+  setOverlayCloser(dismiss);
 }
 
 /* ---------- Deferred trophy celebration (fires from bloom "Back to lessons") ---------- */
@@ -3136,7 +3139,9 @@ function showTrophyCelebration(trophy, onDone){
   trophyMegaBurst();
   setTimeout(()=>pixieConfetti(30), 1000);
   try{ speak("New trophy!"); }catch(e){}
-  $("#tcCont").onclick=()=>{ if(typeof onDone==="function") onDone(); };
+  const dismiss=()=>{ clearOverlayCloser(); if(typeof onDone==="function") onDone(); };
+  $("#tcCont").onclick=dismiss;
+  setOverlayCloser(dismiss);
 }
 
 /* ======================================================================
@@ -3382,6 +3387,8 @@ function showNameOnboarding(){
   };
   skip.onclick = ()=> finish("");
   inp.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); go.click(); }});
+  // X on the onboarding overlay should also count as "skip" so we don't re-prompt.
+  setOverlayCloser(()=>{ finish(""); });
 }
 
 /* Session-minutes tracking (parent dashboard) */
@@ -6260,7 +6267,15 @@ function commitDay(stars, onDone){
 /* ============================================================
    Wire up
    ============================================================ */
+let _overlayCloser=null;
+function setOverlayCloser(fn){ _overlayCloser = fn || null; }
+function clearOverlayCloser(){ _overlayCloser = null; }
 function requestCloseDay(){
+  // If a popup registered its own dismissal (trophy queue, info panel, onboarding),
+  // hand off — the popup knows how to advance its own state on close.
+  if(typeof _overlayCloser === "function"){
+    const fn=_overlayCloser; clearOverlayCloser(); fn(); return;
+  }
   // Bucket 2 · confirm mid-lesson so a stray tap doesn't lose progress.
   // Skip the confirm on the bloom screen (already finished) and when no lesson is running.
   const inLesson = !!(cur && cur.plan && !cur._onBloom);
