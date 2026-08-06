@@ -183,6 +183,47 @@ Every action falls into exactly one reward, and every reward is *a living thing 
 
 ---
 
+## 7.5 · Fun & agency (engagement layers) — locked
+
+Every layer here is small on its own; together they make the world feel alive. All local, no cloud, no analytics.
+
+### Sensory & atmosphere
+- **Weather spans a day.** Same chapter, different weather each session — sunny morning, cloudy afternoon, rain at 4pm. Ties to real device time.
+- **Rustling background.** When Pico speaks, the leaves in the scene rustle in sync. Zero-cost polish.
+- **Haptic on iOS.** Soft tap when a butterfly appears; firmer tap when a tree matures.
+
+### Relational (Pico as friend, not mascot)
+- **Pico remembers small things.** *"Last time you loved the coral reef — want to visit again?"* Uses 2–3 recent activity points.
+- **Weekly gift from Pico.** Sunday morning, Pico appears with *"I found this feather while you were gone."* Kid puts it in the Field Journal.
+
+### Personal narrative
+- **Pick your first plant.** On first launch, kid picks 1 of 3 seedlings for the Home Tree. It grows differently over time — the tree is *theirs*.
+
+### Ritual
+- **Opening:** consistent friendly greeting every day. Same warmth every time. *(v1.5+ may evolve toward friendship-deepening arc.)*
+- **Farewell wave.** When kid closes or the session ends, Pico waves from a corner of the last scene. No modal. Nice closure.
+- **Goodnight Pico.** After 7pm, tapping a specific corner tucks Pico in with a blanket. Purely optional bedtime ritual for families who want it.
+
+### Playful surprises
+- **Word flies into the scene.** Once every 10–15 sessions, a random Spanish word "flies in." Kid catches it (tap) to add ahead-of-schedule to the Field Journal.
+- **Silly Pico rare-moments.** Occasionally Pico dances, chases his tail-feathers, or is upside-down for a second. Rarity = delight.
+
+### Explore & collect
+- **Explore mode.** Kid taps any element in a restored chapter scene → hears the Spanish word for it. Turns each chapter into a playground.
+- **Field Journal.** Discovered animals, weekly gifts, and caught-in-flight words all live in a collectible book. Tap any to hear/see it again.
+- **Time-of-day changes.** Chapter scene shifts subtly morning / afternoon / night. Evening → fireflies. Morning → mist.
+
+### Session pacing (locked)
+- **Stretch break every 5–7 min.** 3-second overlay — Pico stretches, kid does it together. Pediatrician-friendly.
+- **Yawn nudge at ~15 min.** Pico says *"my wings are tired, amiguito. Let's play tomorrow?"* Kid can tap **One more** to grant one additional lesson.
+- **Parent hard cap in Settings.** 10 / 15 / 20 / 30 / off. Overrides Pico's suggestions.
+- **Reward the pause.** If kid takes the yawn nudge and stops, next session opens with a warm *"Thanks for resting, amiguito!"* moment. Positive reinforcement for stopping.
+- **Sunday small day.** Sundays start Pico slightly sleepy; yawn nudge moves earlier (~10 min).
+
+### Still open (small decisions)
+- **Bigger creation mechanic** — do we ship one of {Pico Songbook · Garden of Words · Story You Build} at launch? Or keep only #9 (pick your first plant) and defer larger creation to v1.5? *(Master Context's "Creative" mission trait is weak without one — recommend Garden of Words if we ship any.)*
+- **Pico waits (idle behavior)** — currently NOT locked; consider adding in v1.1 if the world feels too silent when a kid stares blankly.
+
 ## 8 · Delight loop — discovery & surprise
 
 None of these unlock content. They just make the world feel alive.

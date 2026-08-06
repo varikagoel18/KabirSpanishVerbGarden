@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pico the Macaw · Storyboard & Plan</title>
+<style>
+  :root{
+    --leaf:#3FA46A; --leaf-dark:#2E7D42; --sun:#F5B841; --coral:#E45C5C; --coral-dark:#C43F3F;
+    --ink:#3B2E24; --ink-soft:#7A6A5C; --cream:#FFF8EE; --cream-warm:#FBF0DC; --card:#FFFFFF;
+    --sky:#B5D8E8; --water:#5AA5C2; --shadow:0 4px 14px rgba(59,46,36,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:linear-gradient(180deg,var(--cream) 0%,var(--cream-warm) 100%);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Nunito,sans-serif;color:var(--ink);
+    line-height:1.5;}
+  body{padding:24px 16px 80px;max-width:1080px;margin:0 auto;}
+  h1{font-size:32px;font-weight:900;color:var(--leaf-dark);margin-bottom:6px;}
+  h2{font-size:22px;font-weight:900;color:var(--leaf-dark);margin:36px 0 12px;
+    padding-bottom:6px;border-bottom:2px solid var(--leaf);}
+  h3{font-size:16px;font-weight:800;color:var(--ink);margin:20px 0 8px;}
+  h4{font-size:14px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;
+    letter-spacing:.5px;margin:16px 0 6px;}
+  p{margin-bottom:8px;font-size:14px;}
+  .subtitle{color:var(--ink-soft);font-size:14px;margin-bottom:24px;font-weight:600;}
+  .callout{background:var(--card);border-left:4px solid var(--leaf);padding:12px 16px;
+    border-radius:0 12px 12px 0;margin:16px 0;font-size:14px;box-shadow:var(--shadow);}
+  .callout small{color:var(--ink-soft);}
+
+  /* Pico emotions row */
+  .emotions{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:16px 0;}
+  .emotion{background:var(--card);border-radius:14px;padding:12px 8px;text-align:center;
+    box-shadow:var(--shadow);}
+  .emotion svg{width:64px;height:64px;margin-bottom:6px;}
+  .emotion .name{font-weight:800;font-size:12px;color:var(--ink);}
+  .emotion .when{font-size:10px;color:var(--ink-soft);margin-top:2px;line-height:1.3;}
+  @media(max-width:640px){.emotions{grid-template-columns:repeat(2,1fr);}}
+
+  /* Phase timeline */
+  .phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:16px 0;}
+  .phase{background:var(--card);border-radius:14px;padding:14px;box-shadow:var(--shadow);
+    border-top:5px solid var(--leaf);}
+  .phase.milestone{border-top-color:var(--sun);background:linear-gradient(180deg,#FFF7E0 0%,var(--card) 100%);}
+  .phase .id{font-family:'SF Mono',Menlo,monospace;font-size:11px;font-weight:800;
+    color:var(--leaf-dark);letter-spacing:.5px;}
+  .phase .title{font-size:15px;font-weight:900;margin:4px 0;color:var(--ink);}
+  .phase .desc{font-size:12px;color:var(--ink-soft);line-height:1.4;}
+  .phase .hours{font-size:11px;font-weight:800;color:var(--coral);margin-top:6px;
+    background:#FFE4E4;display:inline-block;padding:2px 8px;border-radius:8px;}
+
+  /* Emotional journey arc */
+  .journey{background:var(--card);border-radius:16px;padding:20px;margin:16px 0;box-shadow:var(--shadow);}
+
+  /* Storyboard */
+  .board{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:16px 0;}
+  .frame{background:var(--card);border-radius:20px;padding:12px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;}
+  .frame .screen{background:#F0EAD8;border:2px solid #43332A22;border-radius:22px;
+    aspect-ratio:9/16;padding:10px 8px;display:flex;flex-direction:column;position:relative;
+    overflow:hidden;margin-bottom:8px;}
+  .frame .notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);
+    width:60px;height:12px;background:#000;border-radius:0 0 10px 10px;opacity:.5;}
+  .frame .caption{font-weight:800;font-size:13px;color:var(--ink);}
+  .frame .caption-sub{font-size:11px;color:var(--ink-soft);line-height:1.4;margin-top:2px;}
+
+  /* Sub-parts inside a phone screen */
+  .screen-header{background:var(--leaf);color:#fff;padding:14px 8px 8px;border-radius:14px;
+    margin-top:14px;font-size:9px;font-weight:800;text-align:center;}
+  .screen-body{flex:1;padding:6px 0;display:flex;flex-direction:column;justify-content:center;
+    align-items:center;gap:4px;text-align:center;font-size:9px;}
+  .screen-cta{background:var(--coral);color:#fff;font-size:9px;font-weight:800;padding:5px 8px;
+    border-radius:10px;margin:4px auto 0;display:inline-block;}
+  .chip{background:#FFF6E8;border:1px solid #EAD6A8;color:var(--ink);font-weight:800;
+    font-size:8px;padding:3px 6px;border-radius:8px;display:inline-block;}
+  .bar{background:#EFE3D2;border-radius:6px;height:6px;overflow:hidden;width:80%;margin:2px 0;}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--leaf),var(--sun));}
+
+  /* Flow diagrams */
+  .flow{background:var(--card);border-radius:14px;padding:16px;margin:16px 0;
+    box-shadow:var(--shadow);overflow-x:auto;}
+  .flow svg{max-width:100%;height:auto;display:block;margin:0 auto;}
+
+  /* Session pacing */
+  .pacing{background:var(--card);border-radius:14px;padding:16px;margin:16px 0;
+    box-shadow:var(--shadow);overflow-x:auto;}
+
+  /* Print */
+  @media print{
+    body{padding:12px;background:#fff;}
+    .phase,.frame,.callout,.journey,.flow,.pacing,.emotion{box-shadow:none;
+      border:1px solid #ddd;page-break-inside:avoid;}
+    h2{page-break-after:avoid;}
+  }
+</style>
+</head>
+<body>
+
+<h1>🦜 Pico the Macaw · Storyboard & Plan</h1>
+<p class="subtitle">A visual reference for the Education Universe · World 1. Kid's emotions, Pico's expressions, key screens, and how everything connects. Wireframe-style — layout only, not final art.</p>
+
+<div class="callout">
+  <b>Reading order.</b> Start with Pico's five emotions (§1) so every screen reads correctly. Then scan the phase timeline (§2), the kid's emotional arc (§3), the storyboard (§4), and the flow diagrams (§5). Session pacing sketch is at the end (§6).
+</div>
+
+<!-- =====================================================
+     §1 · Pico's emotional states
+===================================================== -->
+<h2>§1 · Pico's 5 emotional states</h2>
+<p>The same character, five moods. Every visible Pico across the app is one of these. Simple SVG at v1; illustrated art at v2.</p>
+
+<div class="emotions">
+  <!-- Curious -->
+  <div class="emotion">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="62" rx="26" ry="24" fill="#E45C5C"/>
+      <ellipse cx="72" cy="55" rx="16" ry="20" fill="#F5B841" transform="rotate(15 72 55)"/>
+      <ellipse cx="28" cy="55" rx="16" ry="20" fill="#3FA46A" transform="rotate(-15 28 55)"/>
+      <circle cx="50" cy="36" r="16" fill="#E45C5C"/>
+      <circle cx="45" cy="34" r="3" fill="#fff"/>
+      <circle cx="45" cy="34" r="1.5" fill="#000"/>
+      <circle cx="55" cy="34" r="3" fill="#fff"/>
+      <circle cx="55" cy="34" r="1.5" fill="#000"/>
+      <path d="M 44 42 L 50 46 L 56 42" stroke="#3B2E24" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div class="name">Curious</div>
+    <div class="when">Default · head tilted · always present</div>
+  </div>
+  <!-- Cheering -->
+  <div class="emotion">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="65" rx="26" ry="22" fill="#E45C5C"/>
+      <ellipse cx="82" cy="40" rx="14" ry="22" fill="#F5B841" transform="rotate(45 82 40)"/>
+      <ellipse cx="18" cy="40" rx="14" ry="22" fill="#3FA46A" transform="rotate(-45 18 40)"/>
+      <circle cx="50" cy="40" r="16" fill="#E45C5C"/>
+      <path d="M 40 40 Q 45 34 50 40" stroke="#3B2E24" stroke-width="2" fill="none"/>
+      <path d="M 50 40 Q 55 34 60 40" stroke="#3B2E24" stroke-width="2" fill="none"/>
+      <path d="M 42 46 Q 50 54 58 46" stroke="#3B2E24" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <text x="20" y="20" font-size="14">✨</text>
+      <text x="72" y="22" font-size="14">✨</text>
+    </svg>
+    <div class="name">Cheering</div>
+    <div class="when">Correct answer · lesson complete</div>
+  </div>
+  <!-- Thinking -->
+  <div class="emotion">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="65" rx="26" ry="22" fill="#E45C5C"/>
+      <ellipse cx="70" cy="55" rx="12" ry="18" fill="#F5B841" transform="rotate(10 70 55)"/>
+      <ellipse cx="30" cy="55" rx="12" ry="18" fill="#3FA46A" transform="rotate(-10 30 55)"/>
+      <circle cx="50" cy="40" r="16" fill="#E45C5C"/>
+      <circle cx="46" cy="40" r="2" fill="#000"/>
+      <circle cx="54" cy="40" r="2" fill="#000"/>
+      <path d="M 45 48 L 55 48" stroke="#3B2E24" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <text x="70" y="24" font-size="18">💭</text>
+    </svg>
+    <div class="name">Thinking</div>
+    <div class="when">While kid types or chooses</div>
+  </div>
+  <!-- Comforting -->
+  <div class="emotion">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="65" rx="26" ry="22" fill="#E45C5C"/>
+      <ellipse cx="82" cy="50" rx="18" ry="14" fill="#F5B841" transform="rotate(-10 82 50)"/>
+      <ellipse cx="30" cy="55" rx="12" ry="18" fill="#3FA46A" transform="rotate(-10 30 55)"/>
+      <circle cx="50" cy="40" r="16" fill="#E45C5C"/>
+      <path d="M 44 40 Q 46 42 48 40" stroke="#3B2E24" stroke-width="2" fill="none"/>
+      <path d="M 52 40 Q 54 42 56 40" stroke="#3B2E24" stroke-width="2" fill="none"/>
+      <path d="M 44 47 Q 50 46 56 47" stroke="#3B2E24" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <text x="60" y="80" font-size="12">💛</text>
+    </svg>
+    <div class="name">Comforting</div>
+    <div class="when">Wrong answer · child struggles</div>
+  </div>
+  <!-- Sleepy -->
+  <div class="emotion">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="68" rx="24" ry="20" fill="#E45C5C"/>
+      <ellipse cx="72" cy="60" rx="12" ry="16" fill="#F5B841" transform="rotate(10 72 60)"/>
+      <ellipse cx="28" cy="60" rx="12" ry="16" fill="#3FA46A" transform="rotate(-10 28 60)"/>
+      <circle cx="50" cy="46" r="14" fill="#E45C5C"/>
+      <path d="M 42 46 Q 46 46 50 46" stroke="#3B2E24" stroke-width="2" fill="none"/>
+      <path d="M 50 46 Q 54 46 58 46" stroke="#3B2E24" stroke-width="2" fill="none"/>
+      <path d="M 46 52 Q 50 55 54 52" stroke="#3B2E24" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <text x="72" y="24" font-size="16">💤</text>
+    </svg>
+    <div class="name">Sleepy</div>
+    <div class="when">After 8pm · yawn nudge at 15 min</div>
+  </div>
+</div>
+
+<div class="callout">
+  <b>Rule:</b> only ONE emotion is on-screen at a time. Transitions between them are ~200ms fades — never abrupt. On iPhone this is paired with a soft haptic tap when Pico appears.
+</div>
+
+<!-- =====================================================
+     §2 · Phase plan visual timeline
+===================================================== -->
+<h2>§2 · Phase timeline (P0 → P11)</h2>
+<p>Each card is a build phase. Yellow-topped cards are shippable milestones. Ordering can flex but dependencies (P2 needs P0, etc.) hold.</p>
+
+<div class="phases">
+  <div class="phase milestone">
+    <div class="id">P0 · SCAFFOLD</div>
+    <div class="title">Fresh app skeleton</div>
+    <div class="desc">New repo, bundle ID, App Icon draft, empty HTML shell with Pico visual language</div>
+    <div class="hours">~3h</div>
+  </div>
+  <div class="phase milestone">
+    <div class="id">P1 · MEET PICO</div>
+    <div class="title">5 sprites + greeting</div>
+    <div class="desc">Pico introduces himself, asks for the child's name, STATE.universe schema</div>
+    <div class="hours">~4h</div>
+  </div>
+  <div class="phase milestone">
+    <div class="id">P2 · PORT SPANISH</div>
+    <div class="title">Content transplant</div>
+    <div class="desc">All Verb Garden lessons + renderers move under STATE.spanish, unchanged shape</div>
+    <div class="hours">~6h</div>
+  </div>
+  <div class="phase">
+    <div class="id">P3 · WORLD MAP</div>
+    <div class="title">Silhouetted chapters</div>
+    <div class="desc">Ten ecosystem-shaped silhouettes, bilingual signage, restoration bar</div>
+    <div class="hours">~5h</div>
+  </div>
+  <div class="phase">
+    <div class="id">P4 · LIFE REWARDS</div>
+    <div class="title">Seeds, flowers, butterflies</div>
+    <div class="desc">Bloom screen replaced with life-appearing per-chapter scene</div>
+    <div class="hours">~5h</div>
+  </div>
+  <div class="phase">
+    <div class="id">P5 · ADAPTIVE LANG</div>
+    <div class="title">Words graduate</div>
+    <div class="desc">Track word mastery, drop English gloss after 5 correct uses, tappable 🔊</div>
+    <div class="hours">~3h</div>
+  </div>
+  <div class="phase">
+    <div class="id">P6 · BOND ENGINE</div>
+    <div class="title">Level 1 → 5</div>
+    <div class="desc">XP thresholds, nickname whitelist, refresh scheduler, weekly Pico moment</div>
+    <div class="hours">~3h</div>
+  </div>
+  <div class="phase">
+    <div class="id">P7 · KINDNESS</div>
+    <div class="title">10 missions</div>
+    <div class="desc">Weekly-rotation engine + 10 hand-written in-app missions</div>
+    <div class="hours">~3h</div>
+  </div>
+  <div class="phase">
+    <div class="id">P8 · DISCOVERY</div>
+    <div class="title">Hidden animals</div>
+    <div class="desc">Random visitors, seasonal events, eco-facts, first festival</div>
+    <div class="hours">~4h</div>
+  </div>
+  <div class="phase">
+    <div class="id">P9 · PARENT VIEW</div>
+    <div class="title">Learning + Character + Culture</div>
+    <div class="desc">New Parents dashboard reframed per Master Context's parent promise</div>
+    <div class="hours">~3h</div>
+  </div>
+  <div class="phase">
+    <div class="id">P10 · MIGRATION</div>
+    <div class="title">Verb Garden import</div>
+    <div class="desc">Paste-in restore that computes book.currentChapter from Verb Garden state</div>
+    <div class="hours">~2h</div>
+  </div>
+  <div class="phase milestone">
+    <div class="id">P11 · LAUNCH PREP</div>
+    <div class="title">App Store submission</div>
+    <div class="desc">Fonts, launch screen, privacy declaration, screenshots, description, keywords</div>
+    <div class="hours">~5h</div>
+  </div>
+</div>
+
+<div class="callout">
+  <b>First real milestone: P0+P1+P2 (~13h).</b> Pico opens the app, greets Kabir by name, and hands him a Spanish lesson identical to Verb Garden. Not yet the full universe — but a real, shippable product.
+</div>
+
+<!-- =====================================================
+     §3 · Kid's emotional journey
+===================================================== -->
+<h2>§3 · The kid's emotional arc</h2>
+<p>How the child feels over their first year with Pico. Each stage lasts weeks, not sessions. The line never dips into frustration.</p>
+
+<div class="journey">
+  <svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+    <!-- Baseline -->
+    <line x1="40" y1="220" x2="880" y2="220" stroke="#3B2E2422" stroke-width="1"/>
+    <!-- Curve -->
+    <path d="M 40 200 Q 180 160 260 150 Q 380 140 460 130 Q 580 120 660 105 Q 780 90 840 80"
+          stroke="#3FA46A" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <!-- Nodes -->
+    <g font-family="Nunito,sans-serif" font-size="12" font-weight="800">
+      <!-- Stage 1 -->
+      <circle cx="90" cy="195" r="8" fill="#F5B841"/>
+      <text x="90" y="175" text-anchor="middle" fill="#3B2E24">Curiosity</text>
+      <text x="90" y="240" text-anchor="middle" fill="#7A6A5C" font-size="10" font-weight="600">Days 1–3</text>
+      <text x="90" y="252" text-anchor="middle" fill="#7A6A5C" font-size="10" font-weight="600">"Who is Pico?"</text>
+      <!-- Stage 2 -->
+      <circle cx="240" cy="152" r="8" fill="#3FA46A"/>
+      <text x="240" y="132" text-anchor="middle" fill="#3B2E24">Discovery</text>
+      <text x="240" y="240" text-anchor="middle" fill="#7A6A5C" font-size="10" font-weight="600">Week 1–2</text>
+      <text x="240" y="252" text-anchor="middle" fill="#7A6A5C" font-size="10" font-weight="600">"What's in this world?"</text>
+      <!-- Stage 3 -->
+      <circle cx="440" cy="130" r="8" fill="#3FA46A"/>
+      <text x="440" y="110" text-anchor="middle" fill="#3B2E24">Mastery</text>
+      <text x="440" y="240" text-anchor="middle" fill="#7A6A5C" font-size="10" font-weight="600">Week 3–8</text>
+      <text x="440" y="252" text-anchor="middle" fill="#7A6A5C" font-size="10" font-weight="600">"I know things now."</text>
+      <!-- Stage 4 -->
+      <circle cx="650" cy="108" r="8" fill="#E45C5C"/>
+      <text x="650" y="88" text-anchor="middle" fill="#3B2E24">Belonging</text>
+      <text x="650" y="240" text-anchor="middle" fill="#7A6A5C" font-size="10" font-weight="600">Week 8–24</text>
+      <text x="650" y="252" text-anchor="middle" fill="#7A6A5C" font-size="10" font-weight="600">"Pico knows me."</text>
+      <!-- Stage 5 -->
+      <circle cx="830" cy="82" r="8" fill="#E45C5C"/>
+      <text x="830" y="62" text-anchor="middle" fill="#3B2E24">Steward</text>
+      <text x="830" y="240" text-anchor="middle" fill="#7A6A5C" font-size="10" font-weight="600">Month 6+</text>
+      <text x="830" y="252" text-anchor="middle" fill="#7A6A5C" font-size="10" font-weight="600">"I care for this world."</text>
+    </g>
+    <!-- Legend axis label -->
+    <text x="20" y="130" fill="#7A6A5C" font-size="10" font-weight="700" transform="rotate(-90 20 130)">emotional depth</text>
+  </svg>
+</div>
+
+<div class="callout">
+  <b>Design implication:</b> features must be sequenced to unlock in this order. A bond-level-5 personal moment shown on Day 1 would feel weird. The Kindness Missions engine can start firing at Discovery (Week 1) once the child has enough context. Steward-stage features (like "adopt an animal") aren't v1.
+</div>
+
+<!-- =====================================================
+     §4 · Storyboard: key screens
+===================================================== -->
+<h2>§4 · Screen storyboard</h2>
+<p>Wireframes of the twelve key moments. Layout / hierarchy only — final art will be warmer.</p>
+
+<div class="board">
+
+  <!-- Frame 1: First launch — Pico introduces -->
+  <div class="frame">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="screen-body">
+        <svg viewBox="0 0 100 100" width="70" height="70"><ellipse cx="50" cy="62" rx="26" ry="24" fill="#E45C5C"/><ellipse cx="72" cy="55" rx="16" ry="20" fill="#F5B841" transform="rotate(15 72 55)"/><ellipse cx="28" cy="55" rx="16" ry="20" fill="#3FA46A" transform="rotate(-15 28 55)"/><circle cx="50" cy="36" r="16" fill="#E45C5C"/><circle cx="45" cy="34" r="2" fill="#000"/><circle cx="55" cy="34" r="2" fill="#000"/><path d="M 44 42 L 50 46 L 56 42" stroke="#3B2E24" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <div style="font-weight:900;">¡Hola, amigo!</div>
+        <div style="opacity:.7">I'm Pico. What should I call you?</div>
+        <div style="background:#fff;border:1px solid #ccc;padding:4px 8px;border-radius:6px;width:70%;">e.g. Kabir</div>
+        <div class="screen-cta">¡Vamos! ▶</div>
+      </div>
+    </div>
+    <div class="caption">1 · Meet Pico (first launch)</div>
+    <div class="caption-sub">Curious sprite · warm greeting · name onboarding · single field · skippable</div>
+  </div>
+
+  <!-- Frame 2: Home landing -->
+  <div class="frame">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="screen-header">🦜 · Hi Kabir! · Level 2 bond</div>
+      <div class="screen-body" style="justify-content:flex-start;padding-top:6px;">
+        <div class="chip">📖 Chapter 2 · La Selva</div>
+        <div class="bar" style="width:90%;"><i style="width:63%;"></i></div>
+        <div style="opacity:.7;font-size:8px;">3 more words wake the toucans</div>
+        <div style="margin-top:6px;font-weight:800;">Today's quest</div>
+        <div style="opacity:.7;font-size:8px;line-height:1.4;padding:0 6px;">Help Pico teach 3 new colors to the parrots</div>
+        <div class="screen-cta">Start ▶</div>
+        <div style="margin-top:8px;opacity:.6;font-size:8px;">— Explore —</div>
+        <div class="chip">🇪🇸 Spanish</div>
+      </div>
+    </div>
+    <div class="caption">2 · Home landing</div>
+    <div class="caption-sub">Chapter progress front and center · Today's quest · Explore tiles below</div>
+  </div>
+
+  <!-- Frame 3: Silhouetted world map -->
+  <div class="frame">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="screen-header">🗺 · Book of Living Worlds</div>
+      <div class="screen-body" style="justify-content:flex-start;padding-top:8px;gap:3px;">
+        <svg viewBox="0 0 140 200" style="width:120px;height:auto;">
+          <rect x="0" y="0" width="140" height="200" fill="#EDE4D3" rx="10"/>
+          <!-- Chapter silhouettes -->
+          <circle cx="30" cy="30" r="14" fill="#3FA46A"/>
+          <text x="30" y="52" text-anchor="middle" font-size="6" font-weight="800" fill="#2E7D42">Home Tree</text>
+          <path d="M 60 30 Q 75 20 90 30 Q 100 40 88 45 L 62 45 Q 50 40 60 30 Z" fill="#3FA46A" opacity=".85"/>
+          <text x="75" y="55" text-anchor="middle" font-size="5" font-weight="800" fill="#2E7D42">La Selva</text>
+          <path d="M 110 30 Q 120 60 115 90" stroke="#B5B5B5" stroke-width="3" fill="none"/>
+          <text x="115" y="105" text-anchor="middle" font-size="5" font-weight="800" fill="#7A6A5C">???</text>
+          <path d="M 20 80 L 40 60 L 55 80 Z" fill="#B5B5B5"/>
+          <text x="35" y="90" text-anchor="middle" font-size="5" font-weight="800" fill="#7A6A5C">???</text>
+          <path d="M 70 90 Q 80 100 90 90" stroke="#B5B5B5" stroke-width="3" fill="none"/>
+          <text x="80" y="108" text-anchor="middle" font-size="5" font-weight="800" fill="#7A6A5C">???</text>
+          <ellipse cx="30" cy="140" rx="15" ry="8" fill="#B5B5B5"/>
+          <text x="30" y="155" text-anchor="middle" font-size="5" font-weight="800" fill="#7A6A5C">???</text>
+          <path d="M 60 130 L 60 160 M 55 160 L 65 160" stroke="#B5B5B5" stroke-width="2" fill="none"/>
+          <text x="60" y="172" text-anchor="middle" font-size="5" font-weight="800" fill="#7A6A5C">???</text>
+          <circle cx="105" cy="145" r="12" fill="#B5B5B5"/>
+          <text x="105" y="168" text-anchor="middle" font-size="5" font-weight="800" fill="#7A6A5C">???</text>
+          <path d="M 40 180 L 100 180" stroke="#B5B5B5" stroke-width="2"/>
+          <text x="70" y="192" text-anchor="middle" font-size="5" font-weight="800" fill="#7A6A5C">??? · ???</text>
+        </svg>
+        <div style="opacity:.6;font-size:8px;margin-top:4px;">Restored 2 of 10</div>
+      </div>
+    </div>
+    <div class="caption">3 · World map</div>
+    <div class="caption-sub">Silhouettes hint at ecosystem shape · restored chapters colored + named · unrestored are ???</div>
+  </div>
+
+  <!-- Frame 4: Chapter scene (explore) -->
+  <div class="frame">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="screen-header">📖 · Chapter 1 · Home Tree</div>
+      <div class="screen-body" style="justify-content:flex-end;padding-bottom:12px;">
+        <svg viewBox="0 0 140 140" style="width:100%;height:auto;">
+          <rect width="140" height="140" fill="#DFF3E5"/>
+          <rect x="0" y="100" width="140" height="40" fill="#8B6A44"/>
+          <ellipse cx="70" cy="70" rx="45" ry="40" fill="#3FA46A"/>
+          <rect x="65" y="90" width="10" height="30" fill="#6B4A2A"/>
+          <circle cx="55" cy="55" r="4" fill="#F5B841"/>
+          <circle cx="85" cy="60" r="4" fill="#E45C5C"/>
+          <circle cx="70" cy="45" r="4" fill="#F5B841"/>
+          <text x="30" y="35" font-size="16">🦋</text>
+          <text x="105" y="35" font-size="14">🌸</text>
+          <text x="15" y="120" font-size="12">🌱</text>
+        </svg>
+        <div style="opacity:.7;font-size:8px;">tap around to hear Spanish words</div>
+      </div>
+    </div>
+    <div class="caption">4 · Chapter scene (explore mode)</div>
+    <div class="caption-sub">The living scene grows as the child learns · tap anything for pronunciation · time-of-day changes light + weather</div>
+  </div>
+
+  <!-- Frame 5: Lesson (ported from Verb Garden) -->
+  <div class="frame">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="screen-header">Lesson 5 · Colors</div>
+      <div class="screen-body">
+        <svg viewBox="0 0 100 100" width="40" height="40"><ellipse cx="50" cy="65" rx="26" ry="22" fill="#E45C5C"/><ellipse cx="70" cy="55" rx="12" ry="18" fill="#F5B841" transform="rotate(10 70 55)"/><ellipse cx="30" cy="55" rx="12" ry="18" fill="#3FA46A" transform="rotate(-10 30 55)"/><circle cx="50" cy="40" r="16" fill="#E45C5C"/><circle cx="46" cy="40" r="2" fill="#000"/><circle cx="54" cy="40" r="2" fill="#000"/><text x="70" y="24" font-size="18">💭</text></svg>
+        <div style="font-weight:900;">What color?</div>
+        <div style="width:30px;height:30px;background:#8b4dcc;border-radius:50%;margin:4px auto;"></div>
+        <div style="display:flex;flex-wrap:wrap;gap:2px;justify-content:center;">
+          <div class="chip">morado</div>
+          <div class="chip">azul</div>
+          <div class="chip">verde</div>
+        </div>
+      </div>
+    </div>
+    <div class="caption">5 · Lesson (ported)</div>
+    <div class="caption-sub">Verb Garden renderer · unchanged mechanics · Pico watches (thinking sprite) while child chooses</div>
+  </div>
+
+  <!-- Frame 6: Life reward (bloom) -->
+  <div class="frame">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="screen-header">✨ Lesson done!</div>
+      <div class="screen-body">
+        <svg viewBox="0 0 100 100" width="55" height="55"><ellipse cx="50" cy="65" rx="26" ry="22" fill="#E45C5C"/><ellipse cx="82" cy="40" rx="14" ry="22" fill="#F5B841" transform="rotate(45 82 40)"/><ellipse cx="18" cy="40" rx="14" ry="22" fill="#3FA46A" transform="rotate(-45 18 40)"/><circle cx="50" cy="40" r="16" fill="#E45C5C"/><path d="M 40 40 Q 45 34 50 40" stroke="#3B2E24" stroke-width="2" fill="none"/><path d="M 50 40 Q 55 34 60 40" stroke="#3B2E24" stroke-width="2" fill="none"/><path d="M 42 46 Q 50 54 58 46" stroke="#3B2E24" stroke-width="2.5" fill="none"/></svg>
+        <div style="font-weight:900;font-size:12px;">4 butterflies woke up!</div>
+        <div style="font-size:16px;">🦋 🦋 🦋 🦋</div>
+        <div style="opacity:.7;font-size:8px;padding:0 10px;">They're helping Pico teach these words to the canopy</div>
+        <div class="screen-cta">Next ▶</div>
+      </div>
+    </div>
+    <div class="caption">6 · Life reward</div>
+    <div class="caption-sub">Replaces the star-count bloom · every reward is a living thing appearing · no numbers going up</div>
+  </div>
+
+  <!-- Frame 7: Field Journal -->
+  <div class="frame">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="screen-header">📓 · Field Journal</div>
+      <div class="screen-body" style="justify-content:flex-start;padding-top:6px;">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;">
+          <div class="chip">🦋 mariposa</div>
+          <div class="chip">🐢 tortuga</div>
+          <div class="chip">🦥 perezoso</div>
+          <div class="chip">?</div><div class="chip">?</div><div class="chip">?</div>
+        </div>
+        <div style="opacity:.6;font-size:8px;margin-top:6px;">3 of 24 found</div>
+        <div class="chip" style="margin-top:6px;">Tap to hear</div>
+      </div>
+    </div>
+    <div class="caption">7 · Field Journal (collectibles)</div>
+    <div class="caption-sub">Discoveries live here · tap any to hear it move + speak · empty slots hint at what's still out there</div>
+  </div>
+
+  <!-- Frame 8: Kindness mission banner -->
+  <div class="frame">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="screen-header">💛 · Kindness mission</div>
+      <div class="screen-body">
+        <svg viewBox="0 0 100 100" width="45" height="45"><ellipse cx="50" cy="65" rx="26" ry="22" fill="#E45C5C"/><ellipse cx="82" cy="50" rx="18" ry="14" fill="#F5B841" transform="rotate(-10 82 50)"/><circle cx="50" cy="40" r="16" fill="#E45C5C"/></svg>
+        <div style="font-weight:800;font-size:11px;padding:0 8px;line-height:1.3;">A jaguar cub is lost in the Rainforest.</div>
+        <div style="opacity:.7;font-size:9px;padding:0 8px;">Say <b>madre</b> three times — Pico will call her home.</div>
+        <div class="screen-cta">🎤 Say it</div>
+      </div>
+    </div>
+    <div class="caption">8 · Kindness mission</div>
+    <div class="caption-sub">Once a week · warm micro-story + 1 Spanish action + payoff · never blocks a lesson</div>
+  </div>
+
+  <!-- Frame 9: Stretch break -->
+  <div class="frame">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="screen-header">🧘 · Quick stretch!</div>
+      <div class="screen-body">
+        <svg viewBox="0 0 100 100" width="55" height="55"><ellipse cx="50" cy="65" rx="26" ry="22" fill="#E45C5C"/><ellipse cx="82" cy="30" rx="14" ry="22" fill="#F5B841" transform="rotate(80 82 30)"/><ellipse cx="18" cy="30" rx="14" ry="22" fill="#3FA46A" transform="rotate(-80 18 30)"/><circle cx="50" cy="40" r="16" fill="#E45C5C"/></svg>
+        <div style="font-weight:800;font-size:11px;">Stretch with me!</div>
+        <div style="opacity:.7;font-size:9px;">Reach up · then down · together</div>
+        <div style="font-size:8px;opacity:.5;">3s · then back to your lesson</div>
+      </div>
+    </div>
+    <div class="caption">9 · Stretch break (every 5–7 min)</div>
+    <div class="caption-sub">Pico's wings up · 3-second overlay · pediatrician-friendly · no scoring, no skip needed</div>
+  </div>
+
+  <!-- Frame 10: Yawn nudge -->
+  <div class="frame">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="screen-header">🌙 · Rest time?</div>
+      <div class="screen-body">
+        <svg viewBox="0 0 100 100" width="55" height="55"><ellipse cx="50" cy="68" rx="24" ry="20" fill="#E45C5C"/><ellipse cx="72" cy="60" rx="12" ry="16" fill="#F5B841" transform="rotate(10 72 60)"/><ellipse cx="28" cy="60" rx="12" ry="16" fill="#3FA46A" transform="rotate(-10 28 60)"/><circle cx="50" cy="46" r="14" fill="#E45C5C"/><path d="M 42 46 Q 46 46 50 46" stroke="#3B2E24" stroke-width="2" fill="none"/><path d="M 50 46 Q 54 46 58 46" stroke="#3B2E24" stroke-width="2" fill="none"/><text x="72" y="24" font-size="16">💤</text></svg>
+        <div style="font-weight:800;font-size:11px;padding:0 8px;">My wings are tired, amiguito.</div>
+        <div style="opacity:.7;font-size:9px;">Let's play tomorrow?</div>
+        <div class="screen-cta">Goodnight 💛</div>
+        <div class="chip" style="margin-top:6px;">One more</div>
+      </div>
+    </div>
+    <div class="caption">10 · Yawn nudge at ~15 min</div>
+    <div class="caption-sub">Soft nudge only — not a hard cap · child can tap "One more" once · rewards the pause next session</div>
+  </div>
+
+  <!-- Frame 11: Parents dashboard -->
+  <div class="frame">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="screen-header">👪 · Parents</div>
+      <div class="screen-body" style="justify-content:flex-start;padding-top:6px;text-align:left;padding-left:6px;padding-right:6px;">
+        <div style="font-weight:800;font-size:9px;">Learning</div>
+        <div style="opacity:.7;font-size:8px;">23 verbs · 4 chapters restored</div>
+        <div style="font-weight:800;font-size:9px;margin-top:4px;">Character</div>
+        <div style="opacity:.7;font-size:8px;">🌍 3 cultures · 💛 5 kindness · 🔎 12 curious</div>
+        <div style="opacity:.7;font-size:8px;">🦜 Pico bond · level 2</div>
+        <div style="font-weight:800;font-size:9px;margin-top:4px;">Cultural exposure</div>
+        <div style="opacity:.7;font-size:8px;">Mexico · Peru · Spain</div>
+        <div class="chip" style="margin-top:6px;">⚙ Session cap</div>
+      </div>
+    </div>
+    <div class="caption">11 · Parents dashboard</div>
+    <div class="caption-sub">Learning + Character + Culture · not raw quiz % · session-cap setting here (parent chooses 10/15/20/30/off)</div>
+  </div>
+
+  <!-- Frame 12: Farewell -->
+  <div class="frame">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="screen-body">
+        <svg viewBox="0 0 100 100" width="60" height="60"><ellipse cx="50" cy="65" rx="26" ry="22" fill="#E45C5C"/><ellipse cx="82" cy="35" rx="14" ry="20" fill="#F5B841" transform="rotate(60 82 35)"/><ellipse cx="30" cy="55" rx="12" ry="18" fill="#3FA46A" transform="rotate(-10 30 55)"/><circle cx="50" cy="40" r="16" fill="#E45C5C"/><path d="M 42 46 Q 50 54 58 46" stroke="#3B2E24" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+        <div style="opacity:.7;font-size:10px;font-weight:800;">See you soon, Kabir 👋</div>
+        <div style="opacity:.5;font-size:8px;">— Pico</div>
+      </div>
+    </div>
+    <div class="caption">12 · Farewell moment</div>
+    <div class="caption-sub">When kid closes or session ends · Pico waves from a corner · no modal · nice closure</div>
+  </div>
+
+</div>
+
+<!-- =====================================================
+     §5 · Flow diagrams
+===================================================== -->
+<h2>§5 · Flow diagrams</h2>
+
+<h3>5.1 · First-time user (install → first lesson done)</h3>
+<div class="flow">
+  <svg viewBox="0 0 900 150" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arr1" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B2E24"/>
+      </marker>
+    </defs>
+    <g font-family="Nunito,sans-serif" font-size="11" font-weight="800" text-anchor="middle">
+      <rect x="10" y="50" width="120" height="50" fill="#F5B841" rx="12"/>
+      <text x="70" y="72" fill="#3B2E24">Install &amp;</text>
+      <text x="70" y="86" fill="#3B2E24">first launch</text>
+      <line x1="130" y1="75" x2="180" y2="75" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr1)"/>
+      <rect x="180" y="50" width="130" height="50" fill="#3FA46A" rx="12"/>
+      <text x="245" y="72" fill="#fff">Pico intro</text>
+      <text x="245" y="86" fill="#fff">"¿Cómo te llamas?"</text>
+      <line x1="310" y1="75" x2="360" y2="75" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr1)"/>
+      <rect x="360" y="50" width="130" height="50" fill="#3FA46A" rx="12"/>
+      <text x="425" y="72" fill="#fff">Choose your</text>
+      <text x="425" y="86" fill="#fff">first seedling</text>
+      <line x1="490" y1="75" x2="540" y2="75" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr1)"/>
+      <rect x="540" y="50" width="130" height="50" fill="#3FA46A" rx="12"/>
+      <text x="605" y="72" fill="#fff">See world map</text>
+      <text x="605" y="86" fill="#fff">(silhouettes)</text>
+      <line x1="670" y1="75" x2="720" y2="75" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr1)"/>
+      <rect x="720" y="50" width="130" height="50" fill="#E45C5C" rx="12"/>
+      <text x="785" y="72" fill="#fff">Ch 1 · lesson 1</text>
+      <text x="785" y="86" fill="#fff">→ seed sprouts</text>
+    </g>
+  </svg>
+</div>
+
+<h3>5.2 · Daily session (open → play → close)</h3>
+<div class="flow">
+  <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arr2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B2E24"/>
+      </marker>
+    </defs>
+    <g font-family="Nunito,sans-serif" font-size="11" font-weight="800" text-anchor="middle">
+      <rect x="10" y="30" width="110" height="45" fill="#F5B841" rx="12"/>
+      <text x="65" y="58" fill="#3B2E24">Open app</text>
+      <line x1="120" y1="52" x2="170" y2="52" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="170" y="30" width="140" height="45" fill="#3FA46A" rx="12"/>
+      <text x="240" y="50" fill="#fff">Pico greets</text>
+      <text x="240" y="64" fill="#fff">(mood-aware)</text>
+      <line x1="310" y1="52" x2="360" y2="52" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="360" y="30" width="140" height="45" fill="#3FA46A" rx="12"/>
+      <text x="430" y="50" fill="#fff">Today's quest</text>
+      <text x="430" y="64" fill="#fff">or Explore</text>
+      <line x1="500" y1="52" x2="550" y2="52" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="550" y="30" width="130" height="45" fill="#E45C5C" rx="12"/>
+      <text x="615" y="58" fill="#fff">Lesson</text>
+      <line x1="680" y1="52" x2="730" y2="52" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="730" y="30" width="150" height="45" fill="#E45C5C" rx="12"/>
+      <text x="805" y="50" fill="#fff">Life reward</text>
+      <text x="805" y="64" fill="#fff">(seed/butterfly)</text>
+      <!-- Loop back / stretch -->
+      <path d="M 805 75 Q 805 130 615 130 L 615 75" stroke="#3B2E24" stroke-width="2" fill="none" marker-end="url(#arr2)" stroke-dasharray="4 3"/>
+      <text x="710" y="145" fill="#7A6A5C" font-size="10">every 5–7 min: stretch break · at 15 min: Pico yawns</text>
+      <!-- End paths -->
+      <line x1="805" y1="75" x2="805" y2="170" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr2)"/>
+      <rect x="720" y="170" width="170" height="35" fill="#F5B841" rx="12"/>
+      <text x="805" y="192" fill="#3B2E24">Farewell wave</text>
+    </g>
+  </svg>
+</div>
+
+<h3>5.3 · Chapter completion (last lesson → next chapter unlocks)</h3>
+<div class="flow">
+  <svg viewBox="0 0 900 180" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arr3" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B2E24"/>
+      </marker>
+    </defs>
+    <g font-family="Nunito,sans-serif" font-size="11" font-weight="800" text-anchor="middle">
+      <rect x="10" y="60" width="140" height="50" fill="#E45C5C" rx="12"/>
+      <text x="80" y="82" fill="#fff">Final lesson</text>
+      <text x="80" y="96" fill="#fff">of chapter</text>
+      <line x1="150" y1="85" x2="200" y2="85" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr3)"/>
+      <rect x="200" y="60" width="140" height="50" fill="#3FA46A" rx="12"/>
+      <text x="270" y="82" fill="#fff">Tree matures 🌳</text>
+      <text x="270" y="96" fill="#fff">+ eco fact</text>
+      <line x1="340" y1="85" x2="390" y2="85" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr3)"/>
+      <rect x="390" y="60" width="140" height="50" fill="#3FA46A" rx="12"/>
+      <text x="460" y="82" fill="#fff">New animal moves</text>
+      <text x="460" y="96" fill="#fff">into Home Tree</text>
+      <line x1="530" y1="85" x2="580" y2="85" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr3)"/>
+      <rect x="580" y="60" width="140" height="50" fill="#F5B841" rx="12"/>
+      <text x="650" y="82" fill="#3B2E24">Next silhouette</text>
+      <text x="650" y="96" fill="#3B2E24">colors in on map</text>
+      <line x1="720" y1="85" x2="770" y2="85" stroke="#3B2E24" stroke-width="2" marker-end="url(#arr3)"/>
+      <rect x="770" y="60" width="120" height="50" fill="#F5B841" rx="12"/>
+      <text x="830" y="82" fill="#3B2E24">Coloring page</text>
+      <text x="830" y="96" fill="#3B2E24">available</text>
+      <text x="450" y="145" text-anchor="middle" fill="#7A6A5C" font-size="10">Kabir gets: mature tree · new animal · fact · a chapter to share with a parent</text>
+    </g>
+  </svg>
+</div>
+
+<!-- =====================================================
+     §6 · Session pacing timeline
+===================================================== -->
+<h2>§6 · Session pacing at a glance</h2>
+<p>What happens when in a session — engagement layer + fatigue check are baked in from minute one.</p>
+
+<div class="pacing">
+  <svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg">
+    <g font-family="Nunito,sans-serif" font-size="10" font-weight="700">
+      <!-- Timeline -->
+      <line x1="60" y1="130" x2="860" y2="130" stroke="#3B2E24" stroke-width="2"/>
+      <text x="30" y="135" fill="#7A6A5C" font-weight="800">0 min</text>
+      <text x="860" y="135" fill="#7A6A5C" font-weight="800" text-anchor="start">→</text>
+
+      <!-- Tick marks -->
+      <line x1="60" y1="125" x2="60" y2="135" stroke="#3B2E24" stroke-width="2"/>
+      <line x1="220" y1="125" x2="220" y2="135" stroke="#3B2E24" stroke-width="2"/>
+      <line x1="380" y1="125" x2="380" y2="135" stroke="#3B2E24" stroke-width="2"/>
+      <line x1="540" y1="125" x2="540" y2="135" stroke="#3B2E24" stroke-width="2"/>
+      <line x1="700" y1="125" x2="700" y2="135" stroke="#3B2E24" stroke-width="2"/>
+      <line x1="820" y1="125" x2="820" y2="135" stroke="#3B2E24" stroke-width="2"/>
+
+      <text x="60" y="155" fill="#7A6A5C">0'</text>
+      <text x="220" y="155" fill="#7A6A5C">~5'</text>
+      <text x="380" y="155" fill="#7A6A5C">~10'</text>
+      <text x="540" y="155" fill="#7A6A5C">~15'</text>
+      <text x="700" y="155" fill="#7A6A5C">~20'</text>
+      <text x="820" y="155" fill="#7A6A5C">~25'</text>
+
+      <!-- Events above -->
+      <g font-weight="800">
+        <circle cx="60" cy="80" r="18" fill="#F5B841"/>
+        <text x="60" y="85" text-anchor="middle" font-size="14">👋</text>
+        <text x="60" y="45" text-anchor="middle" fill="#3B2E24" font-size="10">Greet</text>
+
+        <circle cx="220" cy="80" r="18" fill="#3FA46A"/>
+        <text x="220" y="85" text-anchor="middle" font-size="14" fill="#fff">🧘</text>
+        <text x="220" y="45" text-anchor="middle" fill="#3B2E24" font-size="10">Stretch</text>
+        <text x="220" y="30" text-anchor="middle" fill="#7A6A5C" font-size="9">3 sec together</text>
+
+        <circle cx="380" cy="80" r="18" fill="#3FA46A"/>
+        <text x="380" y="85" text-anchor="middle" font-size="14" fill="#fff">🧘</text>
+        <text x="380" y="45" text-anchor="middle" fill="#3B2E24" font-size="10">Stretch</text>
+
+        <circle cx="540" cy="80" r="18" fill="#E45C5C"/>
+        <text x="540" y="85" text-anchor="middle" font-size="14" fill="#fff">💤</text>
+        <text x="540" y="45" text-anchor="middle" fill="#3B2E24" font-size="10">Yawn nudge</text>
+        <text x="540" y="30" text-anchor="middle" fill="#7A6A5C" font-size="9">"my wings are tired"</text>
+
+        <circle cx="700" cy="80" r="18" fill="#C43F3F"/>
+        <text x="700" y="85" text-anchor="middle" font-size="14" fill="#fff">🛑</text>
+        <text x="700" y="45" text-anchor="middle" fill="#3B2E24" font-size="10">Parent cap</text>
+        <text x="700" y="30" text-anchor="middle" fill="#7A6A5C" font-size="9">(if set to 20')</text>
+      </g>
+
+      <!-- Below-line events -->
+      <g font-weight="700">
+        <text x="60" y="180" text-anchor="middle" fill="#7A6A5C" font-size="10">Lesson 1</text>
+        <text x="60" y="192" text-anchor="middle" fill="#7A6A5C" font-size="9">life reward</text>
+
+        <text x="140" y="180" text-anchor="middle" fill="#7A6A5C" font-size="10">Lesson 2</text>
+        <text x="140" y="192" text-anchor="middle" fill="#7A6A5C" font-size="9">life reward</text>
+
+        <text x="300" y="180" text-anchor="middle" fill="#7A6A5C" font-size="10">Lesson 3</text>
+        <text x="300" y="192" text-anchor="middle" fill="#7A6A5C" font-size="9">life reward</text>
+
+        <text x="460" y="180" text-anchor="middle" fill="#7A6A5C" font-size="10">Lesson 4</text>
+        <text x="460" y="192" text-anchor="middle" fill="#7A6A5C" font-size="9">life reward</text>
+
+        <text x="620" y="180" text-anchor="middle" fill="#7A6A5C" font-size="10">"one more"</text>
+        <text x="620" y="192" text-anchor="middle" fill="#7A6A5C" font-size="9">granted once</text>
+
+        <text x="780" y="180" text-anchor="middle" fill="#7A6A5C" font-size="10">Farewell wave</text>
+        <text x="780" y="192" text-anchor="middle" fill="#7A6A5C" font-size="9">— see you tomorrow —</text>
+      </g>
+
+      <!-- Legend -->
+      <g transform="translate(60, 220)" font-size="9">
+        <rect x="0" y="0" width="10" height="10" fill="#F5B841"/><text x="14" y="9" fill="#3B2E24">welcome / farewell</text>
+        <rect x="140" y="0" width="10" height="10" fill="#3FA46A"/><text x="154" y="9" fill="#3B2E24">stretch break</text>
+        <rect x="270" y="0" width="10" height="10" fill="#E45C5C"/><text x="284" y="9" fill="#3B2E24">soft nudge (yawn)</text>
+        <rect x="410" y="0" width="10" height="10" fill="#C43F3F"/><text x="424" y="9" fill="#3B2E24">hard cap (parent-controlled)</text>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<div class="callout">
+  <b>Sunday small day.</b> Sundays start Pico slightly sleepy, and the yawn nudge moves earlier (~10 min). Baked in — the world encourages rest naturally.
+</div>
+
+<p style="margin-top:40px;text-align:center;color:var(--ink-soft);font-size:12px;">
+  🦜 Pico the Macaw · World 1 of the Education Universe<br>
+  <span style="opacity:.7">Storyboard v0.1 · print-friendly · self-contained</span>
+</p>
+
+</body>
+</html>
