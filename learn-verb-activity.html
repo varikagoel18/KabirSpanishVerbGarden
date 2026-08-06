@@ -535,15 +535,18 @@
 
   /* ---------- Modal / day view ---------- */
   .overlay{position:fixed;inset:0;background:rgba(67,51,42,.55);backdrop-filter:blur(3px);
-    display:none;align-items:flex-start;justify-content:center;z-index:50;padding:14px;overflow-y:auto;}
+    display:none;align-items:flex-start;justify-content:center;z-index:50;
+    padding:calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom));overflow-y:auto;}
   .overlay.show{display:flex;}
   .sheet{
-    background:var(--cream);border-radius:26px;max-width:560px;width:100%;margin:auto;
-    box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden;animation:pop .25s cubic-bezier(.2,.9,.3,1.2);
+    background:var(--cream);border-radius:26px;max-width:480px;width:100%;margin:auto;
+    box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden;animation:slideUp .15s ease-out;
   }
   /* Wider modal when the trophy room is showing */
   .overlay:has(.trv2) .sheet{max-width:1080px;}
   @keyframes pop{from{transform:scale(.9) translateY(20px);opacity:0}to{transform:none;opacity:1}}
+  @keyframes slideUp{from{transform:translateY(24px);opacity:.4}to{transform:none;opacity:1}}
+  @media (prefers-reduced-motion: reduce){.sheet{animation:none;}}
   .sheet-top{background:linear-gradient(135deg,var(--leaf),var(--leaf-dark));color:#fff;padding:16px 18px;
     display:flex;align-items:center;justify-content:space-between;}
   .sheet-top .d{display:flex;align-items:center;gap:11px;}
@@ -1979,16 +1982,16 @@ const LEVEL5_LESSONS = (function(){
 })();
 
 const LEVELS = [
-  {id:0, name:"Level 0 · Vocab Fiesta 🎉", blurb:"Colors, adjectives, prepositions, questions, professions, days & months",
+  {id:0, displayOrder:1, name:"Level 0 · Vocab Fiesta 🎉", blurb:"Colors, adjectives, prepositions, questions, professions, days & months",
     verbs:LEVEL5_VOCAB, fills:{},
     customPlan: LEVEL5_LESSONS.map(L=>({
       d:L.d, title:L.title, em:L.em, game:L.game, newV:L.newV||[],
       finale:L.finale, fiestaQuiz:!!L.fiestaQuiz, fiesta:true
     }))
   },
-  {id:1, name:"Level 1 · Regular Verbs", blurb:"The -AR, -ER & -IR basics", verbs:LEVEL1_VERBS, fills:LEVEL1_FILLS},
-  {id:2, name:"Level 2 · Irregular Verbs", blurb:"Go verbs, stem changers, reflexives & core irregulars", verbs:LEVEL2_VERBS, fills:LEVEL2_FILLS},
-  {id:3, name:"Level 3 · Verb Tenses", blurb:"Futuro cercano — ir + a + infinitive", verbs:[], fills:{}, tense:true,
+  {id:1, displayOrder:3, name:"Level 1 · Regular Verbs", blurb:"The -AR, -ER & -IR basics", verbs:LEVEL1_VERBS, fills:LEVEL1_FILLS},
+  {id:2, displayOrder:4, name:"Level 2 · Irregular Verbs", blurb:"Go verbs, stem changers, reflexives & core irregulars", verbs:LEVEL2_VERBS, fills:LEVEL2_FILLS},
+  {id:3, displayOrder:5, name:"Level 3 · Verb Tenses", blurb:"Futuro cercano — ir + a + infinitive", verbs:[], fills:{}, tense:true,
     customPlan:(function(){
       // One tense activity per day, plus a Review lesson every 3rd day
       // that replays a rotating earlier activity. Result: ~13 lessons for 10 tense activities.
@@ -2005,7 +2008,7 @@ const LEVELS = [
       return plan;
     })()
   },
-  {id:4, name:"Level 4 · La Casa", blurb:"Rooms, house parts, furniture & objects", verbs:LEVEL4_HOUSE_VOCAB, fills:{}, house:true,
+  {id:4, displayOrder:2, name:"Level 4 · La Casa", blurb:"Rooms, house parts, furniture & objects", verbs:LEVEL4_HOUSE_VOCAB, fills:{}, house:true,
     customPlan: LEVEL4_LESSONS.map(L=>({
       d:L.d, title:L.title, em:L.em,
       game: L.type==="quiz" ? "house_quiz" : "house_lesson",
@@ -3039,7 +3042,7 @@ function showNextTrophyPopup(){
   const stage=$("#stage");
   cur = cur || null;
   $("#dvEmoji").textContent="🏆";
-  $("#dvTitle").textContent="New trophy earned!";
+  $("#dvTitle").textContent="Trophy!";
   $("#dvSub").textContent=t.name;
   $("#steps").innerHTML="";
   stage.innerHTML=`
@@ -3113,7 +3116,7 @@ function showTrophyCelebration(trophy, onDone){
   stageBottom(null);
   const stage=$("#stage");
   $("#dvEmoji").textContent="🏆";
-  $("#dvTitle").textContent="New trophy!";
+  $("#dvTitle").textContent="¡Trofeo!";
   $("#dvSub").textContent=trophy.name;
   $("#steps").innerHTML="";
   stage.innerHTML=`
@@ -3272,9 +3275,9 @@ function showRevivalCoupon(){
   const stage=$("#stage");
   cur = null;
   c.cost = revivalCouponCost();
-  $("#dvEmoji").textContent="🎁";
-  $("#dvTitle").textContent="Revive-your-Garden Coupon";
-  $("#dvSub").textContent=`Because you were away for ${c.daysAway} days · one-time offer`;
+  $("#dvEmoji").textContent="🌱";
+  $("#dvTitle").textContent="Grow it back";
+  $("#dvSub").textContent="Finish 1 lesson in each level";
   $("#steps").innerHTML="";
   const cost = c.cost;
   const avail = saplingsAvailable();
@@ -3837,15 +3840,17 @@ function renderLevels(){
       wrap.appendChild(hello);
     }
   }catch(e){}
+  // Render levels in easy→hard order via displayOrder (falls back to id).
+  const _sortedLevels = LEVELS.slice().sort((a,b)=>((a.displayOrder??a.id)-(b.displayOrder??b.id)));
   // Determine which level card gets the "you are here" pulse — first level with lessons left.
   let _nextLevelId=null;
-  for(const lv of LEVELS){
+  for(const lv of _sortedLevels){
     const st=STATE.levels[lv.id];
     const total=planFor(lv).length;
     const done=st?Object.values(st.completed).filter(Boolean).length:0;
     if(done<total){ _nextLevelId=lv.id; break; }
   }
-  LEVELS.forEach(lv=>{
+  _sortedLevels.forEach(lv=>{
     const st=STATE.levels[lv.id];
     const total=planFor(lv).length;
     const done=st?Object.values(st.completed).filter(Boolean).length:0;
@@ -6307,15 +6312,15 @@ function showLearnedVerbs(levelId){
   const unique=rows.filter(r=>{ const k=r.v.inf||r.v.es; if(seen.has(k)) return false; seen.add(k); return true; });
   const lid = String(levelId!=null?levelId:"1");
   const meta = lid==="0"
-    ? {title:"Vocab Fiesta words learned",emoji:"🎉", unit:"word", where:"Level 0"}
+    ? {title:"Fiesta words",     emoji:"🎉", unit:"word", where:"Vocab Fiesta"}
     : lid==="4"
-    ? {title:"La Casa words learned",     emoji:"🏠", unit:"word", where:"Level 4"}
+    ? {title:"La Casa words",    emoji:"🏠", unit:"word", where:"La Casa"}
     : lid==="2"
-    ? {title:"Irregular verbs learned",   emoji:"⚡", unit:"verb", where:"Level 2"}
-    : {title:"Regular verbs learned",     emoji:"🌷", unit:"verb", where:"Level 1"};
+    ? {title:"Irregular verbs",  emoji:"⚡", unit:"verb", where:"Irregulars"}
+    : {title:"Regular verbs",    emoji:"🌷", unit:"verb", where:"Regulars"};
   $("#dvEmoji").textContent=meta.emoji;
   $("#dvTitle").textContent=meta.title;
-  $("#dvSub").textContent=unique.length+" "+(unique.length===1?meta.unit:meta.unit+"s")+" so far — tap any to hear it!";
+  $("#dvSub").textContent=unique.length+" learned · tap to hear";
   $("#steps").innerHTML="";
   const stage=$("#stage");
   if(unique.length===0){
@@ -6412,8 +6417,8 @@ function renderSurpriseQuiz(learnedRows){
   for(let i=0;i<rows.length;i+=10) chunks.push(rows.slice(i,i+10));
   let round=0, totalMatched=0;
   $("#dvEmoji").textContent="🎁";
-  $("#dvTitle").textContent="Surprise quiz!";
-  $("#dvSub").textContent=`Every 4 completions unlocks a quick review · ${rows.length} learned verbs`;
+  $("#dvTitle").textContent="Quick review";
+  $("#dvSub").textContent=`${rows.length} learned words · 5 questions`;
   $("#steps").innerHTML="";
   $("#overlay").classList.add("show");
   document.body.style.overflow="hidden";
@@ -6560,7 +6565,7 @@ function renderParents(){
       dayRows.push(`<div class="mini-row"><span>${lv.name} · Lesson ${d}<small>${p?p.title:"Completed"}</small></span><b>${"⭐".repeat(st.stars[d]||0)}</b></div>`);
     });
   }
-  openInfoPanel("👪","Parent dashboard","A quick coaching snapshot",`
+  openInfoPanel("👪","Parents","How it's going",`
     <div class="panel-grid">
       <div class="metric-row">
         <div class="metric"><b>${mins}</b>min today</div>
@@ -6729,6 +6734,20 @@ function syncStoreSet(key, value, opts){
     window.localStorage.setItem(key, value);
     return true;
   }catch(e){
+    // Fallback #1 — for the primary state key, hand off to the native iOS
+    // ProgressPersistenceBridge if it's available. This survives even when
+    // WKWebView localStorage is blocked or over quota.
+    if(key===SYNC_STATE_KEY){
+      try{
+        if(window.webkit && webkit.messageHandlers && webkit.messageHandlers.progressPersistence){
+          webkit.messageHandlers.progressPersistence.postMessage(String(value));
+          return true;
+        }
+      }catch(_){}
+    }
+    // Fallback #2 — try to free up space by dropping the backup copy, then retry.
+    try{ window.localStorage.removeItem(SYNC_BACKUP_KEY); }catch(_){}
+    try{ window.localStorage.setItem(key, value); return true; }catch(_){}
     if(!(opts && opts.quiet)){
       try{ toast("Storage is blocked, so sync could not save on this device."); }catch(_){}
     }
@@ -6793,7 +6812,7 @@ async function syncWithDevice(baseUrl){
 
 function showSyncPanel(){
   const savedUrl = syncStoreGet(SYNC_DEVICE_URL_KEY) || "http://192.168.1.10:8181";
-  openInfoPanel("🔄","Wi-Fi Sync","Merge progress with the iPhone app",`
+  openInfoPanel("🔄","Sync","Merge devices on your Wi-Fi",`
     <div style="display:grid;gap:14px">
       <div style="background:var(--panel-cream,#FFF6E8);border:1px solid #EAD6A8;border-radius:14px;padding:14px;font-size:14px;line-height:1.5">
         On the iPhone, open the app and tap the 🌐 icon to see its address.<br/>
