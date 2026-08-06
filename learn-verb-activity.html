@@ -2404,12 +2404,39 @@ const Store = (() => {
   let mem = null;
   function def(){ return {levels:{}, streak:0, lastDate:null}; }
   function lsGet(){ try{ const v=window.localStorage.getItem(KEY); return v?JSON.parse(v):null; }catch(e){ return null; } }
+  function _compactState(o){
+    // Shrink oldest history fields when the JSON has grown past localStorage's 5MB cap.
+    // Keeps recent 60 days of session minutes and 200 most recent misses per key.
+    try{
+      if(o && o.sessionMinutes){
+        const keys=Object.keys(o.sessionMinutes).sort();
+        while(keys.length>60){ delete o.sessionMinutes[keys.shift()]; }
+      }
+      if(o && o.misses && typeof o.misses==="object"){
+        Object.keys(o.misses).forEach(k=>{
+          const arr=o.misses[k];
+          if(Array.isArray(arr) && arr.length>200) o.misses[k]=arr.slice(-200);
+        });
+      }
+      if(o && Array.isArray(o.wrongLog) && o.wrongLog.length>500){
+        o.wrongLog = o.wrongLog.slice(-500);
+      }
+    }catch(_){}
+    return o;
+  }
   function lsSet(o){
     let ok=false;
-    try{ window.localStorage.setItem(KEY, JSON.stringify(o)); ok=true; }catch(e){}
-    // Mirror every save to IndexedDB so a blocked localStorage doesn't lose progress.
+    let json=null;
+    try{ json=JSON.stringify(o); window.localStorage.setItem(KEY, json); ok=true; }catch(e){
+      if(e && (e.name==="QuotaExceededError" || /quota/i.test(e.message||""))){
+        // Compact and retry once — losing 3 months of daily-session detail is
+        // strictly better than losing all future progress.
+        try{ _compactState(o); json=JSON.stringify(o); window.localStorage.setItem(KEY, json); ok=true; }catch(_){}
+      }
+    }
+    // Mirror every save to IndexedDB (no 5MB cap) so state survives regardless.
     try{
-      const json=JSON.stringify(o);
+      if(!json) json=JSON.stringify(o);
       if(typeof idbSet==="function") idbSet(KEY, json);
       if(typeof _idbCache!=="undefined") _idbCache.set(KEY, json);
     }catch(_){}
@@ -2419,14 +2446,36 @@ const Store = (() => {
     if(mem) return mem;
     let data=null;
     try{ if(window.storage && window.storage.get){ const r=await window.storage.get(KEY); if(r&&r.value) data=JSON.parse(r.value); } }catch(e){}
-    if(!data) data=lsGet();                 // fallback for a downloaded/local file
-    if(!data && typeof idbGet==="function"){
-      // Last-chance recovery: previous session may have saved only to IndexedDB
-      // (localStorage blocked). Await here so we don't start empty.
-      try{ const raw=await idbGet(KEY); if(raw) data=JSON.parse(raw); }catch(_){}
+    // Prefer IndexedDB when available — it's mirrored on every save and has no
+    // 5MB quota, so it's the freshest source when localStorage is stale/blocked.
+    let idbData=null;
+    if(typeof idbGet==="function"){
+      try{ const raw=await idbGet(KEY); if(raw) idbData=JSON.parse(raw); }catch(_){}
     }
+    const lsData = lsGet();
+    // Whichever has the most-recent activity wins.
+    function stamp(s){
+      try{
+        return Math.max(
+          (s && s.updatedAt) ? Date.parse(s.updatedAt)||0 : 0,
+          (s && s.lastLaunchAt) ? Date.parse(s.lastLaunchAt)||0 : 0,
+          (s && s.profile && s.profile.updatedAt) ? Date.parse(s.profile.updatedAt)||0 : 0
+        );
+      }catch(_){ return 0; }
+    }
+    if(idbData && lsData){
+      data = data || (stamp(idbData) >= stamp(lsData) ? idbData : lsData);
+    }
+    if(!data) data = idbData || lsData;
     mem = data || def();
     if(!mem.levels) mem.levels={};
+    // Proactive shrink — if the state has bloated past a safe size, compact
+    // now so the next localStorage save succeeds without waiting for a quota
+    // exception. Roughly 3.5MB is a safe threshold under the 5MB cap.
+    try{
+      const size = JSON.stringify(mem).length;
+      if(size > 3500000) _compactState(mem);
+    }catch(_){}
     return mem;
   }
   async function save(){
