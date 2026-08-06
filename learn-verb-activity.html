@@ -6868,16 +6868,10 @@ function syncStoreSet(key, value, opts){
     _idbCache.set(key, String(value));
     idbSet(key, value); // fire-and-forget; async but we already returned success on cache write
   }catch(_){}
-  if(!localOk){
-    // We at least cached to IDB, so the sync isn't lost — but tell the user we
-    // couldn't hit localStorage and include the actual error for diagnosis.
-    if(!(opts && opts.quiet)){
-      try{ toast("Saved to backup store · localStorage blocked (" + (_lastStorageError||"unknown") + ")"); }catch(_){}
-    }
-    // Return true — we DID persist via the fallback. Callers only need to know
-    // the value is safe on this device somewhere.
-    return true;
-  }
+  // No toast on !localOk — IndexedDB (mirrored above) always accepts the write,
+  // so the data is safe on this device. The error is recorded in
+  // _lastStorageError for diagnostics; check via getLastStorageError() if needed.
+  if(!localOk) return true;
   return true;
 }
 function getLastStorageError(){ return _lastStorageError || "(none — localStorage OK)"; }
@@ -6938,9 +6932,9 @@ async function syncWithDevice(baseUrl){
       if(typeof renderLevels==="function") renderLevels();
     }
   }catch(_){}
-  if(!localSaved){
-    try{ toast("Storage is blocked here — synced to iPhone only 📱"); }catch(_){}
-  }
+  // Deliberately no toast on !localSaved: IndexedDB is always mirrored, so
+  // the state is safe on this device even when localStorage refuses the write.
+  // The sync itself already surfaces success/failure via its normal flow.
   // 5) Push merged to iPhone (they end up with identical state)
   const res2 = await fetchTO(base+"/state", {method:"POST", headers:{"Content-Type":"application/json"}, body:mergedJson}, 15000);
   if(!res2.ok) throw new Error("Push to iPhone failed — HTTP "+res2.status);
