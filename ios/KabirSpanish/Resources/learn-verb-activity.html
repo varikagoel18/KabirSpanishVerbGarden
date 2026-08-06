@@ -6349,15 +6349,20 @@ function requestCloseDay(){
   if(typeof _overlayCloser === "function"){
     const fn=_overlayCloser; clearOverlayCloser(); fn(); return;
   }
-  // Bucket 2 · confirm mid-lesson so a stray tap doesn't lose progress.
-  // Skip the confirm on the bloom screen (already finished) and when no lesson is running.
-  const inLesson = !!(cur && cur.plan && !cur._onBloom);
-  if(!inLesson){ closeDay(); return; }
-  const ok = window.confirm("Save progress and exit this lesson?");
-  if(ok) closeDay();
+  // Always close. Mid-lesson state is auto-saved via saveResume() on every
+  // stage advance, so reopening resumes at the correct stage & question.
+  // (Prior versions prompted window.confirm here, but WKWebView silently
+  //  blocks confirm() when no UIDelegate is set, making X do nothing.)
+  closeDay();
 }
 $("#closeBtn").onclick=requestCloseDay;
-$("#overlay").onclick=(e)=>{ if(e.target.id==="overlay") requestCloseDay(); };
+// Overlay backdrop tap: only close for popups (no active lesson) — a stray
+// backdrop tap while playing shouldn't yank the kid out of a lesson.
+$("#overlay").onclick=(e)=>{
+  if(e.target.id!=="overlay") return;
+  const inLesson = !!(cur && cur.plan && !cur._onBloom);
+  if(!inLesson) requestCloseDay();
+};
 $("#backBtn").onclick=backToLevels;
 
 /* Learned-verbs popup — header tiles show regular vs irregular progress separately. */
