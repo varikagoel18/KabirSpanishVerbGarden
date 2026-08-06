@@ -6790,15 +6790,29 @@ async function syncWithDevice(baseUrl){
   if(remoteRaw && remoteRaw!=="null"){
     try{ remote = JSON.parse(remoteRaw); }catch(e){ throw new Error("Remote state wasn't valid JSON."); }
   }
-  // 2) Read local state
+  // 2) Read local state — prefer the in-memory STATE (always fresh) and fall
+  //    back to whatever localStorage can hand us. STATE beats stale storage.
   let local = null;
-  try{ local = JSON.parse(syncStoreGet(SYNC_STATE_KEY)||"null"); }catch(e){}
+  try{ local = (typeof STATE!=="undefined" && STATE) ? JSON.parse(JSON.stringify(STATE)) : null; }catch(e){}
+  if(!local){
+    try{ local = JSON.parse(syncStoreGet(SYNC_STATE_KEY)||"null"); }catch(e){}
+  }
   // 3) Merge
   const merged = syncMergeState(remote, local);
   const mergedJson = JSON.stringify(merged);
-  // 4) Write merged locally
-  if(!syncStoreSet(SYNC_STATE_KEY, mergedJson)){
-    throw new Error("Browser storage is blocked, so sync could not save progress here.");
+  // 4) Write merged locally — best effort. If the browser blocks storage
+  //    (Safari private mode, file:// origin, etc.) we still update the
+  //    in-memory STATE and push to the phone so the sync isn't wasted.
+  const localSaved = syncStoreSet(SYNC_STATE_KEY, mergedJson);
+  try{
+    if(typeof STATE!=="undefined"){
+      STATE = merged;
+      if(typeof ensureExtraState==="function") ensureExtraState();
+      if(typeof renderLevels==="function") renderLevels();
+    }
+  }catch(_){}
+  if(!localSaved){
+    try{ toast("Storage is blocked here — synced to iPhone only 📱"); }catch(_){}
   }
   // 5) Push merged to iPhone (they end up with identical state)
   const res2 = await fetchTO(base+"/state", {method:"POST", headers:{"Content-Type":"application/json"}, body:mergedJson}, 15000);
