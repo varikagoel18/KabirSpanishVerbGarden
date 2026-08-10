@@ -4596,7 +4596,7 @@ function renderFill(st){
   if(cur && typeof cur._startAt === "number" && cur._startAt > 0 && cur._startAt < items.length){ i = cur._startAt; }
   if(cur) cur._startAt = 0;
   const stage=$("#stage");
-  const useMCQ = LVID===2;   // Irregular verbs → MCQ options; others → typed input.
+  const useMCQ = true;   // All levels → 4 MCQ options (was: only Level 2 got MCQ).
   function draw(){
     saveResumeQuestion(i);
     const v=items[i], data=fillFor(v);
