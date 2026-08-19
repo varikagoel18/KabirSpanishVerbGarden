@@ -122,10 +122,12 @@
       overflow:hidden;
     }
     header.collapsed{padding-bottom:14px;}
-    header.collapsed .stats,
-    header.collapsed .header-actions{
+    header.collapsed .stats{
       max-height:0;opacity:0;margin-top:0;pointer-events:none;
     }
+    /* Header actions (Parents / Trophies / Sync) stay visible even when the
+       header is collapsed — they are the primary way to reach history,
+       streak details, and trophies, and hiding them made kids miss them. */
     header.collapsed .brand p{display:none;}
     header.collapsed .brand h1{font-size:20px;}
     .mini-action{min-height:36px;}
