@@ -2885,7 +2885,7 @@ const TROPHIES = [
   {id:"irregular-3s-25",em:"🥇",name:"Irregular Grandmaster",desc:"3 stars on 25 Level 2 lessons",       check:s=>s.level2ThreeStarLessons>=25},
   {id:"irregular-perfect",em:"🥋",name:"Irregular Perfectionist",desc:"3 stars on every Level 2 lesson",  check:s=>s.level2Perfect},
   {id:"practice-first",em:"🧪", name:"Test Starter",      desc:"Finish your first regular practice test", check:s=>s.practiceTestsDone>=1},
-  {id:"hw-first",    em:"🎒",   name:"Homework Hero",     desc:"Finish your first Spanish Class HW quiz", check:s=>s.hwDone>=1},
+  {id:"hw-first",    em:"🦸‍♀️",   name:"Homework Hero",     desc:"Finish your first Spanish Class HW quiz", check:s=>s.hwDone>=1},
   {id:"hw-5",        em:"🎧",   name:"Listening Learner", desc:"Finish 5 Spanish Class HW quizzes",       check:s=>s.hwDone>=5},
   {id:"surprise-quiz",em:"🎁",  name:"Surprise Solver",   desc:"Finish a surprise review quiz",           check:s=>s.surpriseFinished},
   // Lesson-count milestones
@@ -2895,7 +2895,7 @@ const TROPHIES = [
   {id:"lessons-100",em:"🏃‍♀️",   name:"Marathon Master",   desc:"Finish 100 lessons total",                check:s=>s.totalLessonsDone>=100},
   // Stars
   {id:"stars-150",  em:"🌌",   name:"Star Storm",        desc:"Earn 150 stars total",                    check:s=>s.totalStars>=150},
-  {id:"stars-250",  em:"🚀",   name:"Cosmic Champion",   desc:"Earn 250 stars total",                    check:s=>s.totalStars>=250},
+  {id:"stars-250",  em:"🧑‍🚀",   name:"Cosmic Champion",   desc:"Earn 250 stars total",                    check:s=>s.totalStars>=250},
   // Saplings (3-star regular lessons)
   {id:"saplings-10",em:"🌱",   name:"Sapling Patch",     desc:"Grow 10 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=10},
   {id:"saplings-25",em:"🌸",   name:"Blooming Garden",   desc:"Grow 25 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=25},
@@ -2922,14 +2922,14 @@ const TROPHIES = [
   {id:"hw-all",     em:"🧮",   name:"HW Master",         desc:"Finish all Spanish Class HW quizzes",     check:s=>s.hwFullyDone},
   {id:"hw-stars-3", em:"✏️",  name:"HW Sharpshooter",   desc:"Earn 3 stars on 3 HW quizzes",             check:s=>s.hwThreeStar>=3},
   // Mastery
-  {id:"master-40",  em:"🧠",   name:"Verb Sage",         desc:"Master 40 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=40},
+  {id:"master-40",  em:"🧑‍🏫",   name:"Verb Sage",         desc:"Master 40 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=40},
   // Level 3 · Verb Tenses (Futuro cercano)
   {id:"tense-first",em:"⏳",   name:"Tense Rookie",      desc:"Finish your first tense activity",        check:s=>s.tenseLessonsDone>=1},
   {id:"tense-3",    em:"🕰️", name:"Tense Trio",         desc:"Finish 3 tense activities",               check:s=>s.tenseLessonsDone>=3},
   {id:"tense-7",    em:"⌛",   name:"Tense Explorer",    desc:"Finish 7 tense activities",               check:s=>s.tenseLessonsDone>=7},
   {id:"tense-all",  em:"📗",   name:"Verb Tenses Pro",   desc:"Finish all 10 tense activities",          check:s=>s.tenseAllDone},
   {id:"tense-stars-3",em:"⏱️",name:"Tense Sharpshooter", desc:"Earn 3 stars on 3 tense activities",      check:s=>s.tenseThreeStar>=3},
-  {id:"tense-perfect",em:"🔮", name:"Futuro Master",     desc:"Earn 3 stars on ALL 10 tense activities", check:s=>s.tensePerfect},
+  {id:"tense-perfect",em:"🧚‍♀️", name:"Futuro Master",     desc:"Earn 3 stars on ALL 10 tense activities", check:s=>s.tensePerfect},
   // Level 4 · La Casa
   {id:"house-first",   em:"🗝️",name:"Casa Explorer",    desc:"Finish your first La Casa lesson",         check:s=>s.houseLessonsDone>=1 || s.houseQuizzesDone>=1},
   {id:"house-rooms",   em:"🚪", name:"Room Finder",       desc:"Learn every room / area word",            check:s=>s.houseAllRoomsLearned},
@@ -2949,7 +2949,7 @@ const TROPHIES = [
   {id:"level0-done",em:"🎊", name:"Fiesta Champion+",    desc:"Finish every Level 0 lesson",             check:s=>s.fiestaLevelComplete},
   {id:"level3-done",em:"🧿", name:"Tense Champion",      desc:"Finish every Level 3 activity",           check:s=>s.tenseAllDone},
   {id:"level4-done",em:"🏘️", name:"La Casa Champion+",   desc:"Finish every Level 4 lesson",             check:s=>s.houseLevelComplete},
-  {id:"all-levels-done",em:"🎖️",name:"Grand Champion",   desc:"Finish every lesson in every level",      check:s=>s.fiestaLevelComplete && s.level1Complete && s.level2Complete && s.tenseAllDone && s.houseLevelComplete},
+  {id:"all-levels-done",em:"🦸",name:"Grand Champion",   desc:"Finish every lesson in every level",      check:s=>s.fiestaLevelComplete && s.level1Complete && s.level2Complete && s.tenseAllDone && s.houseLevelComplete},
   // --- Saplings (extras) ---
   {id:"saplings-100",em:"🌾",name:"Meadow Maker",         desc:"Grow 100 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=100},
   {id:"saplings-200",em:"🪻",name:"Sunflower Fields",     desc:"Grow 200 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=200},
@@ -2977,8 +2977,8 @@ const TROPHIES = [
   // --- Trees (higher tier) ---
   {id:"trees-50",  em:"🪵", name:"Ancient Grove",       desc:"Grow 50 trees (3-star bonus quizzes)",     check:s=>s.treesCount>=50},
   // --- Verb Mastery (higher tiers) ---
-  {id:"master-60", em:"🧜", name:"Verb Sorcerer",       desc:"Master 60 verbs (90%+ accuracy)",          check:s=>s.masteredCount>=60},
-  {id:"master-100",em:"🎩",name:"Verb Grandmaster",    desc:"Master 100 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=100},
+  {id:"master-60", em:"🧑‍🔬", name:"Verb Sorcerer",       desc:"Master 60 verbs (90%+ accuracy)",          check:s=>s.masteredCount>=60},
+  {id:"master-100",em:"🤴",name:"Verb Grandmaster",    desc:"Master 100 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=100},
   // --- Practice tests ---
   {id:"practice-perfect-all",em:"🌞",name:"Practice Rainbow",desc:"Earn 3 stars on every practice test", check:s=>s.practiceThreeStar>=10},
   // --- Spanish HW ---
@@ -2987,7 +2987,7 @@ const TROPHIES = [
   {id:"tense-5",   em:"🕓", name:"Tense Explorer II",    desc:"Finish 5 tense activities",               check:s=>s.tenseLessonsDone>=5},
   // --- Level 0 · Vocab Fiesta ---
   {id:"fiesta-first",   em:"🎉", name:"Fiesta Rookie",     desc:"Finish your first Level 0 activity",     check:s=>s.fiestaLessonsDone>=1 || s.fiestaQuizzesDone>=1},
-  {id:"fiesta-colors",  em:"🎨", name:"Color Master",      desc:"Learn every color",                      check:s=>s.fiestaColorsAll},
+  {id:"fiesta-colors",  em:"🧑‍🎨", name:"Color Master",      desc:"Learn every color",                      check:s=>s.fiestaColorsAll},
   {id:"fiesta-phys",    em:"📏", name:"Descriptions Pro",   desc:"Learn every physical adjective",         check:s=>s.fiestaPhysAll},
   {id:"fiesta-pers",    em:"😊", name:"Personality Explorer",desc:"Learn every personality adjective",     check:s=>s.fiestaPersAll},
   {id:"fiesta-place",   em:"📍", name:"Location Legend",   desc:"Learn every place preposition",          check:s=>s.fiestaPlaceAll},
@@ -3021,7 +3021,7 @@ const TROPHIES = [
   {id:"perfect-200",em:"💠",name:"Perfect Royalty",     desc:"Earn 3 stars on 200 lessons or quizzes",     check:s=>s.perfectCount>=200},
   // Verb mastery — ultra tier
   {id:"master-150",em:"🧞", name:"Verb Genie",          desc:"Master 150 verbs (90%+ accuracy)",           check:s=>s.masteredCount>=150},
-  {id:"master-200",em:"🪬", name:"Verb Deity",          desc:"Master 200 verbs (90%+ accuracy)",           check:s=>s.masteredCount>=200},
+  {id:"master-200",em:"🫅", name:"Verb Deity",          desc:"Master 200 verbs (90%+ accuracy)",           check:s=>s.masteredCount>=200},
   // Garden — ultra tier
   {id:"saplings-350",em:"🏕️",name:"Prairie Guardian",   desc:"Grow 350 saplings (3-star regular lessons)", check:s=>s.saplingsCount>=350},
   {id:"saplings-500",em:"🪷",name:"Garden Universe",    desc:"Grow 500 saplings (3-star regular lessons)", check:s=>s.saplingsCount>=500},
@@ -3046,7 +3046,7 @@ const TROPHIES = [
   {id:"tense-10",      em:"🛤️", name:"Tense Voyager",        desc:"Finish 10 tense activities",             check:s=>s.tenseLessonsDone>=10},
   {id:"tense-13",      em:"🌁", name:"Tense Horizon",        desc:"Finish 13 tense activities",             check:s=>s.tenseLessonsDone>=13},
   {id:"tense-stars-10",em:"🪃", name:"Tense Sharpshooter II",desc:"Earn 3 stars on 10 tense activities",    check:s=>s.tenseThreeStar>=10},
-  {id:"tense-stars-all",em:"📜",name:"Tense Grandmaster",    desc:"Earn 3 stars on every tense activity",   check:s=>s.tensePerfect},
+  {id:"tense-stars-all",em:"🧑‍🎓",name:"Tense Grandmaster",    desc:"Earn 3 stars on every tense activity",   check:s=>s.tensePerfect},
 ];
 function trophySnapshot(){
   let totalLessonsDone=0, anyThreeStars=false, bonusThreeStars=false, totalStars=0, allVerbsLearned=false, verbsLearned=0;
@@ -3919,7 +3919,18 @@ function normAnswer(s){
 /* 10-sec per-question countdown. Attaches a bar above .q inside #stage.
    Returns {cancel()} — call on correct or 2nd-wrong so timeout doesn't fire.
    On timeout: onExpire() is invoked (usually: mark wrong + advance). */
+// Timer hidden until this date (inclusive). After it, the per-question
+// countdown returns on its own. To re-enable earlier, override via
+//   ?qtimer=1  in the URL, or set TIMER_HIDDEN_UNTIL to a past date.
+const TIMER_HIDDEN_UNTIL = new Date('2026-10-20T23:59:59');
 function startQuestionTimer(seconds, onExpire){
+  try{
+    const params = new URLSearchParams(location.search);
+    const forceOn = params.get('qtimer') === '1';
+    if(!forceOn && Date.now() < TIMER_HIDDEN_UNTIL.getTime()){
+      return {cancel(){}};
+    }
+  }catch(_){}
   const q = document.querySelector('#stage .q');
   if(!q) return {cancel(){}};
   const owner = cur;
@@ -3944,15 +3955,44 @@ function startQuestionTimer(seconds, onExpire){
   const to = setTimeout(()=>{ clearInterval(tick); if(cur!==owner)return; bar.classList.add('expired'); onExpire(); }, seconds*1000);
   return { cancel(){ clearInterval(tick); clearTimeout(to); if(bar.parentNode) bar.parentNode.removeChild(bar); } };
 }
-function secondWrongAdvance(state, onAdvance){
+function secondWrongAdvance(state, onAdvance, opts){
+  // opts: optional {correct, speak, fillBlank, container}
+  //   correct    — the right answer. If provided, highlights the matching
+  //                .opt button green and the toast names the answer.
+  //   speak      — optional phrase to read aloud (defaults to opts.correct).
+  //   fillBlank  — if true, writes `correct` into any .blank in the current view.
+  //   container  — element to scope the .opt lookup (defaults to #opts).
   if(state.advancing) return true;
   state.wrongAttempts = (state.wrongAttempts||0) + 1;
   resetCombo();
   SFX.wrong();
   if(state.wrongAttempts >= 2){
     state.advancing = true;
-    toast("Not quite — let's try the next one 💪");
-    setTimeout(onAdvance, 650);
+    let revealed = false;
+    if(opts && opts.correct != null){
+      try{
+        const container = opts.container || document.getElementById("opts") || document.getElementById("stage");
+        if(container){
+          const buttons = container.querySelectorAll(".opt");
+          buttons.forEach(b=>{
+            if(b.textContent === String(opts.correct) && !b.classList.contains("no")){
+              b.classList.add("ok");
+              revealed = true;
+            }
+          });
+        }
+      }catch(_){}
+      if(opts.fillBlank){
+        try{ const bl=document.querySelector(".blank"); if(bl){ bl.textContent = String(opts.correct); bl.classList.add("done"); } }catch(_){}
+      }
+      try{ speak(opts.speak || String(opts.correct)); }catch(_){}
+    }
+    const delay = (revealed || opts && opts.fillBlank) ? 1500 : 650;
+    const msg = (opts && opts.correct != null)
+      ? ("Here's the answer 💡 " + String(opts.correct))
+      : "Not quite — let's try the next one 💪";
+    toast(msg);
+    setTimeout(onAdvance, delay);
     return true;
   }
   sayOops();
@@ -4578,7 +4618,7 @@ function renderQuiz(st){
         if(txt===correct){ done=true; finish(); b.classList.add("ok"); celebrateSmallWin(b); recordVerbAttempt(v.id, !missed); cur.score++;
           if(missed && !pushed){ addRedoQuestion({prompt:promptHTML, opts, correct, em:v.em, speak:v.inf, verbId:v.id}); pushed=true; }
           speak(v.inf); setTimeout(adv,650); }
-        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ finish(); adv(); })) done=true; }
+        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ finish(); adv(); }, {correct:correct, speak:v.inf})) done=true; }
       };
       o.appendChild(b);
     });
@@ -4739,7 +4779,7 @@ function renderConj(st){
         if(txt===correct){ done=true; finish(); b.classList.add("ok"); celebrateSmallWin(b); recordVerbAttempt(v.id, !missed); cur.score++;
           if(missed && !pushed){ addRedoQuestion({prompt:promptHTML, opts, correct, em:v.em, speak:correct, verbId:v.id}); pushed=true; }
           speak(correct); setTimeout(adv,650); }
-        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ finish(); adv(); })) done=true; }
+        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ finish(); adv(); }, {correct:correct, speak:v.inf})) done=true; }
       };
       o.appendChild(b);
     });
@@ -4794,7 +4834,7 @@ function renderFill(st){
             if(missed && !pushed){ addRedoQuestion({prompt:sentence, opts, correct, em:v.em, speak:data.es.replace("___",correct), verbId:v.id}); pushed=true; }
             if(bl){bl.textContent=correct;bl.classList.add("done");}
             speak(data.es.replace("___",correct)); setTimeout(adv,900);
-          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv)) done=true; }
+          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv, {correct:correct, speak:data.es.replace("___",correct)})) done=true; }
         };
         o.appendChild(b);
       });
@@ -4831,7 +4871,7 @@ function renderFill(st){
         } else {
           missed=true;
           feed.textContent="Not quite — try again 💪"; feed.style.color="var(--berry)";
-          if(secondWrongAdvance(wrongState, ()=>{ done=true; disableActions(); inp.disabled=true; adv(); })){
+          if(secondWrongAdvance(wrongState, ()=>{ done=true; disableActions(); inp.disabled=true; adv(); }, {correct:correct, speak:data.es.replace("___",correct)})){
             done=true; disableActions(); inp.disabled=true;
           }
         }
@@ -4949,7 +4989,7 @@ function renderListenSpell(st){
           setTimeout(()=>{ if(r<verbs.length-1){ r++; draw(); } else nextStage(); },850);
         } else { wordMissed=true; tries++;
           if(tries>=2){ $("#lh").innerHTML=`Hint: it means <b>"${v.en}"</b> ${v.em}`; }
-          if(secondWrongAdvance(wrongState, ()=>{ if(r<verbs.length-1){ r++; draw(); } else nextStage(); })) return;
+          if(secondWrongAdvance(wrongState, ()=>{ if(r<verbs.length-1){ r++; draw(); } else nextStage(); }, {correct:correct})) return;
           setTimeout(()=>{ built=[]; drawSlots(); drawTiles(); },500);
         }
       }
@@ -5319,7 +5359,7 @@ function renderBonusReview(st){
             if(missed && !pushed){ addRedoQuestion({prompt:singleSentencePrompt, opts:cur_item.opts, correct:cur_item.correct, hint:cur_item.hint, speak:cur_item.pre.trim()+" "+cur_item.correct+" "+cur_item.post.trim()}); pushed=true; }
             speak(txt);
             setTimeout(advanceBlank,700);
-          } else{ missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; advanceBlank(); })) done=true; }
+          } else{ missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; advanceBlank(); }, {correct:correct})) done=true; }
         };
         o.appendChild(b);
       });
@@ -5378,7 +5418,7 @@ function renderParaFill(st){
           setTimeout(advanceBlank, 700);
         } else {
           missed=true; b.classList.add("no");
-          if(secondWrongAdvance(wrongState, ()=>{ done=true; advanceBlank(); })) done=true;
+          if(secondWrongAdvance(wrongState, ()=>{ done=true; advanceBlank(); }, {correct:correct})) done=true;
         }
       };
       o.appendChild(b);
@@ -5421,7 +5461,7 @@ function renderRedo(st){
       b.onclick=()=>{
         if(done||b.classList.contains("no"))return;
         if(txt===q.correct){ done=true; b.classList.add("ok"); celebrateSmallWin(b); if(q.verbId) recordVerbAttempt(q.verbId, !missed); cur.score++; if(q.speak) speak(q.speak); setTimeout(adv,650); }
-        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv)) done=true; }
+        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv, {correct:q.correct, speak:q.speak || q.correct})) done=true; }
       };
       o.appendChild(b);
     });
@@ -5472,7 +5512,7 @@ function renderHWQuiz(st){
           const bl=stage.querySelector(".blank"); if(bl){ bl.textContent=it.correct; bl.classList.add("done"); }
           speak((it.pre+it.correct+it.post).trim());
           setTimeout(adv, 850);
-        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv)) done=true; }
+        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv, {correct:it.correct})) done=true; }
       };
       o.appendChild(b);
     });
@@ -5541,7 +5581,7 @@ function renderTenseQuiz(st){
           const bl=stage.querySelector(".blank"); if(bl){ bl.textContent=it.correct; bl.classList.add("done"); }
           speak((it.pre+it.correct+it.post).trim());
           setTimeout(advItem, 850);
-        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, advItem)) done=true; }
+        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, advItem, {correct:it.correct})) done=true; }
       };
       o.appendChild(b);
     });
@@ -5612,7 +5652,7 @@ function renderTenseQuiz(st){
               if(pi<pItems.length-1){ pi++; render(); }
               else { paraIdx++; startParagraph(); }
             }, 750);
-          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(pi<pItems.length-1){ pi++; render(); } else { paraIdx++; startParagraph(); } })) done=true; }
+          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(pi<pItems.length-1){ pi++; render(); } else { paraIdx++; startParagraph(); } }, {correct:cur_item.correct})) done=true; }
         };
         o.appendChild(b);
       });
@@ -6108,7 +6148,7 @@ function renderHouseLesson(st){
             const bl=stage.querySelector(".blank"); if(bl){ bl.textContent=it.correct; bl.classList.add("done"); }
             speak((it.pre+it.correct+it.post).trim());
             setTimeout(()=>{ if(i<sentenceItems.length-1){ i++; draw(); } else next(); }, 850);
-          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(i<sentenceItems.length-1){ i++; draw(); } else next(); })) done=true; }
+          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(i<sentenceItems.length-1){ i++; draw(); } else next(); }, {correct:it.correct})) done=true; }
         };
         o.appendChild(b);
       });
@@ -6259,7 +6299,7 @@ function renderHouseQuiz(st){
           if(missed && !pushed){ cur.redoQueue.push({prompt:q.ask, opts:q.opts, correct:q.correct, hint:q.hint, speak:q.speak}); pushed=true; }
           if(q.speak) speak(q.speak);
           setTimeout(()=>{ if(i<questions.length-1){ i++; draw(); } else { toast("Quiz done! 🎯"); setTimeout(nextStage, 650); } }, 750);
-        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(i<questions.length-1){ i++; draw(); } else { toast("Quiz done! 🎯"); setTimeout(nextStage, 650); } })) done=true; }
+        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(i<questions.length-1){ i++; draw(); } else { toast("Quiz done! 🎯"); setTimeout(nextStage, 650); } }, {correct:q.correct})) done=true; }
       };
       o.appendChild(b);
     });
