@@ -794,6 +794,54 @@
     *{animation-duration:.001s !important;transition-duration:.05s !important;}
     .trv2-card::before,.confetti{animation:none!important;display:none!important;}
   }
+  /* -------- Round 2 additions -------- */
+  /* #3 · tap-to-hear: any element with .speakable or data-speak is listenable */
+  .speakable,[data-speak]{cursor:pointer;position:relative;}
+  .speakable:active,[data-speak]:active{transform:scale(.97);}
+  /* #6 · Why? chip + bubble shown after 2 wrongs */
+  .why-chip{display:inline-flex;align-items:center;gap:4px;margin:8px auto 0;
+    background:var(--sun);color:var(--ink);font-weight:800;font-size:13px;
+    padding:6px 12px;border-radius:999px;border:0;box-shadow:0 2px 0 rgba(0,0,0,.1);cursor:pointer;}
+  .why-chip:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.1);}
+  .why-bubble{margin:10px 10px 0;padding:10px 12px;border-radius:12px;
+    background:#FFF6E8;border:1.5px solid #EAD6A8;font-size:13.5px;color:var(--ink);
+    font-weight:700;line-height:1.4;text-align:center;animation:popIn .25s ease-out;}
+  @keyframes popIn{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
+  /* #2 · tricky three card */
+  .tricky-three{background:linear-gradient(135deg,#FFF4D6,#FFE6B8);
+    border:1.5px solid #EAD6A8;border-radius:16px;padding:14px 16px;margin:10px 0;
+    box-shadow:var(--shadow);}
+  .tricky-three h3{font-family:'Baloo 2',cursive;font-size:16px;color:#9A6400;margin-bottom:6px;}
+  .tricky-three .tt-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+  .tricky-three .tt-chip{background:#fff;border:1px solid #EAD6A8;border-radius:999px;
+    padding:6px 12px;font-weight:800;font-size:13px;color:var(--ink);cursor:pointer;}
+  .tricky-three .tt-chip:active{transform:scale(.97);}
+  /* #24 · avatar in header */
+  .avatar-mini{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.3);
+    border:2px solid rgba(255,255,255,.6);display:inline-flex;align-items:center;justify-content:center;
+    font-size:20px;line-height:1;margin-right:8px;flex:0 0 auto;}
+  /* #28 · favorite button */
+  .fav-btn{background:none;border:0;font-size:18px;cursor:pointer;padding:4px 6px;line-height:1;
+    opacity:.5;transition:opacity .15s, transform .1s;}
+  .fav-btn.on{opacity:1;}
+  .fav-btn:active{transform:scale(1.15);}
+  /* #29 · streak freeze */
+  .freeze-badge{display:inline-flex;align-items:center;gap:4px;background:#DCF1FF;
+    color:#1E6A8C;font-weight:800;font-size:12px;padding:3px 8px;border-radius:999px;
+    margin-left:6px;border:1px solid #B6DCF2;}
+  /* #27 · dark mode (opt-in) */
+  :root[data-theme="dark"]{
+    --ink:#F2E7D7; --ink-soft:#C9BDAA; --cream:#2A1F18; --card:#3A2A20;
+    --panel-cream:#3A2A20; --shadow:0 4px 14px rgba(0,0,0,.4);
+  }
+  :root[data-theme="dark"] body{background:linear-gradient(180deg,#2A1F18,#1F160F);}
+  :root[data-theme="dark"] .tricky-three{background:linear-gradient(135deg,#4A3A1F,#5A4620);
+    border-color:#6B5428;color:var(--ink);}
+  :root[data-theme="dark"] .tricky-three h3{color:#F5B841;}
+  :root[data-theme="dark"] .tricky-three .tt-chip{background:#3A2A20;border-color:#5A4A3C;color:var(--ink);}
+  :root[data-theme="dark"] .why-bubble{background:#3A2A20;border-color:#5A4A3C;color:var(--ink);}
+  :root[data-theme="dark"] .mini-action{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);}
+  :root[data-theme="dark"] .freeze-badge{background:#1E2E3A;color:#B6DCF2;border-color:#2D4458;}
 </style>
 </head>
 <body>
@@ -801,6 +849,7 @@
   <header id="mainHeader">
     <button class="header-toggle" id="hdrToggleBtn" type="button" aria-label="Collapse header" aria-expanded="true">−</button>
     <div class="brand">
+      <span class="avatar-mini" id="avatarMini" title="Your avatar">🙂</span>
       <div class="logo">📚</div>
       <div>
         <h1 id="brandName">Jardín español</h1>
@@ -833,6 +882,11 @@
         <p id="todaySubtitle"></p>
       </div>
       <button class="today-play" id="todayPlay" type="button">Play Now ▶</button>
+    </section>
+    <section class="tricky-three" id="trickyThree" hidden>
+      <h3>☀️ Today's tricky three</h3>
+      <p style="font-size:12px;color:var(--ink-soft);margin:0">Tap any word to hear it 🔊</p>
+      <div class="tt-row" id="trickyRow"></div>
     </section>
     <div class="section-title">
       <h2>Choose a level</h2>
@@ -2504,7 +2558,11 @@ function focusPracticePool(day, learnedPool, newSet){
   const upcoming=(planFor(LV)||[])
     .filter(p=>p.d>=day && p.d<day+10)
     .flatMap(p=>p.newV||[]);
-  const focusIds=new Set([...recent, ...nextUnlearned, ...upcoming, ...newSet.map(v=>v.id)]);
+  // Spaced repetition (round 2 · #1): verbs whose SRS due-date is today or earlier
+  // get preference so cross-session review surfaces naturally.
+  let srsDue = [];
+  try{ srsDue = srsDueVerbIdsFor(LVID); }catch(_){}
+  const focusIds=new Set([...srsDue, ...recent, ...nextUnlearned, ...upcoming, ...newSet.map(v=>v.id)]);
   const focused=learnedPool.filter(v=>focusIds.has(v.id));
   return focused.length>=Math.min(8, learnedPool.length) ? focused : learnedPool;
 }
@@ -2643,6 +2701,13 @@ function ensureExtraState(){
   }
   STATE.onboarding = STATE.onboarding || {seen:false, completedAt:""};
   STATE.adoption   = STATE.adoption   || {firstLaunchAt:"", totalLaunches:0, lastLaunchAt:""};
+  // Round 2 features
+  STATE.srs           = STATE.srs           || {};   // {levelId|verbId: {nextDue:"YYYY-MM-DD", interval:days, misses:n}}
+  STATE.favoriteVerbs = STATE.favoriteVerbs || {};   // {levelId|verbId: true}
+  STATE.avatar        = STATE.avatar        || {picked:false, kind:""};
+  STATE.streakFreezes = STATE.streakFreezes || {available:0, used:[], grantedAtStreak:[]};
+  STATE.theme         = STATE.theme         || "auto"; // "auto" | "light" | "dark"
+  STATE.sessionCounters = STATE.sessionCounters || {inSessionLessons:0, startedAt:""};
   STATE.revive        = STATE.revive        || {couponSerial:0, active:null, history:[], saplingsSpent:0};
   if(typeof STATE.revive.saplingsSpent!=="number") STATE.revive.saplingsSpent=0;
   if(STATE.lastDate===todayKey() && !STATE.levelDailyDone[1] && !STATE.level1AliveRepairDone){
@@ -2729,6 +2794,148 @@ function recordVerbAttempt(verbId, firstTryNoHint){
   const s = STATE.verbStats[key] = STATE.verbStats[key] || {attempts:0, correct:0};
   s.attempts++;
   if(firstTryNoHint) s.correct++;
+  srsBump(key, !!firstTryNoHint);
+}
+
+/* ------- Spaced repetition (round 2 · #1) -------
+   Interval ladder: 1 → 3 → 7 → 14 → 30 days. Right-on-first-try advances
+   the interval, wrong resets to 1 day. Due verbs get preference next session. */
+const SRS_LADDER = [1, 3, 7, 14, 30];
+function srsBump(key, correct){
+  ensureExtraState();
+  const entry = STATE.srs[key] = STATE.srs[key] || {nextDue:"", interval:1, misses:0};
+  if(correct){
+    const next = SRS_LADDER[Math.min(SRS_LADDER.indexOf(entry.interval||1)+1, SRS_LADDER.length-1)] || 1;
+    entry.interval = next;
+  } else {
+    entry.interval = 1;
+    entry.misses = (entry.misses||0) + 1;
+  }
+  const d = new Date();
+  d.setDate(d.getDate() + entry.interval);
+  entry.nextDue = d.toISOString().slice(0,10);
+}
+function srsDueVerbIdsFor(levelId){
+  // Returns array of verb ids whose SRS due-date is today or earlier for the given level.
+  ensureExtraState();
+  const tk = todayKey();
+  const prefix = String(levelId) + "|";
+  const due = [];
+  for(const k in STATE.srs){
+    if(!k.startsWith(prefix)) continue;
+    const e = STATE.srs[k];
+    if(!e || !e.nextDue) continue;
+    if(e.nextDue <= tk) due.push(+k.slice(prefix.length));
+  }
+  return due;
+}
+
+/* ------- Haptic feedback (round 2 · #11) -------
+   Prefers the WKWebView bridge (added separately in Swift). Falls back to
+   navigator.vibrate on Android/web. Silent on desktop browsers. */
+function haptic(kind){
+  try{
+    if(window.webkit && webkit.messageHandlers && webkit.messageHandlers.haptic){
+      webkit.messageHandlers.haptic.postMessage(String(kind||"light"));
+      return;
+    }
+  }catch(_){}
+  try{
+    if(navigator.vibrate){
+      const map = {light:10, medium:25, success:[30,20,30], warn:40, heavy:60};
+      navigator.vibrate(map[kind] || 15);
+    }
+  }catch(_){}
+}
+
+/* ------- Favorite verbs (round 2 · #28) ------- */
+function toggleFavorite(levelId, verbId){
+  ensureExtraState();
+  const key = `${levelId}|${verbId}`;
+  if(STATE.favoriteVerbs[key]) delete STATE.favoriteVerbs[key];
+  else STATE.favoriteVerbs[key] = true;
+  Store.save();
+}
+function isFavorite(levelId, verbId){
+  ensureExtraState();
+  return !!STATE.favoriteVerbs[`${levelId}|${verbId}`];
+}
+
+/* ------- Streak freezes (round 2 · #29) -------
+   Grant 1 freeze on streak milestones (7, 14, 21 ...). Freeze auto-protects
+   on a day-off: if the kid returns a day later, streak keeps instead of resets. */
+function maybeGrantStreakFreeze(){
+  ensureExtraState();
+  const s = STATE.streak || 0;
+  const sf = STATE.streakFreezes;
+  // Grant on first time passing a multiple of 7 (never grant more than 3 held at once).
+  if(s>0 && s%7===0 && !sf.grantedAtStreak.includes(s) && sf.available<3){
+    sf.available++;
+    sf.grantedAtStreak.push(s);
+    return true;
+  }
+  return false;
+}
+function tryConsumeStreakFreeze(){
+  ensureExtraState();
+  const sf = STATE.streakFreezes;
+  if(sf.available<=0) return false;
+  sf.available--;
+  sf.used.push({at:new Date().toISOString(), coveredFor:todayKey()});
+  return true;
+}
+
+/* ------- Micro-rule lookup for "Why?" button (round 2 · #6) ------- */
+const CONJUGATION_RULES = {
+  "ar|yo":"Yo + an -AR verb → ends in -o (hablar → hablo).",
+  "ar|tú":"Tú + an -AR verb → ends in -as (hablar → hablas).",
+  "ar|él":"Él/ella + an -AR verb → ends in -a (hablar → habla).",
+  "ar|ella":"Él/ella + an -AR verb → ends in -a (hablar → habla).",
+  "ar|nosotros":"Nosotros + an -AR verb → ends in -amos (hablar → hablamos).",
+  "ar|vosotros":"Vosotros + an -AR verb → ends in -áis (hablar → habláis).",
+  "ar|ellos":"Ellos/ellas + an -AR verb → ends in -an (hablar → hablan).",
+  "er|yo":"Yo + an -ER verb → ends in -o (comer → como).",
+  "er|tú":"Tú + an -ER verb → ends in -es (comer → comes).",
+  "er|él":"Él/ella + an -ER verb → ends in -e (comer → come).",
+  "er|nosotros":"Nosotros + an -ER verb → ends in -emos (comer → comemos).",
+  "er|ellos":"Ellos/ellas + an -ER verb → ends in -en (comer → comen).",
+  "ir|yo":"Yo + an -IR verb → ends in -o (vivir → vivo).",
+  "ir|tú":"Tú + an -IR verb → ends in -es (vivir → vives).",
+  "ir|él":"Él/ella + an -IR verb → ends in -e (vivir → vive).",
+  "ir|nosotros":"Nosotros + an -IR verb → ends in -imos (vivir → vivimos).",
+  "ir|ellos":"Ellos/ellas + an -IR verb → ends in -en (vivir → viven).",
+};
+const IR_FUTURE_RULES = {
+  "yo":"Yo use 'voy a' + the plain verb for the future (voy a jugar = I'm going to play).",
+  "tú":"Tú use 'vas a' + the plain verb for the future (vas a jugar = you're going to play).",
+  "él":"Él/ella use 'va a' + the plain verb for the future (va a jugar).",
+  "ella":"Él/ella use 'va a' + the plain verb for the future (va a jugar).",
+  "nosotros":"Nosotros use 'vamos a' + the plain verb (vamos a jugar).",
+  "ellos":"Ellos/ellas use 'van a' + the plain verb (van a jugar).",
+};
+function ruleForHint(hint){
+  if(!hint) return "Try saying it aloud twice — Spanish verbs change endings for each person.";
+  const h = String(hint).toLowerCase();
+  // ir + a patterns
+  const m1 = h.match(/ir\s*\+?\s*a\s*·\s*(yo|t[úu]|[eé]l|ella|nosotros|ellos|ellas)/);
+  if(m1){
+    const p = m1[1].replace(/[úu]/,"ú").replace("é","é");
+    const k = p==="tú"?"tú":(p==="él"||p==="ella"?"él":p==="nosotros"?"nosotros":"ellos");
+    return IR_FUTURE_RULES[k] || IR_FUTURE_RULES["yo"];
+  }
+  // -AR / -ER / -IR patterns
+  const m2 = h.match(/\b(ar|er|ir)\b.*?·\s*(yo|t[úu]|[eé]l|ella|nosotros|vosotros|ellos|ellas)/);
+  if(m2){
+    const ending = m2[1];
+    const pron = m2[2].replace(/[úu]/,"ú").replace("é","é");
+    const key = `${ending}|${pron==="tú"?"tú":pron==="él"||pron==="ella"?"él":pron==="nosotros"?"nosotros":"vosotros"===pron?"vosotros":"ellos"}`;
+    return CONJUGATION_RULES[key] || "The ending changes with the person — practice makes this stick!";
+  }
+  // Simple "ar · yo" style
+  const m3 = h.match(/^(ar|er|ir)\s*·\s*(\w+)/);
+  if(m3){ return CONJUGATION_RULES[`${m3[1]}|${m3[2]}`] || "Spanish verbs change endings for each person."; }
+  // Fallback
+  return "Spanish verbs change endings for each person — this one just takes a few tries. You've got it! 💪";
 }
 function stripHTML(s){ return String(s||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim(); }
 function recordMissedQuestion(q){
@@ -3614,6 +3821,8 @@ function showNameOnboarding(){
     // Refresh the picker so any name-personalized copy shows immediately.
     try{ renderLevels(); }catch(e){}
     toast(name ? `¡Hola, ${name}! 🌱` : "¡Hola, amigo! 🌱");
+    // Round 2 · #24 — right after name, offer an avatar pick (first launch only).
+    try{ if(!STATE.avatar.picked) setTimeout(showAvatarPicker, 400); }catch(_){}
   }
   go.onclick = ()=>{
     const raw = (inp.value||"").trim().slice(0,40);
@@ -3696,6 +3905,55 @@ function learnerName(){
     return (n && String(n).trim()) || "amigo";
   }catch(e){ return "amigo"; }
 }
+/* Round 2 · #24 avatar picker — 4 choices on first launch */
+function showAvatarPicker(){
+  ensureExtraState();
+  if(STATE.avatar.picked) return;
+  const choices = [
+    {k:"🦸", label:"Hero"},
+    {k:"🧚", label:"Fairy"},
+    {k:"🦋", label:"Butterfly"},
+    {k:"🐯", label:"Tiger"},
+  ];
+  $("#dvEmoji").textContent = "✨";
+  $("#dvTitle").textContent = "Pick your avatar!";
+  $("#dvSub").textContent = "Choose a friend to show at the top";
+  $("#steps").innerHTML = "";
+  const stage = $("#stage");
+  stage.innerHTML = `
+    <div style="padding:20px 10px;text-align:center">
+      <p style="opacity:.7;font-size:14px;margin-bottom:16px">Tap one to pick:</p>
+      <div id="avGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:280px;margin:0 auto"></div>
+    </div>`;
+  const grid = $("#avGrid");
+  choices.forEach(c=>{
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "btn leaf";
+    b.style.cssText = "font-size:40px;padding:16px;min-height:80px;display:flex;flex-direction:column;align-items:center;gap:4px";
+    b.innerHTML = `<span style="font-size:40px;line-height:1">${c.k}</span><span style="font-size:11px;opacity:.8">${c.label}</span>`;
+    b.onclick = ()=>{
+      STATE.avatar = {picked:true, kind:c.k};
+      Store.save();
+      try{ haptic("success"); }catch(_){}
+      $("#overlay").classList.remove("show","lesson-active");
+      document.body.style.overflow = "";
+      clearOverlayCloser();
+      try{ renderLevels(); }catch(_){}
+      toast(`Hi there, ${c.label}! ${c.k}`);
+    };
+    grid.appendChild(b);
+  });
+  $("#overlay").classList.add("show","lesson-active");
+  document.body.style.overflow = "hidden";
+  setOverlayCloser(()=>{
+    // Default to a smiley if the kid skips.
+    STATE.avatar = {picked:true, kind:"🙂"};
+    Store.save();
+    try{ renderLevels(); }catch(_){}
+  });
+}
+
 function markOnboardingSeen(){
   ensureExtraState();
   STATE.onboarding = Object.assign({}, STATE.onboarding||{}, {
@@ -3956,16 +4214,12 @@ function startQuestionTimer(seconds, onExpire){
   return { cancel(){ clearInterval(tick); clearTimeout(to); if(bar.parentNode) bar.parentNode.removeChild(bar); } };
 }
 function secondWrongAdvance(state, onAdvance, opts){
-  // opts: optional {correct, speak, fillBlank, container}
-  //   correct    — the right answer. If provided, highlights the matching
-  //                .opt button green and the toast names the answer.
-  //   speak      — optional phrase to read aloud (defaults to opts.correct).
-  //   fillBlank  — if true, writes `correct` into any .blank in the current view.
-  //   container  — element to scope the .opt lookup (defaults to #opts).
+  // opts: optional {correct, speak, fillBlank, container, hint}
   if(state.advancing) return true;
   state.wrongAttempts = (state.wrongAttempts||0) + 1;
   resetCombo();
   SFX.wrong();
+  try{ haptic("warn"); }catch(_){}
   if(state.wrongAttempts >= 2){
     state.advancing = true;
     let revealed = false;
@@ -3986,8 +4240,27 @@ function secondWrongAdvance(state, onAdvance, opts){
         try{ const bl=document.querySelector(".blank"); if(bl){ bl.textContent = String(opts.correct); bl.classList.add("done"); } }catch(_){}
       }
       try{ speak(opts.speak || String(opts.correct)); }catch(_){}
+      // Round 2 · #6 — show a tiny "Why?" chip near the question that reveals the rule.
+      try{
+        const q = document.querySelector("#stage .q");
+        if(q && !q.querySelector(".why-chip")){
+          const chip = document.createElement("button");
+          chip.className = "why-chip";
+          chip.type = "button";
+          chip.textContent = "💡 Why?";
+          chip.onclick = (ev)=>{
+            ev.stopPropagation();
+            const rule = ruleForHint(opts.hint||"");
+            const bubble = document.createElement("div");
+            bubble.className = "why-bubble";
+            bubble.textContent = rule;
+            chip.replaceWith(bubble);
+          };
+          q.appendChild(chip);
+        }
+      }catch(_){}
     }
-    const delay = (revealed || opts && opts.fillBlank) ? 1500 : 650;
+    const delay = (revealed || opts && opts.fillBlank) ? 1800 : 650;
     const msg = (opts && opts.correct != null)
       ? ("Here's the answer 💡 " + String(opts.correct))
       : "Not quite — let's try the next one 💪";
@@ -4041,7 +4314,24 @@ function refreshStats(){
   const frozen=freshDayPending();
   $("#stStreak").textContent=STATE.streak||0;
   $("#streakStat").classList.toggle("frozen", frozen);
-  $("#stStreakLabel").textContent=frozen ? "Frozen streak 🧊" : "Day streak 🔥";
+  // Round 2 · #26 streak flame tiers
+  const sVal = STATE.streak||0;
+  const flames = sVal>=100 ? "🪐" : sVal>=60 ? "🌋" : sVal>=30 ? "🔥🔥🔥" : sVal>=7 ? "🔥🔥" : "🔥";
+  const freezeBadge = (STATE.streakFreezes && STATE.streakFreezes.available>0)
+    ? ` <span class="freeze-badge" title="${STATE.streakFreezes.available} freeze available">🧊${STATE.streakFreezes.available}</span>` : "";
+  $("#stStreakLabel").innerHTML = frozen ? "Frozen streak 🧊" : ("Day streak " + flames + freezeBadge);
+  // Round 2 · #24 avatar display
+  try{
+    if(STATE.avatar && STATE.avatar.kind){
+      const el = document.getElementById("avatarMini");
+      if(el) el.textContent = STATE.avatar.kind;
+    }
+  }catch(_){}
+  // Round 2 · #27 dark mode apply
+  try{
+    const t = STATE.theme || "auto";
+    document.documentElement.setAttribute("data-theme", t==="auto" ? "" : t);
+  }catch(_){}
   $("#stRegular").textContent=regularVerbs;
   $("#stIrregular").textContent=irregularVerbs;
   if($("#stHouse")) $("#stHouse").textContent=houseWords;
@@ -4085,6 +4375,43 @@ function pickTodayCard(){
   const day=level && planFor(level)[0];
   return level && day ? {level,day,completedCount:0} : null;
 }
+/* Round 2 · #2 Tricky three — surface the 3 lowest-accuracy learned verbs */
+function renderTrickyThree(){
+  const card=$("#trickyThree"); if(!card) return;
+  ensureExtraState();
+  const stats = STATE.verbStats || {};
+  const items = [];
+  for(const key in stats){
+    const s = stats[key];
+    if(!s || s.attempts < 3) continue;      // need enough signal
+    const [lid, vidStr] = key.split("|");
+    const vid = +vidStr;
+    const lv = LEVELS.find(l=>String(l.id)===String(lid));
+    if(!lv) continue;
+    const v = lv.verbs.find(x=>x.id===vid);
+    if(!v) continue;
+    const acc = s.correct / s.attempts;
+    if(acc >= 0.85) continue;               // skip verbs the kid already owns
+    items.push({v, acc, attempts:s.attempts, lv});
+  }
+  // Sort weakest first, break ties by most-attempted
+  items.sort((a,b)=> a.acc - b.acc || b.attempts - a.attempts);
+  const row = $("#trickyRow");
+  if(items.length < 3 || !row){ card.hidden = true; return; }
+  card.hidden = false;
+  row.innerHTML = "";
+  items.slice(0,3).forEach(({v,acc,lv})=>{
+    const chip = document.createElement("button");
+    chip.className = "tt-chip";
+    chip.type = "button";
+    const es = v.inf || v.es;
+    const en = v.en;
+    chip.textContent = `${v.em||"✨"} ${es} · ${en} · ${Math.round(acc*100)}%`;
+    chip.onclick = ()=>{ try{ speak(es); haptic("light"); }catch(_){} };
+    row.appendChild(chip);
+  });
+}
+
 function renderTodayCard(){
   const card=$("#todayCard");
   if(!card) return;
@@ -4098,6 +4425,7 @@ function renderTodayCard(){
 function renderLevels(){
   refreshStats();
   renderTodayCard();
+  renderTrickyThree();
   const wrap=$("#levels"); wrap.innerHTML="";
   // Fresh-install greeting: shown only until any lesson has been completed anywhere
   try{
@@ -4618,7 +4946,7 @@ function renderQuiz(st){
         if(txt===correct){ done=true; finish(); b.classList.add("ok"); celebrateSmallWin(b); recordVerbAttempt(v.id, !missed); cur.score++;
           if(missed && !pushed){ addRedoQuestion({prompt:promptHTML, opts, correct, em:v.em, speak:v.inf, verbId:v.id}); pushed=true; }
           speak(v.inf); setTimeout(adv,650); }
-        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ finish(); adv(); }, {correct:correct, speak:v.inf})) done=true; }
+        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ finish(); adv(); }, {correct:correct, speak:v.inf, hint:(typeof v!=="undefined"&&v&&v.hint)||""})) done=true; }
       };
       o.appendChild(b);
     });
@@ -4779,7 +5107,7 @@ function renderConj(st){
         if(txt===correct){ done=true; finish(); b.classList.add("ok"); celebrateSmallWin(b); recordVerbAttempt(v.id, !missed); cur.score++;
           if(missed && !pushed){ addRedoQuestion({prompt:promptHTML, opts, correct, em:v.em, speak:correct, verbId:v.id}); pushed=true; }
           speak(correct); setTimeout(adv,650); }
-        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ finish(); adv(); }, {correct:correct, speak:v.inf})) done=true; }
+        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ finish(); adv(); }, {correct:correct, speak:v.inf, hint:(typeof v!=="undefined"&&v&&v.hint)||""})) done=true; }
       };
       o.appendChild(b);
     });
@@ -4834,7 +5162,7 @@ function renderFill(st){
             if(missed && !pushed){ addRedoQuestion({prompt:sentence, opts, correct, em:v.em, speak:data.es.replace("___",correct), verbId:v.id}); pushed=true; }
             if(bl){bl.textContent=correct;bl.classList.add("done");}
             speak(data.es.replace("___",correct)); setTimeout(adv,900);
-          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv, {correct:correct, speak:data.es.replace("___",correct)})) done=true; }
+          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv, {correct:correct, speak:data.es.replace("___",correct), hint:(typeof v!=="undefined"&&v&&v.hint)||""})) done=true; }
         };
         o.appendChild(b);
       });
@@ -4871,7 +5199,7 @@ function renderFill(st){
         } else {
           missed=true;
           feed.textContent="Not quite — try again 💪"; feed.style.color="var(--berry)";
-          if(secondWrongAdvance(wrongState, ()=>{ done=true; disableActions(); inp.disabled=true; adv(); }, {correct:correct, speak:data.es.replace("___",correct)})){
+          if(secondWrongAdvance(wrongState, ()=>{ done=true; disableActions(); inp.disabled=true; adv(); }, {correct:correct, speak:data.es.replace("___",correct), hint:(typeof v!=="undefined"&&v&&v.hint)||""})){
             done=true; disableActions(); inp.disabled=true;
           }
         }
@@ -4989,7 +5317,7 @@ function renderListenSpell(st){
           setTimeout(()=>{ if(r<verbs.length-1){ r++; draw(); } else nextStage(); },850);
         } else { wordMissed=true; tries++;
           if(tries>=2){ $("#lh").innerHTML=`Hint: it means <b>"${v.en}"</b> ${v.em}`; }
-          if(secondWrongAdvance(wrongState, ()=>{ if(r<verbs.length-1){ r++; draw(); } else nextStage(); }, {correct:correct})) return;
+          if(secondWrongAdvance(wrongState, ()=>{ if(r<verbs.length-1){ r++; draw(); } else nextStage(); }, {correct:correct, hint:(typeof v!=="undefined"&&v&&v.hint)||""})) return;
           setTimeout(()=>{ built=[]; drawSlots(); drawTiles(); },500);
         }
       }
@@ -5359,7 +5687,7 @@ function renderBonusReview(st){
             if(missed && !pushed){ addRedoQuestion({prompt:singleSentencePrompt, opts:cur_item.opts, correct:cur_item.correct, hint:cur_item.hint, speak:cur_item.pre.trim()+" "+cur_item.correct+" "+cur_item.post.trim()}); pushed=true; }
             speak(txt);
             setTimeout(advanceBlank,700);
-          } else{ missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; advanceBlank(); }, {correct:correct})) done=true; }
+          } else{ missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; advanceBlank(); }, {correct:correct, hint:v.hint})) done=true; }
         };
         o.appendChild(b);
       });
@@ -5418,7 +5746,7 @@ function renderParaFill(st){
           setTimeout(advanceBlank, 700);
         } else {
           missed=true; b.classList.add("no");
-          if(secondWrongAdvance(wrongState, ()=>{ done=true; advanceBlank(); }, {correct:correct})) done=true;
+          if(secondWrongAdvance(wrongState, ()=>{ done=true; advanceBlank(); }, {correct:correct, hint:(typeof v!=="undefined"&&v&&v.hint)||""})) done=true;
         }
       };
       o.appendChild(b);
@@ -5461,7 +5789,7 @@ function renderRedo(st){
       b.onclick=()=>{
         if(done||b.classList.contains("no"))return;
         if(txt===q.correct){ done=true; b.classList.add("ok"); celebrateSmallWin(b); if(q.verbId) recordVerbAttempt(q.verbId, !missed); cur.score++; if(q.speak) speak(q.speak); setTimeout(adv,650); }
-        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv, {correct:q.correct, speak:q.speak || q.correct})) done=true; }
+        else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv, {correct:q.correct, speak:q.speak || q.correct, hint:q.hint})) done=true; }
       };
       o.appendChild(b);
     });
@@ -5512,7 +5840,7 @@ function renderHWQuiz(st){
           const bl=stage.querySelector(".blank"); if(bl){ bl.textContent=it.correct; bl.classList.add("done"); }
           speak((it.pre+it.correct+it.post).trim());
           setTimeout(adv, 850);
-        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv, {correct:it.correct})) done=true; }
+        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, adv, {correct:it.correct, hint:it.hint})) done=true; }
       };
       o.appendChild(b);
     });
@@ -5581,7 +5909,7 @@ function renderTenseQuiz(st){
           const bl=stage.querySelector(".blank"); if(bl){ bl.textContent=it.correct; bl.classList.add("done"); }
           speak((it.pre+it.correct+it.post).trim());
           setTimeout(advItem, 850);
-        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, advItem, {correct:it.correct})) done=true; }
+        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, advItem, {correct:it.correct, hint:it.hint})) done=true; }
       };
       o.appendChild(b);
     });
@@ -5652,7 +5980,7 @@ function renderTenseQuiz(st){
               if(pi<pItems.length-1){ pi++; render(); }
               else { paraIdx++; startParagraph(); }
             }, 750);
-          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(pi<pItems.length-1){ pi++; render(); } else { paraIdx++; startParagraph(); } }, {correct:cur_item.correct})) done=true; }
+          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(pi<pItems.length-1){ pi++; render(); } else { paraIdx++; startParagraph(); } }, {correct:cur_item.correct, hint:cur_item.hint})) done=true; }
         };
         o.appendChild(b);
       });
@@ -6148,7 +6476,7 @@ function renderHouseLesson(st){
             const bl=stage.querySelector(".blank"); if(bl){ bl.textContent=it.correct; bl.classList.add("done"); }
             speak((it.pre+it.correct+it.post).trim());
             setTimeout(()=>{ if(i<sentenceItems.length-1){ i++; draw(); } else next(); }, 850);
-          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(i<sentenceItems.length-1){ i++; draw(); } else next(); }, {correct:it.correct})) done=true; }
+          } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(i<sentenceItems.length-1){ i++; draw(); } else next(); }, {correct:it.correct, hint:it.hint})) done=true; }
         };
         o.appendChild(b);
       });
@@ -6299,7 +6627,7 @@ function renderHouseQuiz(st){
           if(missed && !pushed){ cur.redoQueue.push({prompt:q.ask, opts:q.opts, correct:q.correct, hint:q.hint, speak:q.speak}); pushed=true; }
           if(q.speak) speak(q.speak);
           setTimeout(()=>{ if(i<questions.length-1){ i++; draw(); } else { toast("Quiz done! 🎯"); setTimeout(nextStage, 650); } }, 750);
-        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(i<questions.length-1){ i++; draw(); } else { toast("Quiz done! 🎯"); setTimeout(nextStage, 650); } }, {correct:q.correct})) done=true; }
+        } else { missed=true; b.classList.add("no"); if(secondWrongAdvance(wrongState, ()=>{ done=true; if(i<questions.length-1){ i++; draw(); } else { toast("Quiz done! 🎯"); setTimeout(nextStage, 650); } }, {correct:q.correct, hint:q.hint})) done=true; }
       };
       o.appendChild(b);
     });
@@ -6472,11 +6800,20 @@ function saveDayProgress(stars){
     }
   }
   learnedUpTo(d).forEach(id=>{ if(!st.collected.includes(id)) st.collected.push(id); });
-  // streak (global, per calendar day)
+  // streak (global, per calendar day) — Round 2 · #29 uses a freeze token
+  // if the kid skipped exactly one day, so a 10-day streak survives one off day.
   const tk=todayKey();
   if(STATE.lastDate!==tk){
     const y=new Date(Date.now()-86400000).toISOString().slice(0,10);
-    STATE.streak = (STATE.lastDate===y)? (STATE.streak||0)+1 : 1;
+    const twoAgo=new Date(Date.now()-2*86400000).toISOString().slice(0,10);
+    if(STATE.lastDate===y){
+      STATE.streak = (STATE.streak||0)+1;
+    } else if(STATE.lastDate===twoAgo && tryConsumeStreakFreeze()){
+      STATE.streak = (STATE.streak||0)+1;
+      setTimeout(()=>{ try{ toast("🧊 Freeze used — streak saved!"); }catch(_){} }, 1200);
+    } else {
+      STATE.streak = 1;
+    }
     STATE.lastDate=tk;
   }
   STATE.levelDailyDone=STATE.levelDailyDone||{};
@@ -6510,6 +6847,24 @@ function commitDay(stars, onDone){
   // Lesson finished cleanly → wipe the mid-lesson resume checkpoint so the
   // Today card / next open lands on the picker instead of resuming this day.
   clearResume();
+  // Round 2 · #25 — track in-session lesson count for the "keep going!" nudge
+  try{
+    ensureExtraState();
+    const sc = STATE.sessionCounters;
+    sc.inSessionLessons = (sc.inSessionLessons||0) + 1;
+    sc.startedAt = sc.startedAt || new Date().toISOString();
+    if(sc.inSessionLessons === 2){
+      setTimeout(()=>{ try{ toast("On fire! One more? 🔥"); haptic("success"); }catch(_){} }, 1600);
+    }
+  }catch(_){}
+  // Round 2 · #29 — maybe grant a streak freeze at 7/14/21/… day milestones.
+  try{
+    if(maybeGrantStreakFreeze()){
+      setTimeout(()=>{ try{ toast("🧊 Freeze token earned! Keeps your streak alive if you miss a day."); }catch(_){} }, 2200);
+    }
+  }catch(_){}
+  // Round 2 · #11 — bloom haptic
+  try{ haptic("success"); }catch(_){}
   saveDayProgress(stars);
   // If a revival coupon is active, mark this level's chapter complete.
   try{
@@ -6563,6 +6918,22 @@ function requestCloseDay(){
   closeDay();
 }
 $("#closeBtn").onclick=requestCloseDay;
+
+/* Round 2 · #3 Tap-to-hear everywhere — document-level delegation.
+   Any element with [data-speak] OR class .speakable OR a Spanish verb text
+   inside a bloom message triggers speak() of its text. Doesn't interfere
+   with existing .opt buttons (which have their own click handlers that
+   stopPropagation implicitly via assignment to b.onclick). */
+document.addEventListener("click", (e)=>{
+  try{
+    const el = e.target && e.target.closest ? e.target.closest("[data-speak]") : null;
+    if(!el) return;
+    const txt = el.getAttribute("data-speak");
+    if(!txt) return;
+    speak(txt);
+    try{ haptic("light"); }catch(_){}
+  }catch(_){}
+}, true);
 // Overlay backdrop tap: only close for popups (no active lesson) — a stray
 // backdrop tap while playing shouldn't yank the kid out of a lesson.
 $("#overlay").onclick=(e)=>{
@@ -6608,10 +6979,21 @@ function showLearnedVerbs(levelId){
   } else {
     stage.innerHTML=`<div class="vlist" id="vlist"></div>`;
     const wrap=$("#vlist");
-    unique.forEach(({v})=>{
-      const row=document.createElement("button"); row.className="vrow"; row.type="button";
-      row.innerHTML=`<span class="em">${v.em}</span><span class="meta"><span class="es">${v.es}</span><br><span class="en">${v.en}</span></span><span style="font-size:18px">🔊</span>`;
-      row.onclick=()=>{ SFX.pop(); speak(v.inf || v.es); };
+    unique.forEach(({v, lv})=>{
+      const row=document.createElement("div"); row.className="vrow";
+      const fav = isFavorite(lv.id, v.id);
+      row.innerHTML=`
+        <button type="button" class="fav-btn ${fav?"on":""}" data-fav="1" title="Favorite">${fav?"⭐":"☆"}</button>
+        <button type="button" class="vrow-tap" style="all:unset;flex:1;display:flex;align-items:center;gap:10px;cursor:pointer;">
+          <span class="em">${v.em}</span>
+          <span class="meta"><span class="es">${v.es}</span><br><span class="en">${v.en}</span></span>
+          <span style="font-size:18px">🔊</span>
+        </button>`;
+      const favBtn = row.querySelector(".fav-btn");
+      favBtn.onclick=(ev)=>{ ev.stopPropagation(); toggleFavorite(lv.id, v.id);
+        const now = isFavorite(lv.id, v.id);
+        favBtn.textContent = now?"⭐":"☆"; favBtn.classList.toggle("on", now); haptic("light"); };
+      row.querySelector(".vrow-tap").onclick=()=>{ SFX.pop(); speak(v.inf || v.es); haptic("light"); };
       wrap.appendChild(row);
     });
   }
@@ -6845,6 +7227,9 @@ function renderParents(){
       dayRows.push(`<div class="mini-row"><span>${lv.name} · Lesson ${d}<small>${p?p.title:"Completed"}</small></span><b>${"⭐".repeat(st.stars[d]||0)}</b></div>`);
     });
   }
+  // Round 2 · #27 dark mode + #29 streak freezes shown in Parents
+  const currentTheme = (STATE.theme||"auto");
+  const freezes = (STATE.streakFreezes && STATE.streakFreezes.available)||0;
   openInfoPanel("👪","Parents","How it's going",`
     <div class="panel-grid">
       <div class="metric-row">
@@ -6857,11 +7242,33 @@ function renderParents(){
         <div class="metric"><b>${trend.recent.toFixed(1)}</b>recent avg</div>
         <div class="metric"><b>${trend.better===true?"↘":trend.better===false?"↗":"•"}</b>${trend.label}</div>
       </div>
+      <div class="panel-card">
+        <h3>Settings</h3>
+        <div class="mini-row">
+          <span>Appearance</span>
+          <div>
+            <button class="chip" data-theme-btn="auto"${currentTheme==="auto"?' style="background:var(--leaf);color:#fff;border-color:var(--leaf)"':""}>Auto</button>
+            <button class="chip" data-theme-btn="light"${currentTheme==="light"?' style="background:var(--leaf);color:#fff;border-color:var(--leaf)"':""}>Light</button>
+            <button class="chip" data-theme-btn="dark"${currentTheme==="dark"?' style="background:var(--leaf);color:#fff;border-color:var(--leaf)"':""}>Dark</button>
+          </div>
+        </div>
+        <div class="mini-row">
+          <span>Streak freezes <small>Earned at 7, 14, 21… days. Max 3 held.</small></span>
+          <b>🧊 ${freezes}</b>
+        </div>
+      </div>
       <div class="panel-card"><h3>Focus verbs</h3><div class="mini-list">${struggle}</div></div>
       <div class="panel-card"><h3>Wrong questions by day</h3><div class="mini-list">${missRows}</div></div>
       <div class="panel-card"><h3>Patterns</h3><div class="mini-list">${patternRows}</div></div>
     </div>`);
   $("#stage").querySelectorAll("[data-say]").forEach(b=>b.onclick=()=>{ SFX.pop(); speak(b.dataset.say); });
+  // Round 2 · #27 theme-toggle buttons
+  $("#stage").querySelectorAll("[data-theme-btn]").forEach(b=>b.onclick=()=>{
+    STATE.theme = b.getAttribute("data-theme-btn");
+    Store.save();
+    try{ document.documentElement.setAttribute("data-theme", STATE.theme==="auto"?"":STATE.theme); }catch(_){}
+    renderParents();
+  });
 }
 
 
