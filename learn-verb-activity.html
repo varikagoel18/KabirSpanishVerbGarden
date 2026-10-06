@@ -2849,13 +2849,13 @@ const TROPHIES = [
   {id:"three-star",  em:"⭐",  name:"Star Power!",       desc:"Get 3 stars in any lesson",               check:s=>s.anyThreeStars},
   {id:"tree",        em:"🌳",  name:"Tree Grower",       desc:"Get 3 stars in a bonus quiz",             check:s=>s.bonusThreeStars},
   {id:"streak3",     em:"🔥",  name:"On Fire!",          desc:"Reach a 3-day streak",                    check:s=>s.streak>=3},
-  {id:"streak7",     em:"🔥",  name:"Week Warrior!",     desc:"Reach a 7-day streak",                    check:s=>s.streak>=7},
+  {id:"streak7",     em:"🚒",  name:"Week Warrior!",     desc:"Reach a 7-day streak",                    check:s=>s.streak>=7},
   {id:"streak30",    em:"🏔️", name:"Unstoppable!",      desc:"Reach a 30-day streak",                   check:s=>s.streak>=30},
   {id:"verbs-10",    em:"📖",  name:"Word Sprout",       desc:"Collect 10 verbs",                        check:s=>s.verbsLearned>=10},
   {id:"verbs-25",    em:"📚",  name:"Word Bloom",        desc:"Collect 25 verbs",                        check:s=>s.verbsLearned>=25},
   {id:"verbs-all",   em:"🧙",  name:"Word Wizard",       desc:"Collect all verbs in a level",            check:s=>s.allVerbsLearned},
   {id:"stars-30",    em:"🌠",  name:"Star Collector",    desc:"Earn 30 stars total",                     check:s=>s.totalStars>=30},
-  {id:"stars-75",    em:"🏆",  name:"Star Champion",     desc:"Earn 75 stars total",                     check:s=>s.totalStars>=75},
+  {id:"stars-75",    em:"🏅",  name:"Star Champion",     desc:"Earn 75 stars total",                     check:s=>s.totalStars>=75},
   {id:"conj-master", em:"🎯",  name:"Conjugation Master",desc:"3 stars on AR, ER and IR endings",        check:s=>s.conjMasterDone},
   {id:"master-10",   em:"💎",  name:"Verb Master x10",   desc:"Master 10 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=10},
   {id:"master-25",   em:"👑",  name:"Verb Royalty",      desc:"Master 25 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=25},
@@ -2868,10 +2868,10 @@ const TROPHIES = [
   {id:"regular-30",  em:"🌻",  name:"Regular Scholar",   desc:"Learn 30 regular verbs",                   check:s=>s.regularVerbsLearned>=30},
   {id:"regular-all", em:"💐",  name:"Regular Verb Hero", desc:"Learn all regular verbs",                  check:s=>s.regularVerbsLearned>=LEVEL1_VERBS.length},
   // Regular verbs — 3-star lesson milestones
-  {id:"regular-3s-5", em:"🎯", name:"Regular Sharpshooter",desc:"3 stars on 5 Level 1 lessons",          check:s=>s.level1ThreeStarLessons>=5},
-  {id:"regular-3s-15",em:"🏹", name:"Regular Ace",         desc:"3 stars on 15 Level 1 lessons",         check:s=>s.level1ThreeStarLessons>=15},
-  {id:"regular-3s-25",em:"🏆", name:"Regular Legend",      desc:"3 stars on 25 Level 1 lessons",         check:s=>s.level1ThreeStarLessons>=25},
-  {id:"regular-perfect",em:"💯",name:"Regular Perfectionist",desc:"3 stars on every Level 1 lesson",     check:s=>s.level1Perfect},
+  {id:"regular-3s-5", em:"🏹", name:"Regular Sharpshooter",desc:"3 stars on 5 Level 1 lessons",          check:s=>s.level1ThreeStarLessons>=5},
+  {id:"regular-3s-15",em:"🪁", name:"Regular Ace",         desc:"3 stars on 15 Level 1 lessons",         check:s=>s.level1ThreeStarLessons>=15},
+  {id:"regular-3s-25",em:"🎺", name:"Regular Legend",      desc:"3 stars on 25 Level 1 lessons",         check:s=>s.level1ThreeStarLessons>=25},
+  {id:"regular-perfect",em:"🪖",name:"Regular Perfectionist",desc:"3 stars on every Level 1 lesson",     check:s=>s.level1Perfect},
   // Irregular verbs — collection milestones
   {id:"irregular-5", em:"⚡",  name:"Irregular Spark",    desc:"Learn 5 irregular verbs",                 check:s=>s.irregularVerbsLearned>=5},
   {id:"irregular-10",em:"🧭",  name:"Irregular Explorer", desc:"Learn 10 irregular verbs",                check:s=>s.irregularVerbsLearned>=10},
@@ -2880,10 +2880,10 @@ const TROPHIES = [
   {id:"irregular-50",em:"🛡️", name:"Irregular Legend",    desc:"Learn 50 irregular verbs",                check:s=>s.irregularVerbsLearned>=50},
   {id:"irregular-all",em:"🏛️", name:"Irregular Collector",desc:"Learn every irregular verb",              check:s=>s.irregularVerbsLearned>=LEVEL2_VERBS.length},
   // Irregular verbs — 3-star lesson milestones
-  {id:"irregular-3s-5", em:"🎯",name:"Irregular Sharpshooter",desc:"3 stars on 5 Level 2 lessons",       check:s=>s.level2ThreeStarLessons>=5},
+  {id:"irregular-3s-5", em:"🎳",name:"Irregular Sharpshooter",desc:"3 stars on 5 Level 2 lessons",       check:s=>s.level2ThreeStarLessons>=5},
   {id:"irregular-3s-15",em:"🥈",name:"Irregular Ace",        desc:"3 stars on 15 Level 2 lessons",       check:s=>s.level2ThreeStarLessons>=15},
   {id:"irregular-3s-25",em:"🥇",name:"Irregular Grandmaster",desc:"3 stars on 25 Level 2 lessons",       check:s=>s.level2ThreeStarLessons>=25},
-  {id:"irregular-perfect",em:"💯",name:"Irregular Perfectionist",desc:"3 stars on every Level 2 lesson",  check:s=>s.level2Perfect},
+  {id:"irregular-perfect",em:"🥋",name:"Irregular Perfectionist",desc:"3 stars on every Level 2 lesson",  check:s=>s.level2Perfect},
   {id:"practice-first",em:"🧪", name:"Test Starter",      desc:"Finish your first regular practice test", check:s=>s.practiceTestsDone>=1},
   {id:"hw-first",    em:"🎒",   name:"Homework Hero",     desc:"Finish your first Spanish Class HW quiz", check:s=>s.hwDone>=1},
   {id:"hw-5",        em:"🎧",   name:"Listening Learner", desc:"Finish 5 Spanish Class HW quizzes",       check:s=>s.hwDone>=5},
@@ -2892,7 +2892,7 @@ const TROPHIES = [
   {id:"lessons-10", em:"📅",   name:"Getting Going",     desc:"Finish 10 lessons total",                 check:s=>s.totalLessonsDone>=10},
   {id:"lessons-25", em:"🧱",   name:"Quarter Way",       desc:"Finish 25 lessons total",                 check:s=>s.totalLessonsDone>=25},
   {id:"lessons-50", em:"🏃",   name:"Half Marathon",     desc:"Finish 50 lessons total",                 check:s=>s.totalLessonsDone>=50},
-  {id:"lessons-100",em:"🏁",   name:"Marathon Master",   desc:"Finish 100 lessons total",                check:s=>s.totalLessonsDone>=100},
+  {id:"lessons-100",em:"🏃‍♀️",   name:"Marathon Master",   desc:"Finish 100 lessons total",                check:s=>s.totalLessonsDone>=100},
   // Stars
   {id:"stars-150",  em:"🌌",   name:"Star Storm",        desc:"Earn 150 stars total",                    check:s=>s.totalStars>=150},
   {id:"stars-250",  em:"🚀",   name:"Cosmic Champion",   desc:"Earn 250 stars total",                    check:s=>s.totalStars>=250},
@@ -2901,7 +2901,7 @@ const TROPHIES = [
   {id:"saplings-25",em:"🌸",   name:"Blooming Garden",   desc:"Grow 25 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=25},
   {id:"saplings-50",em:"🌺",   name:"Wildflower Field",  desc:"Grow 50 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=50},
   // Trees (3-star bonus quizzes)
-  {id:"trees-3",    em:"🌳",   name:"Little Grove",      desc:"Grow 3 trees (3-star bonus quizzes)",     check:s=>s.treesCount>=3},
+  {id:"trees-3",    em:"🪴",   name:"Little Grove",      desc:"Grow 3 trees (3-star bonus quizzes)",     check:s=>s.treesCount>=3},
   {id:"trees-10",   em:"🌲",   name:"Mighty Forest",     desc:"Grow 10 trees (3-star bonus quizzes)",    check:s=>s.treesCount>=10},
   {id:"trees-25",   em:"🌴",   name:"Forest Royalty",    desc:"Grow 25 trees (3-star bonus quizzes)",    check:s=>s.treesCount>=25},
   // Longer streaks
@@ -2915,18 +2915,18 @@ const TROPHIES = [
   {id:"level2-done",em:"📕",   name:"Irregular Verb Pro",desc:"Finish every lesson in Level 2",          check:s=>s.level2Complete},
   // Practice tests
   {id:"practice-3", em:"🥉",   name:"Practice Trio",     desc:"Finish 3 regular-verb practice tests",    check:s=>s.practiceTestsDone>=3},
-  {id:"practice-5", em:"🥈",   name:"Practice Pro",      desc:"Finish 5 regular-verb practice tests",    check:s=>s.practiceTestsDone>=5},
-  {id:"practice-perfect-3",em:"⭐",name:"Practice Stars", desc:"Earn 3 stars on 3 practice tests",       check:s=>s.practiceThreeStar>=3},
+  {id:"practice-5", em:"🏐",   name:"Practice Pro",      desc:"Finish 5 regular-verb practice tests",    check:s=>s.practiceTestsDone>=5},
+  {id:"practice-perfect-3",em:"✨",name:"Practice Stars", desc:"Earn 3 stars on 3 practice tests",       check:s=>s.practiceThreeStar>=3},
   // Spanish HW
   {id:"hw-3",       em:"📓",   name:"Steady Student",    desc:"Finish 3 Spanish Class HW quizzes",       check:s=>s.hwDone>=3},
-  {id:"hw-all",     em:"🎓",   name:"HW Master",         desc:"Finish all Spanish Class HW quizzes",     check:s=>s.hwFullyDone},
+  {id:"hw-all",     em:"🧮",   name:"HW Master",         desc:"Finish all Spanish Class HW quizzes",     check:s=>s.hwFullyDone},
   {id:"hw-stars-3", em:"✏️",  name:"HW Sharpshooter",   desc:"Earn 3 stars on 3 HW quizzes",             check:s=>s.hwThreeStar>=3},
   // Mastery
   {id:"master-40",  em:"🧠",   name:"Verb Sage",         desc:"Master 40 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=40},
   // Level 3 · Verb Tenses (Futuro cercano)
   {id:"tense-first",em:"⏳",   name:"Tense Rookie",      desc:"Finish your first tense activity",        check:s=>s.tenseLessonsDone>=1},
   {id:"tense-3",    em:"🕰️", name:"Tense Trio",         desc:"Finish 3 tense activities",               check:s=>s.tenseLessonsDone>=3},
-  {id:"tense-7",    em:"📆",   name:"Tense Explorer",    desc:"Finish 7 tense activities",               check:s=>s.tenseLessonsDone>=7},
+  {id:"tense-7",    em:"⌛",   name:"Tense Explorer",    desc:"Finish 7 tense activities",               check:s=>s.tenseLessonsDone>=7},
   {id:"tense-all",  em:"📗",   name:"Verb Tenses Pro",   desc:"Finish all 10 tense activities",          check:s=>s.tenseAllDone},
   {id:"tense-stars-3",em:"⏱️",name:"Tense Sharpshooter", desc:"Earn 3 stars on 3 tense activities",      check:s=>s.tenseThreeStar>=3},
   {id:"tense-perfect",em:"🔮", name:"Futuro Master",     desc:"Earn 3 stars on ALL 10 tense activities", check:s=>s.tensePerfect},
@@ -2935,7 +2935,7 @@ const TROPHIES = [
   {id:"house-rooms",   em:"🚪", name:"Room Finder",       desc:"Learn every room / area word",            check:s=>s.houseAllRoomsLearned},
   {id:"house-furn",    em:"🛋️",name:"Furniture Collector",desc:"Learn every furniture / object word",    check:s=>s.houseAllFurnitureLearned},
   {id:"house-all-words",em:"🏡",name:"House Builder",    desc:"Learn every La Casa word",                 check:s=>s.houseAllWordsLearned},
-  {id:"house-quiz-3s", em:"🎯", name:"Perfect Room Quiz", desc:"Get 3 stars on a La Casa quiz",           check:s=>s.houseThreeStarQuizzes>=1},
+  {id:"house-quiz-3s", em:"🧩", name:"Perfect Room Quiz", desc:"Get 3 stars on a La Casa quiz",           check:s=>s.houseThreeStarQuizzes>=1},
   {id:"house-quiz-arch",em:"🏗️",name:"Quiz Architect",   desc:"Get 3 stars on 5 La Casa quizzes",        check:s=>s.houseThreeStarQuizzes>=5},
   {id:"house-listen",  em:"🔊", name:"Listening Builder", desc:"Answer 10 La Casa listening questions",   check:s=>s.houseListeningCorrect>=10},
   {id:"house-sentence",em:"🧾", name:"Sentence Maker",    desc:"Answer 10 Hay/Está en… questions",        check:s=>s.houseSentenceCorrect>=10},
@@ -2944,43 +2944,43 @@ const TROPHIES = [
   // Level 0 · Everyday Basics
   // --- Perfection (extra tiers) ---
   {id:"perfect-50", em:"🌟", name:"Perfect Fifty",       desc:"Earn 3 stars on 50 lessons or quizzes",   check:s=>s.perfectCount>=50},
-  {id:"perfect-100",em:"🏆", name:"Century of Stars",    desc:"Earn 3 stars on 100 lessons or quizzes",  check:s=>s.perfectCount>=100},
+  {id:"perfect-100",em:"🎆", name:"Century of Stars",    desc:"Earn 3 stars on 100 lessons or quizzes",  check:s=>s.perfectCount>=100},
   // --- Level Champions (extras) ---
   {id:"level0-done",em:"🎊", name:"Fiesta Champion+",    desc:"Finish every Level 0 lesson",             check:s=>s.fiestaLevelComplete},
-  {id:"level3-done",em:"📗", name:"Tense Champion",      desc:"Finish every Level 3 activity",           check:s=>s.tenseAllDone},
-  {id:"level4-done",em:"🏡", name:"La Casa Champion+",   desc:"Finish every Level 4 lesson",             check:s=>s.houseLevelComplete},
-  {id:"all-levels-done",em:"👑",name:"Grand Champion",   desc:"Finish every lesson in every level",      check:s=>s.fiestaLevelComplete && s.level1Complete && s.level2Complete && s.tenseAllDone && s.houseLevelComplete},
+  {id:"level3-done",em:"🧿", name:"Tense Champion",      desc:"Finish every Level 3 activity",           check:s=>s.tenseAllDone},
+  {id:"level4-done",em:"🏘️", name:"La Casa Champion+",   desc:"Finish every Level 4 lesson",             check:s=>s.houseLevelComplete},
+  {id:"all-levels-done",em:"🎖️",name:"Grand Champion",   desc:"Finish every lesson in every level",      check:s=>s.fiestaLevelComplete && s.level1Complete && s.level2Complete && s.tenseAllDone && s.houseLevelComplete},
   // --- Saplings (extras) ---
   {id:"saplings-100",em:"🌾",name:"Meadow Maker",         desc:"Grow 100 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=100},
-  {id:"saplings-200",em:"🌻",name:"Sunflower Fields",     desc:"Grow 200 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=200},
+  {id:"saplings-200",em:"🪻",name:"Sunflower Fields",     desc:"Grow 200 saplings (3-star regular lessons)",check:s=>s.saplingsCount>=200},
   // --- Irregular Verbs (extras) ---
-  {id:"irregular-30",   em:"🧭",name:"Irregular Voyager", desc:"Learn 30 irregular verbs",                check:s=>s.irregularVerbsLearned>=30},
+  {id:"irregular-30",   em:"⛵",name:"Irregular Voyager", desc:"Learn 30 irregular verbs",                check:s=>s.irregularVerbsLearned>=30},
   {id:"irregular-3s-40",em:"🏵️",name:"Irregular Champion",desc:"3 stars on 40 Level 2 lessons",          check:s=>s.level2ThreeStarLessons>=40},
   // --- La Casa (extras) ---
-  {id:"house-lessons-5", em:"🚪",name:"Home Tour",         desc:"Finish 5 La Casa lessons",                check:s=>s.houseLessonsDone>=5},
+  {id:"house-lessons-5", em:"🪟",name:"Home Tour",         desc:"Finish 5 La Casa lessons",                check:s=>s.houseLessonsDone>=5},
   {id:"house-lessons-15",em:"🏠",name:"Home Sweet Home",   desc:"Finish 15 La Casa lessons",               check:s=>s.houseLessonsDone>=15},
-  {id:"house-quizzes-5", em:"🎯",name:"Quiz Roomer",       desc:"Finish 5 La Casa quizzes",                check:s=>s.houseQuizzesDone>=5},
-  {id:"house-quiz-arch-10",em:"🏛️",name:"Quiz Landlord",  desc:"Get 3 stars on 10 La Casa quizzes",       check:s=>s.houseThreeStarQuizzes>=10},
+  {id:"house-quizzes-5", em:"🔑",name:"Quiz Roomer",       desc:"Finish 5 La Casa quizzes",                check:s=>s.houseQuizzesDone>=5},
+  {id:"house-quiz-arch-10",em:"🏯",name:"Quiz Landlord",  desc:"Get 3 stars on 10 La Casa quizzes",       check:s=>s.houseThreeStarQuizzes>=10},
   // --- Streaks (higher tiers) ---
-  {id:"streak21",  em:"🔥", name:"Habit Formed",       desc:"Reach a 21-day streak",                    check:s=>s.streak>=21},
-  {id:"streak45",  em:"⚡", name:"Rhythm Master",       desc:"Reach a 45-day streak",                    check:s=>s.streak>=45},
-  {id:"streak100", em:"💯", name:"Century Streaker",    desc:"Reach a 100-day streak",                   check:s=>s.streak>=100},
+  {id:"streak21",  em:"🧗", name:"Habit Formed",       desc:"Reach a 21-day streak",                    check:s=>s.streak>=21},
+  {id:"streak45",  em:"🥁", name:"Rhythm Master",       desc:"Reach a 45-day streak",                    check:s=>s.streak>=45},
+  {id:"streak100", em:"💮", name:"Century Streaker",    desc:"Reach a 100-day streak",                   check:s=>s.streak>=100},
   // --- Stars (higher tiers) ---
-  {id:"stars-500", em:"🌟", name:"Star Galaxy",         desc:"Earn 500 stars total",                     check:s=>s.totalStars>=500},
-  {id:"stars-1000",em:"🌠", name:"Star Constellation",  desc:"Earn 1000 stars total",                    check:s=>s.totalStars>=1000},
+  {id:"stars-500", em:"☀️", name:"Star Galaxy",         desc:"Earn 500 stars total",                     check:s=>s.totalStars>=500},
+  {id:"stars-1000",em:"🪐", name:"Star Constellation",  desc:"Earn 1000 stars total",                    check:s=>s.totalStars>=1000},
   // --- Lesson milestones (higher tiers) ---
-  {id:"lessons-150",em:"🎖️",name:"Ultra Marathon",     desc:"Finish 150 lessons total",                 check:s=>s.totalLessonsDone>=150},
-  {id:"lessons-200",em:"🥇", name:"Learning Legend",    desc:"Finish 200 lessons total",                 check:s=>s.totalLessonsDone>=200},
+  {id:"lessons-150",em:"🧗‍♂️",name:"Ultra Marathon",     desc:"Finish 150 lessons total",                 check:s=>s.totalLessonsDone>=150},
+  {id:"lessons-200",em:"🚄", name:"Learning Legend",    desc:"Finish 200 lessons total",                 check:s=>s.totalLessonsDone>=200},
   // --- Bonus quiz milestones (higher tiers) ---
   {id:"bonus-25",  em:"🎰", name:"Bonus Master",        desc:"Finish 25 bonus quizzes",                  check:s=>s.bonusLessonsDone>=25},
   {id:"bonus-50",  em:"🎡", name:"Bonus Legend",        desc:"Finish 50 bonus quizzes",                  check:s=>s.bonusLessonsDone>=50},
   // --- Trees (higher tier) ---
-  {id:"trees-50",  em:"🌲", name:"Ancient Grove",       desc:"Grow 50 trees (3-star bonus quizzes)",     check:s=>s.treesCount>=50},
+  {id:"trees-50",  em:"🪵", name:"Ancient Grove",       desc:"Grow 50 trees (3-star bonus quizzes)",     check:s=>s.treesCount>=50},
   // --- Verb Mastery (higher tiers) ---
-  {id:"master-60", em:"🧙", name:"Verb Sorcerer",       desc:"Master 60 verbs (90%+ accuracy)",          check:s=>s.masteredCount>=60},
-  {id:"master-100",em:"🏵️",name:"Verb Grandmaster",    desc:"Master 100 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=100},
+  {id:"master-60", em:"🧜", name:"Verb Sorcerer",       desc:"Master 60 verbs (90%+ accuracy)",          check:s=>s.masteredCount>=60},
+  {id:"master-100",em:"🎩",name:"Verb Grandmaster",    desc:"Master 100 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=100},
   // --- Practice tests ---
-  {id:"practice-perfect-all",em:"🌈",name:"Practice Rainbow",desc:"Earn 3 stars on every practice test", check:s=>s.practiceThreeStar>=10},
+  {id:"practice-perfect-all",em:"🌞",name:"Practice Rainbow",desc:"Earn 3 stars on every practice test", check:s=>s.practiceThreeStar>=10},
   // --- Spanish HW ---
   {id:"hw-stars-5",em:"✒️", name:"HW Ace",              desc:"Earn 3 stars on 5 HW quizzes",             check:s=>s.hwThreeStar>=5},
   // --- Tense (extra tier) ---
@@ -2993,60 +2993,60 @@ const TROPHIES = [
   {id:"fiesta-place",   em:"📍", name:"Location Legend",   desc:"Learn every place preposition",          check:s=>s.fiestaPlaceAll},
   {id:"fiesta-question",em:"❓", name:"Question Wizard",   desc:"Learn every question word",              check:s=>s.fiestaQuestionAll},
   {id:"fiesta-profession",em:"👨‍🏫",name:"Profession Pro", desc:"Learn every profession",                 check:s=>s.fiestaProfAll},
-  {id:"fiesta-weekday", em:"📅", name:"Weekday Winner",    desc:"Learn every day of the week",            check:s=>s.fiestaWeekdayAll},
-  {id:"fiesta-month",   em:"🗓️",name:"Month Master",      desc:"Learn every month of the year",          check:s=>s.fiestaMonthAll},
-  {id:"fiesta-all-words",em:"🎊",name:"Vocab All-Star",    desc:"Learn every Level 0 word",               check:s=>s.fiestaAllWords},
-  {id:"fiesta-quiz-3s", em:"🎯", name:"Fiesta Sharpshooter",desc:"Earn 3 stars on any Fiesta quiz",       check:s=>s.fiestaThreeStarQuizzes>=1},
-  {id:"fiesta-quiz-5",  em:"🥇", name:"Fiesta Ace",        desc:"Earn 3 stars on 5 Fiesta quizzes",       check:s=>s.fiestaThreeStarQuizzes>=5},
-  {id:"fiesta-quiz-15", em:"🏆", name:"Fiesta Legend",     desc:"Earn 3 stars on 15 Fiesta quizzes",      check:s=>s.fiestaThreeStarQuizzes>=15},
+  {id:"fiesta-weekday", em:"🗓️", name:"Weekday Winner",    desc:"Learn every day of the week",            check:s=>s.fiestaWeekdayAll},
+  {id:"fiesta-month",   em:"🗒️",name:"Month Master",      desc:"Learn every month of the year",          check:s=>s.fiestaMonthAll},
+  {id:"fiesta-all-words",em:"🎼",name:"Vocab All-Star",    desc:"Learn every Level 0 word",               check:s=>s.fiestaAllWords},
+  {id:"fiesta-quiz-3s", em:"🪅", name:"Fiesta Sharpshooter",desc:"Earn 3 stars on any Fiesta quiz",       check:s=>s.fiestaThreeStarQuizzes>=1},
+  {id:"fiesta-quiz-5",  em:"🎷", name:"Fiesta Ace",        desc:"Earn 3 stars on 5 Fiesta quizzes",       check:s=>s.fiestaThreeStarQuizzes>=5},
+  {id:"fiesta-quiz-15", em:"🪩", name:"Fiesta Legend",     desc:"Earn 3 stars on 15 Fiesta quizzes",      check:s=>s.fiestaThreeStarQuizzes>=15},
   {id:"fiesta-lessons-10",em:"🎪",name:"Fiesta Regular",   desc:"Finish 10 Level 0 lessons",              check:s=>s.fiestaLessonsDone>=10},
-  {id:"fiesta-champion",em:"🎡", name:"Fiesta Champion",   desc:"Finish every Level 0 lesson",            check:s=>s.fiestaLevelComplete},
+  {id:"fiesta-champion",em:"🎠", name:"Fiesta Champion",   desc:"Finish every Level 0 lesson",            check:s=>s.fiestaLevelComplete},
   // --- General vocab collection (across all levels) ---
-  {id:"verbs-50",  em:"🌸", name:"Word Meadow",         desc:"Collect 50 unique words across all levels",  check:s=>s.verbsLearned>=50},
-  {id:"verbs-100", em:"🌳", name:"Vocab Marathon",      desc:"Collect 100 unique words across all levels", check:s=>s.verbsLearned>=100},
+  {id:"verbs-50",  em:"🍀", name:"Word Meadow",         desc:"Collect 50 unique words across all levels",  check:s=>s.verbsLearned>=50},
+  {id:"verbs-100", em:"📔", name:"Vocab Marathon",      desc:"Collect 100 unique words across all levels", check:s=>s.verbsLearned>=100},
   // --- New tier (round 2) --- bigger stretch goals that use existing snapshot fields
-  {id:"verbs-150", em:"📚", name:"Library",             desc:"Collect 150 unique words across all levels", check:s=>s.verbsLearned>=150},
-  {id:"verbs-200", em:"🏛️",name:"Grand Library",       desc:"Collect 200 unique words across all levels", check:s=>s.verbsLearned>=200},
+  {id:"verbs-150", em:"📒", name:"Library",             desc:"Collect 150 unique words across all levels", check:s=>s.verbsLearned>=150},
+  {id:"verbs-200", em:"🗂️",name:"Grand Library",       desc:"Collect 200 unique words across all levels", check:s=>s.verbsLearned>=200},
   // Streaks — ultra tier
-  {id:"streak90",  em:"🗻", name:"Mountain Climber",    desc:"Reach a 90-day streak",                      check:s=>s.streak>=90},
-  {id:"streak180", em:"🌋", name:"Volcano Climber",     desc:"Reach a 180-day streak",                     check:s=>s.streak>=180},
+  {id:"streak90",  em:"⛰️", name:"Mountain Climber",    desc:"Reach a 90-day streak",                      check:s=>s.streak>=90},
+  {id:"streak180", em:"🗻", name:"Volcano Climber",     desc:"Reach a 180-day streak",                     check:s=>s.streak>=180},
   {id:"streak365", em:"🌍", name:"Year of Spanish",     desc:"Reach a 365-day streak",                     check:s=>s.streak>=365},
   // Stars — ultra tier
-  {id:"stars-2000",em:"🌟", name:"Star Universe",       desc:"Earn 2000 stars total",                      check:s=>s.totalStars>=2000},
-  {id:"stars-5000",em:"✨", name:"Infinity Stars",      desc:"Earn 5000 stars total",                      check:s=>s.totalStars>=5000},
+  {id:"stars-2000",em:"☄️", name:"Star Universe",       desc:"Earn 2000 stars total",                      check:s=>s.totalStars>=2000},
+  {id:"stars-5000",em:"💫", name:"Infinity Stars",      desc:"Earn 5000 stars total",                      check:s=>s.totalStars>=5000},
   // Lessons — ultra tier
   {id:"lessons-300",em:"🚅",name:"Lesson Express",      desc:"Finish 300 lessons total",                   check:s=>s.totalLessonsDone>=300},
-  {id:"lessons-500",em:"🚀",name:"Lesson Legend",       desc:"Finish 500 lessons total",                   check:s=>s.totalLessonsDone>=500},
+  {id:"lessons-500",em:"🛸",name:"Lesson Legend",       desc:"Finish 500 lessons total",                   check:s=>s.totalLessonsDone>=500},
   // Perfect lessons — ultra tier
-  {id:"perfect-200",em:"👑",name:"Perfect Royalty",     desc:"Earn 3 stars on 200 lessons or quizzes",     check:s=>s.perfectCount>=200},
+  {id:"perfect-200",em:"💠",name:"Perfect Royalty",     desc:"Earn 3 stars on 200 lessons or quizzes",     check:s=>s.perfectCount>=200},
   // Verb mastery — ultra tier
   {id:"master-150",em:"🧞", name:"Verb Genie",          desc:"Master 150 verbs (90%+ accuracy)",           check:s=>s.masteredCount>=150},
-  {id:"master-200",em:"🪄", name:"Verb Deity",          desc:"Master 200 verbs (90%+ accuracy)",           check:s=>s.masteredCount>=200},
+  {id:"master-200",em:"🪬", name:"Verb Deity",          desc:"Master 200 verbs (90%+ accuracy)",           check:s=>s.masteredCount>=200},
   // Garden — ultra tier
-  {id:"saplings-350",em:"🌾",name:"Prairie Guardian",   desc:"Grow 350 saplings (3-star regular lessons)", check:s=>s.saplingsCount>=350},
-  {id:"saplings-500",em:"🌼",name:"Garden Universe",    desc:"Grow 500 saplings (3-star regular lessons)", check:s=>s.saplingsCount>=500},
-  {id:"trees-100", em:"🌲", name:"Enchanted Forest",    desc:"Grow 100 trees (3-star bonus quizzes)",      check:s=>s.treesCount>=100},
+  {id:"saplings-350",em:"🏕️",name:"Prairie Guardian",   desc:"Grow 350 saplings (3-star regular lessons)", check:s=>s.saplingsCount>=350},
+  {id:"saplings-500",em:"🪷",name:"Garden Universe",    desc:"Grow 500 saplings (3-star regular lessons)", check:s=>s.saplingsCount>=500},
+  {id:"trees-100", em:"🏞️", name:"Enchanted Forest",    desc:"Grow 100 trees (3-star bonus quizzes)",      check:s=>s.treesCount>=100},
   // Fiesta — new perfectionist tier
-  {id:"fiesta-quiz-30",em:"🎊",name:"Fiesta Grandmaster",desc:"Earn 3 stars on 30 Fiesta quizzes",         check:s=>s.fiestaThreeStarQuizzes>=30},
+  {id:"fiesta-quiz-30",em:"🧨",name:"Fiesta Grandmaster",desc:"Earn 3 stars on 30 Fiesta quizzes",         check:s=>s.fiestaThreeStarQuizzes>=30},
   // Tense — new perfectionist tier
-  {id:"tense-stars-7",em:"🔮",name:"Tense Perfectionist II",desc:"Earn 3 stars on 7 tense activities",     check:s=>s.tenseThreeStar>=7},
+  {id:"tense-stars-7",em:"⏲️",name:"Tense Perfectionist II",desc:"Earn 3 stars on 7 tense activities",     check:s=>s.tenseThreeStar>=7},
   // HW — new perfectionist tier
-  {id:"hw-stars-10",em:"📒",name:"HW Perfectionist",    desc:"Earn 3 stars on 10 HW quizzes",              check:s=>s.hwThreeStar>=10},
+  {id:"hw-stars-10",em:"🖊️",name:"HW Perfectionist",    desc:"Earn 3 stars on 10 HW quizzes",              check:s=>s.hwThreeStar>=10},
   // Grand combo — every level perfected
   {id:"all-levels-perfect",em:"🏆",name:"Garden Perfectionist",desc:"3-star every lesson in every level",  check:s=>s.level1Perfect && s.level2Perfect && s.tensePerfect && s.houseLevelComplete && s.fiestaLevelComplete},
   // --- Regular verbs (Level 1 extended to 80 days) ---
-  {id:"regular-lessons-25",em:"🌱",name:"Regular Journey",   desc:"Finish 25 Level 1 lessons",              check:s=>s.level1LessonsDone>=25},
-  {id:"regular-lessons-50",em:"🌿",name:"Regular Rhythm",    desc:"Finish 50 Level 1 lessons",              check:s=>s.level1LessonsDone>=50},
-  {id:"regular-lessons-70",em:"🌳",name:"Regular Grove",     desc:"Finish 70 Level 1 lessons",              check:s=>s.level1LessonsDone>=70},
-  {id:"regular-lessons-all",em:"🏆",name:"Regular Champion", desc:"Finish all 80 Level 1 lessons",          check:s=>s.level1Complete},
-  {id:"regular-3s-40", em:"🎯", name:"Regular Marksman",     desc:"3 stars on 40 Level 1 lessons",          check:s=>s.level1ThreeStarLessons>=40},
-  {id:"regular-3s-60", em:"🥇", name:"Regular Virtuoso",     desc:"3 stars on 60 Level 1 lessons",          check:s=>s.level1ThreeStarLessons>=60},
-  {id:"regular-3s-80", em:"👑", name:"Regular Royalty",      desc:"3 stars on all 80 Level 1 lessons",      check:s=>s.level1Perfect},
+  {id:"regular-lessons-25",em:"🌿",name:"Regular Journey",   desc:"Finish 25 Level 1 lessons",              check:s=>s.level1LessonsDone>=25},
+  {id:"regular-lessons-50",em:"☘️",name:"Regular Rhythm",    desc:"Finish 50 Level 1 lessons",              check:s=>s.level1LessonsDone>=50},
+  {id:"regular-lessons-70",em:"🌵",name:"Regular Grove",     desc:"Finish 70 Level 1 lessons",              check:s=>s.level1LessonsDone>=70},
+  {id:"regular-lessons-all",em:"🎓",name:"Regular Champion", desc:"Finish all 80 Level 1 lessons",          check:s=>s.level1Complete},
+  {id:"regular-3s-40", em:"🏉", name:"Regular Marksman",     desc:"3 stars on 40 Level 1 lessons",          check:s=>s.level1ThreeStarLessons>=40},
+  {id:"regular-3s-60", em:"🪗", name:"Regular Virtuoso",     desc:"3 stars on 60 Level 1 lessons",          check:s=>s.level1ThreeStarLessons>=60},
+  {id:"regular-3s-80", em:"🪄", name:"Regular Royalty",      desc:"3 stars on all 80 Level 1 lessons",      check:s=>s.level1Perfect},
   // --- Verb Tenses (Level 3 expanded to 13 lessons) ---
-  {id:"tense-10",      em:"🧭", name:"Tense Voyager",        desc:"Finish 10 tense activities",             check:s=>s.tenseLessonsDone>=10},
-  {id:"tense-13",      em:"🌠", name:"Tense Horizon",        desc:"Finish 13 tense activities",             check:s=>s.tenseLessonsDone>=13},
-  {id:"tense-stars-10",em:"⚡", name:"Tense Sharpshooter II",desc:"Earn 3 stars on 10 tense activities",    check:s=>s.tenseThreeStar>=10},
-  {id:"tense-stars-all",em:"🏆",name:"Tense Grandmaster",    desc:"Earn 3 stars on every tense activity",   check:s=>s.tensePerfect},
+  {id:"tense-10",      em:"🛤️", name:"Tense Voyager",        desc:"Finish 10 tense activities",             check:s=>s.tenseLessonsDone>=10},
+  {id:"tense-13",      em:"🌁", name:"Tense Horizon",        desc:"Finish 13 tense activities",             check:s=>s.tenseLessonsDone>=13},
+  {id:"tense-stars-10",em:"🪃", name:"Tense Sharpshooter II",desc:"Earn 3 stars on 10 tense activities",    check:s=>s.tenseThreeStar>=10},
+  {id:"tense-stars-all",em:"📜",name:"Tense Grandmaster",    desc:"Earn 3 stars on every tense activity",   check:s=>s.tensePerfect},
 ];
 function trophySnapshot(){
   let totalLessonsDone=0, anyThreeStars=false, bonusThreeStars=false, totalStars=0, allVerbsLearned=false, verbsLearned=0;
