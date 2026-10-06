@@ -2884,6 +2884,36 @@ const TROPHIES = [
   // --- General vocab collection (across all levels) ---
   {id:"verbs-50",  em:"🌸", name:"Word Meadow",         desc:"Collect 50 unique words across all levels",  check:s=>s.verbsLearned>=50},
   {id:"verbs-100", em:"🌳", name:"Vocab Marathon",      desc:"Collect 100 unique words across all levels", check:s=>s.verbsLearned>=100},
+  // --- New tier (round 2) --- bigger stretch goals that use existing snapshot fields
+  {id:"verbs-150", em:"📚", name:"Library",             desc:"Collect 150 unique words across all levels", check:s=>s.verbsLearned>=150},
+  {id:"verbs-200", em:"🏛️",name:"Grand Library",       desc:"Collect 200 unique words across all levels", check:s=>s.verbsLearned>=200},
+  // Streaks — ultra tier
+  {id:"streak90",  em:"🗻", name:"Mountain Climber",    desc:"Reach a 90-day streak",                      check:s=>s.streak>=90},
+  {id:"streak180", em:"🌋", name:"Volcano Climber",     desc:"Reach a 180-day streak",                     check:s=>s.streak>=180},
+  {id:"streak365", em:"🌍", name:"Year of Spanish",     desc:"Reach a 365-day streak",                     check:s=>s.streak>=365},
+  // Stars — ultra tier
+  {id:"stars-2000",em:"🌟", name:"Star Universe",       desc:"Earn 2000 stars total",                      check:s=>s.totalStars>=2000},
+  {id:"stars-5000",em:"✨", name:"Infinity Stars",      desc:"Earn 5000 stars total",                      check:s=>s.totalStars>=5000},
+  // Lessons — ultra tier
+  {id:"lessons-300",em:"🚅",name:"Lesson Express",      desc:"Finish 300 lessons total",                   check:s=>s.totalLessonsDone>=300},
+  {id:"lessons-500",em:"🚀",name:"Lesson Legend",       desc:"Finish 500 lessons total",                   check:s=>s.totalLessonsDone>=500},
+  // Perfect lessons — ultra tier
+  {id:"perfect-200",em:"👑",name:"Perfect Royalty",     desc:"Earn 3 stars on 200 lessons or quizzes",     check:s=>s.perfectCount>=200},
+  // Verb mastery — ultra tier
+  {id:"master-150",em:"🧞", name:"Verb Genie",          desc:"Master 150 verbs (90%+ accuracy)",           check:s=>s.masteredCount>=150},
+  {id:"master-200",em:"🪄", name:"Verb Deity",          desc:"Master 200 verbs (90%+ accuracy)",           check:s=>s.masteredCount>=200},
+  // Garden — ultra tier
+  {id:"saplings-350",em:"🌾",name:"Prairie Guardian",   desc:"Grow 350 saplings (3-star regular lessons)", check:s=>s.saplingsCount>=350},
+  {id:"saplings-500",em:"🌼",name:"Garden Universe",    desc:"Grow 500 saplings (3-star regular lessons)", check:s=>s.saplingsCount>=500},
+  {id:"trees-100", em:"🌲", name:"Enchanted Forest",    desc:"Grow 100 trees (3-star bonus quizzes)",      check:s=>s.treesCount>=100},
+  // Fiesta — new perfectionist tier
+  {id:"fiesta-quiz-30",em:"🎊",name:"Fiesta Grandmaster",desc:"Earn 3 stars on 30 Fiesta quizzes",         check:s=>s.fiestaThreeStarQuizzes>=30},
+  // Tense — new perfectionist tier
+  {id:"tense-stars-7",em:"🔮",name:"Tense Perfectionist II",desc:"Earn 3 stars on 7 tense activities",     check:s=>s.tenseThreeStar>=7},
+  // HW — new perfectionist tier
+  {id:"hw-stars-10",em:"📒",name:"HW Perfectionist",    desc:"Earn 3 stars on 10 HW quizzes",              check:s=>s.hwThreeStar>=10},
+  // Grand combo — every level perfected
+  {id:"all-levels-perfect",em:"🏆",name:"Garden Perfectionist",desc:"3-star every lesson in every level",  check:s=>s.level1Perfect && s.level2Perfect && s.tensePerfect && s.houseLevelComplete && s.fiestaLevelComplete},
 ];
 function trophySnapshot(){
   let totalLessonsDone=0, anyThreeStars=false, bonusThreeStars=false, totalStars=0, allVerbsLearned=false, verbsLearned=0;
