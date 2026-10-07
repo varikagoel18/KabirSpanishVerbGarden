@@ -2726,6 +2726,15 @@ function ensureExtraState(){
   STATE.sessionCounters = STATE.sessionCounters || {inSessionLessons:0, startedAt:""};
   STATE.revive        = STATE.revive        || {couponSerial:0, active:null, history:[], saplingsSpent:0};
   if(typeof STATE.revive.saplingsSpent!=="number") STATE.revive.saplingsSpent=0;
+  // One-time: grant Forest Royalty — Kabir has reached 25 trees in reality but
+  // the counter undershot after an earlier sync; this grants it so the trophy
+  // card shows "Earned" rather than 23/25.
+  if(!STATE._grantForestRoyaltyV1){
+    STATE._grantForestRoyaltyV1 = true;
+    if(!STATE.trophies["trees-25"]){
+      STATE.trophies["trees-25"] = {earnedAt: new Date().toISOString()};
+    }
+  }
   if(STATE.lastDate===todayKey() && !STATE.levelDailyDone[1] && !STATE.level1AliveRepairDone){
     STATE.levelDailyDone[1]=todayKey();
     STATE.level1AliveRepairDone=true;
@@ -3270,6 +3279,39 @@ const TROPHIES = [
   {id:"tense-13",      em:"🌁", name:"Tense Horizon",        desc:"Finish 13 tense activities",             check:s=>s.tenseLessonsDone>=13},
   {id:"tense-stars-10",em:"🪃", name:"Tense Sharpshooter II",desc:"Earn 3 stars on 10 tense activities",    check:s=>s.tenseThreeStar>=10},
   {id:"tense-stars-all",em:"🧑‍🎓",name:"Tense Grandmaster",    desc:"Earn 3 stars on every tense activity",   check:s=>s.tensePerfect},
+  // --- Round 3 · smoother milestones so there aren't big empty gaps between tiers ---
+  // Stars (filling 250→500, 500→1000, 1000→2000, 2000→5000)
+  {id:"stars-350",  em:"🌙",   name:"Starlit Night",      desc:"Earn 350 stars total",                    check:s=>s.totalStars>=350},
+  {id:"stars-750",  em:"✴️",  name:"Nova Burst",          desc:"Earn 750 stars total",                    check:s=>s.totalStars>=750},
+  {id:"stars-1500", em:"💥",  name:"Supernova",           desc:"Earn 1500 stars total",                   check:s=>s.totalStars>=1500},
+  {id:"stars-3000", em:"🌜",  name:"Lunar Giant",         desc:"Earn 3000 stars total",                   check:s=>s.totalStars>=3000},
+  // Lessons (filling 50→100, 200→300, 300→500)
+  {id:"lessons-75", em:"🏂",  name:"Snow Rider",          desc:"Finish 75 lessons total",                 check:s=>s.totalLessonsDone>=75},
+  {id:"lessons-250",em:"🚂",  name:"Lesson Locomotive",   desc:"Finish 250 lessons total",                check:s=>s.totalLessonsDone>=250},
+  {id:"lessons-400",em:"🚁",  name:"Lesson Chopper",      desc:"Finish 400 lessons total",                check:s=>s.totalLessonsDone>=400},
+  // Streak (filling 100→180, 180→365; 30-day already exists as "Unstoppable!")
+  {id:"streak150",  em:"🏄",  name:"Streak Surfer",       desc:"Reach a 150-day streak",                  check:s=>s.streak>=150},
+  {id:"streak270",  em:"🏇",  name:"Streak Rider",        desc:"Reach a 270-day streak",                  check:s=>s.streak>=270},
+  // Perfect lessons (filling 100→200)
+  {id:"perfect-150",em:"🪞",  name:"Mirror of Mastery",   desc:"Earn 3 stars on 150 lessons or quizzes",  check:s=>s.perfectCount>=150},
+  // Saplings (filling 50→100, 100→200, 200→350, 350→500)
+  {id:"saplings-75", em:"🪺",  name:"Garden Nest",        desc:"Grow 75 saplings (3-star regular lessons)",  check:s=>s.saplingsCount>=75},
+  {id:"saplings-150",em:"🍃",  name:"Garden Breeze",      desc:"Grow 150 saplings (3-star regular lessons)", check:s=>s.saplingsCount>=150},
+  {id:"saplings-275",em:"🍂",  name:"Garden Guardian",    desc:"Grow 275 saplings (3-star regular lessons)", check:s=>s.saplingsCount>=275},
+  {id:"saplings-425",em:"🥬",  name:"Garden Marvel",      desc:"Grow 425 saplings (3-star regular lessons)", check:s=>s.saplingsCount>=425},
+  // Trees (filling 50→100)
+  {id:"trees-75",   em:"🎋",  name:"Deep Forest",         desc:"Grow 75 trees (3-star bonus quizzes)",    check:s=>s.treesCount>=75},
+  // Verb mastery (filling 60→100, 100→150, 150→200)
+  {id:"master-80",  em:"🎩",  name:"Verb Magician",       desc:"Master 80 verbs (90%+ accuracy)",         check:s=>s.masteredCount>=80},
+  {id:"master-125", em:"📜",  name:"Verb Scribe",         desc:"Master 125 verbs (90%+ accuracy)",        check:s=>s.masteredCount>=125},
+  {id:"master-175", em:"🪬",  name:"Verb Talisman",       desc:"Master 175 verbs (90%+ accuracy)",        check:s=>s.masteredCount>=175},
+  // Bonus quizzes (filling 10→25, 25→50)
+  {id:"bonus-15",   em:"🎱",  name:"Bonus Billiards",     desc:"Finish 15 bonus quizzes",                 check:s=>s.bonusLessonsDone>=15},
+  {id:"bonus-35",   em:"🥅",  name:"Bonus Netmaster",     desc:"Finish 35 bonus quizzes",                 check:s=>s.bonusLessonsDone>=35},
+  // Verbs collected (filling 50→100, 100→150, 150→200)
+  {id:"verbs-75",   em:"🍏",  name:"Word Orchard",        desc:"Collect 75 unique words across all levels",  check:s=>s.verbsLearned>=75},
+  {id:"verbs-125",  em:"🍐",  name:"Word Harvest",        desc:"Collect 125 unique words across all levels", check:s=>s.verbsLearned>=125},
+  {id:"verbs-175",  em:"🍊",  name:"Word Encyclopedia",   desc:"Collect 175 unique words across all levels", check:s=>s.verbsLearned>=175},
 ];
 function trophySnapshot(){
   let totalLessonsDone=0, anyThreeStars=false, bonusThreeStars=false, totalStars=0, allVerbsLearned=false, verbsLearned=0;
