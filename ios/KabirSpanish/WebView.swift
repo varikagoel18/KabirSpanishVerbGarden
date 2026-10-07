@@ -161,11 +161,43 @@ final class ProgressPersistenceBridge: NSObject, WKScriptMessageHandler {
     }
 }
 
+/// Haptic feedback bridge for round 2 · #11.
+/// JS calls `webkit.messageHandlers.haptic.postMessage("light"|"medium"|"success"|"warn"|"heavy")`.
+final class HapticBridge: NSObject, WKScriptMessageHandler {
+    private let lightImpact = UIImpactFeedbackGenerator(style: .light)
+    private let mediumImpact = UIImpactFeedbackGenerator(style: .medium)
+    private let heavyImpact = UIImpactFeedbackGenerator(style: .heavy)
+    private let notification = UINotificationFeedbackGenerator()
+
+    override init() {
+        super.init()
+        lightImpact.prepare(); mediumImpact.prepare(); heavyImpact.prepare(); notification.prepare()
+    }
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.frameInfo.isMainFrame,
+              message.webView?.url?.lastPathComponent == "learn-verb-activity.html",
+              let kind = message.body as? String else { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            switch kind {
+            case "light": self.lightImpact.impactOccurred(); self.lightImpact.prepare()
+            case "medium": self.mediumImpact.impactOccurred(); self.mediumImpact.prepare()
+            case "heavy": self.heavyImpact.impactOccurred(); self.heavyImpact.prepare()
+            case "success": self.notification.notificationOccurred(.success); self.notification.prepare()
+            case "warn": self.notification.notificationOccurred(.warning); self.notification.prepare()
+            default: self.lightImpact.impactOccurred(); self.lightImpact.prepare()
+            }
+        }
+    }
+}
+
 final class WebViewStore: NSObject, ObservableObject, WKNavigationDelegate {
     static let shared = WebViewStore()
     let webView: WKWebView
     private let speechBridge: SpeechPracticeBridge
     private let progressBridge: ProgressPersistenceBridge
+    private let hapticBridge: HapticBridge
     // Release gate: enable only after the physical-device 8/10 accept and 8/10 reject check passes.
     private let speechPracticeEnabled = false
 
@@ -213,6 +245,8 @@ final class WebViewStore: NSObject, ObservableObject, WKNavigationDelegate {
         speechBridge = bridge
         let progress = ProgressPersistenceBridge()
         progressBridge = progress
+        let haptic = HapticBridge()
+        hapticBridge = haptic
         let savedProgress = ProgressPersistenceBridge.savedState()
         let savedProgressB64 = savedProgress.map { Data($0.utf8).base64EncodedString() } ?? ""
         let progressScript = """
@@ -244,6 +278,7 @@ final class WebViewStore: NSObject, ObservableObject, WKNavigationDelegate {
         """
         config.userContentController.addUserScript(WKUserScript(source: speechScript, injectionTime: .atDocumentStart, forMainFrameOnly: true, in: .page))
         config.userContentController.add(bridge, name: "speechPractice")
+        config.userContentController.add(haptic, name: "haptic")
 
         webView = WKWebView(frame: .zero, configuration: config)
 

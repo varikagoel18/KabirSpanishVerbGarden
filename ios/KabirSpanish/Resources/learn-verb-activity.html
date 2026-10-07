@@ -696,6 +696,22 @@
   .blank{display:inline-block;min-width:58px;padding:0 10px;margin:0 3px;border-bottom:3px solid var(--berry);
     color:var(--berry-dark);font-family:'Baloo 2';font-weight:800;}
   .blank.done{border-bottom-color:var(--leaf);color:var(--leaf-dark);background:#E6F6EA;border-radius:6px;}
+  /* Round 2 · #8 — drag-based fill-in variant */
+  .blank.drop-zone{min-width:84px;border:2.5px dashed var(--berry);border-radius:10px;padding:4px 12px;background:#FFF6F0;
+    transition:background .15s ease, transform .15s ease;}
+  .blank.drop-hot{background:#FFE4CC;transform:scale(1.08);}
+  .blank.drop-wrong{animation:shakeBlank .32s ease;}
+  @keyframes shakeBlank{0%,100%{transform:none}25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+  .drag-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px;}
+  .drag-chip{background:#fff;border:2px solid var(--border);border-radius:14px;padding:12px 18px;
+    font-weight:800;font-size:18px;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.08);
+    cursor:grab;user-select:none;touch-action:none;transition:transform .15s ease, opacity .15s ease;}
+  .drag-chip.dragging{opacity:.3;}
+  .drag-chip.used{opacity:.35;pointer-events:none;}
+  .drag-chip.wrong{animation:shakeBlank .32s ease;border-color:var(--berry);}
+  .drag-ghost{position:fixed;pointer-events:none;z-index:9999;background:#FFF;border:2px solid var(--leaf);border-radius:14px;
+    padding:12px 18px;font-weight:800;font-size:18px;color:var(--ink);box-shadow:0 8px 20px rgba(0,0,0,.25);transform:translate(-50%,-50%);}
+  .drag-hint{text-align:center;font-size:14px;color:var(--ink-soft);margin-top:8px;font-weight:600;}
   .tf{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .tfbtn{font-size:19px;padding:18px;}
 
@@ -3969,6 +3985,10 @@ function tickAdoptionOnLaunch(){
   if(!a.firstLaunchAt) a.firstLaunchAt = now;
   a.totalLaunches = (a.totalLaunches|0) + 1;
   a.lastLaunchAt = now;
+  // Round 2 · #25 — reset in-session counter on each fresh launch so the "keep going!" nudge fires per session.
+  try{
+    STATE.sessionCounters = {inSessionLessons:0, startedAt:now};
+  }catch(_){}
   try{ Store.save(); }catch(e){}
 }
 
@@ -5143,6 +5163,85 @@ function renderFill(st){
       const others=sample(cur.pool.filter(x=>x.id!==v.id),3).map(x=> data.infMode ? x.inf : conjugate(x, data.p));
       const opts=shuffle([correct, ...new Set(others)]).slice(0,4);
       if(!opts.includes(correct)) opts[0]=correct;
+      // Round 2 · #8 — randomly use drag-to-blank variant on ~1 in 3 sentences for tactile variety.
+      const useDrag = Math.random() < 0.34;
+      if(useDrag){
+        stage.innerHTML=`
+          <p class="lead">Drag the word to finish the sentence ✋</p>
+          <div class="qcount">Sentence ${i+1} of ${items.length}</div>
+          <div class="q">
+            ${qImage(v)}
+            <div class="ask" style="font-size:21px;line-height:1.4">${sentence.replace('class="blank"','class="blank drop-zone"')}</div>
+            <div class="sub" style="margin:8px 0 0">${data.en}</div>
+          </div>
+          <div class="drag-chips" id="dragChips"></div>
+          <div class="drag-hint">Drag a word onto the dotted blank</div>`;
+        const chipsBox=$("#dragChips");
+        const blank=stage.querySelector(".blank");
+        shuffle(opts).forEach(txt=>{
+          const chip=document.createElement("div");
+          chip.className="drag-chip";
+          chip.textContent=txt;
+          chip.dataset.value=txt;
+          chipsBox.appendChild(chip);
+          let ghost=null, startX=0, startY=0;
+          chip.addEventListener("pointerdown", (ev)=>{
+            if(done || chip.classList.contains("used")) return;
+            ev.preventDefault();
+            startX=ev.clientX; startY=ev.clientY;
+            chip.classList.add("dragging");
+            try{ chip.setPointerCapture(ev.pointerId); }catch(_){}
+            ghost=document.createElement("div");
+            ghost.className="drag-ghost";
+            ghost.textContent=txt;
+            ghost.style.left=ev.clientX+"px";
+            ghost.style.top=ev.clientY+"px";
+            document.body.appendChild(ghost);
+          });
+          chip.addEventListener("pointermove", (ev)=>{
+            if(!ghost) return;
+            ev.preventDefault();
+            ghost.style.left=ev.clientX+"px";
+            ghost.style.top=ev.clientY+"px";
+            const r=blank.getBoundingClientRect();
+            const hot=ev.clientX>=r.left-18 && ev.clientX<=r.right+18 && ev.clientY>=r.top-18 && ev.clientY<=r.bottom+18;
+            blank.classList.toggle("drop-hot", hot);
+          });
+          function endDrag(ev){
+            if(!ghost) return;
+            const r=blank.getBoundingClientRect();
+            const over=ev.clientX>=r.left-18 && ev.clientX<=r.right+18 && ev.clientY>=r.top-18 && ev.clientY<=r.bottom+18;
+            ghost.remove(); ghost=null;
+            chip.classList.remove("dragging");
+            blank.classList.remove("drop-hot");
+            try{ chip.releasePointerCapture(ev.pointerId); }catch(_){}
+            if(!over) return;
+            if(done) return;
+            if(txt===correct){
+              done=true; chip.classList.add("used"); celebrateSmallWin(chip);
+              recordVerbAttempt(v.id, !missed); cur.score++;
+              if(missed && !pushed){ addRedoQuestion({prompt:sentence, opts, correct, em:v.em, speak:data.es.replace("___",correct), verbId:v.id}); pushed=true; }
+              blank.textContent=correct; blank.classList.add("done"); blank.classList.remove("drop-zone");
+              speak(data.es.replace("___",correct));
+              try{ haptic("success"); }catch(_){}
+              setTimeout(adv,900);
+            } else {
+              missed=true;
+              chip.classList.add("wrong"); chip.classList.add("used");
+              blank.classList.add("drop-wrong");
+              setTimeout(()=>{ chip.classList.remove("wrong"); blank.classList.remove("drop-wrong"); }, 350);
+              try{ haptic("warn"); }catch(_){}
+              if(secondWrongAdvance(wrongState, adv, {correct:correct, speak:data.es.replace("___",correct), hint:(typeof v!=="undefined"&&v&&v.hint)||""})){
+                done=true;
+                // reveal correct in blank
+                blank.textContent=correct; blank.classList.add("done"); blank.classList.remove("drop-zone");
+              }
+            }
+          }
+          chip.addEventListener("pointerup", endDrag);
+          chip.addEventListener("pointercancel", endDrag);
+        });
+      } else {
       stage.innerHTML=`
         <p class="lead">Finish the sentence ✏️</p>
         <div class="qcount">Sentence ${i+1} of ${items.length}</div>
@@ -5166,6 +5265,7 @@ function renderFill(st){
         };
         o.appendChild(b);
       });
+      }
     } else {
       const accepted = new Set([normAnswer(correct)]);
       stage.innerHTML=`
